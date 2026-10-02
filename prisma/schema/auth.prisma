@@ -1,0 +1,7 @@
+// =============================================================================
+// Authentication Models
+// =============================================================================
+// Session model is in user.prisma as it's considered part of the User domain.
+// The 501-database.md schema does not define separate auth token models;
+// token management (refresh tokens, verification tokens, password reset tokens)
+// is handled via Redis/in-memory stores at the application layer.

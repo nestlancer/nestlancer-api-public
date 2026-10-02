@@ -1,0 +1,53 @@
+{
+  "seedKey": "suresh-iyer",
+  "displayName": "Suresh Iyer",
+  "summary": "Proprietor at Iyer Agro Supplies in Coimbatore.",
+  "profile": {
+    "email": "suresh.iyer@nestlancer.com",
+    "firstName": "Suresh",
+    "lastName": "Iyer",
+    "phone": "+919894226510",
+    "company": "Iyer Agro Supplies",
+    "jobTitle": "Proprietor",
+    "timezone": "Asia/Kolkata",
+    "city": "Coimbatore",
+    "industry": "agriculture",
+    "headline": "Proprietor \u00b7 Iyer Agro Supplies (Coimbatore \u00b7 Agriculture)",
+    "bio": "Suresh runs Iyer Agro Supplies in Coimbatore. He wants mandi prices and cooperative ordering on a phone for his farmer customers.",
+    "skills": [
+      "Proprietor",
+      "Agri Supply Chain",
+      "Cooperative Ops",
+      "Rural Payments"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/suresh-iyer.jpg"
+}

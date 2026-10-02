@@ -1,0 +1,15 @@
+{
+  "name": "@nestlancer/email",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@nestlancer/common": "workspace:*",
+    "@nestlancer/queue": "workspace:*"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit"
+  }
+}

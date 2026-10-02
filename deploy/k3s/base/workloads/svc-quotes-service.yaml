@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-quotes
+spec:
+  selector:
+    app: svc-quotes
+  ports:
+    - port: 3007
+      targetPort: http
+      name: http

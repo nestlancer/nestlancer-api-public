@@ -1,0 +1,67 @@
+// =============================================================================
+// Media Domain Models
+// =============================================================================
+
+enum MediaStatus {
+  PENDING
+  PROCESSING
+  UPLOADING
+  READY
+  FAILED
+  QUARANTINED
+}
+
+enum MediaVisibility {
+  PRIVATE
+  PUBLIC
+}
+
+model Media {
+  id               String          @id @default(uuid(7))
+  filename         String
+  originalFilename String
+  mimeType         String
+  size             Int
+  status           MediaStatus     @default(PENDING)
+  visibility       MediaVisibility @default(PRIVATE)
+  uploaderId       String
+  contextType      String?
+  contextId        String?
+  urls             Json?
+  metadata         Json?
+  deletedAt        DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  uploader         User            @relation(fields: [uploaderId], references: [id], onDelete: Restrict)
+  shareLinks       MediaShareLink[]
+  blogFeaturedImages BlogPost[]      @relation("BlogFeaturedImage")
+  portfolioImages  PortfolioImage[]
+  portfolioThumbnails PortfolioItem[] @relation("PortfolioThumbnail")
+  portfolioVideos     PortfolioItem[] @relation("PortfolioVideo")
+  paymentProofs    PaymentProof[]
+
+  @@index([uploaderId])
+  @@index([contextType, contextId])
+  @@index([status])
+  @@index([deletedAt])
+  @@index([uploaderId, status])
+  @@index([status, createdAt])
+}
+
+model MediaShareLink {
+  id            String    @id @default(uuid(7))
+  mediaId       String
+  token         String    @unique
+  purpose       String?
+  expiresAt     DateTime?
+  passwordHash  String?
+  allowedEmails String[]  @default([])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@index([mediaId])
+  @@index([expiresAt])
+}

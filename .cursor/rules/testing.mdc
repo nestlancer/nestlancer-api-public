@@ -1,0 +1,32 @@
+---
+description: Backend testing conventions (Jest unit, integration, e2e, system)
+globs: "**/{tests,e2e}/**/*.{ts,tsx},**/jest.config*.ts,**/*.spec.ts,**/*e2e-spec.ts"
+alwaysApply: false
+---
+
+# Backend Testing
+
+Stack: Jest + ts-jest. Shared helpers live in `@nestlancer/testing`.
+
+## Layout
+- Unit: `**/tests/unit/**/*.spec.ts`
+- Integration: `**/tests/integration/**/*.spec.ts`
+- Package e2e: `**/e2e/**/*e2e-spec.ts` with local `e2e/setup.ts` / `e2e/jest.e2e.config.ts`
+- System: `tests/system/**/*.{smoke,e2e}.spec.ts` (live infra; sequential)
+
+## Commands
+- `pnpm test:unit` / `pnpm test:integration` / `pnpm test:e2e`
+- `pnpm test:system:smoke` for health/smoke against running stack
+- `pnpm test:cov` for coverage
+
+## Required coverage when changing code
+- Auth, payments, webhooks, admin impersonation, media uploads: unit + at least one integration or e2e path
+- Controllers/DTOs: validation failure cases (400 envelope), authz denial (401/403)
+- Services with Prisma: mock write/read clients; assert soft-delete and transaction boundaries
+- Workers/outbox: idempotent consume + failure/DLQ behavior
+- Do not rely on `forceExit` to hide leaked handles; clean up connections in `afterAll`
+
+## Style
+- Prefer `@nestlancer/testing` UUID mock and factory helpers
+- Mirror source names: `foo.service.ts` → `foo.service.spec.ts`
+- CI currently runs unit tests only — still write integration/e2e for risk paths locally before merge

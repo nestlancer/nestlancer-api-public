@@ -1,0 +1,6 @@
+packages:
+  - 'services/*'
+  - 'workers/*'
+  - 'libs/*'
+  - 'gateway'
+  - 'ws-gateway'

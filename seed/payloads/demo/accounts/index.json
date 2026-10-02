@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "meta": {
+    "description": "Indian client accounts — step 1 input for scripts/create_accounts.py. Scenarios live in data/scenarios/.",
+    "defaultClientPassword": "REDACTED_DEMO_PASSWORD",
+    "admin": {
+      "email": "admin@nestlancer.com",
+      "opsEmail": "ops@nestlancer.com",
+      "securityNote": "Demo seed uses shared password REDACTED_DEMO_PASSWORD for admin and all client accounts."
+    },
+    "currency": "INR",
+    "amountUnit": "rupees",
+    "amountUnitNote": "Request budget min/max in scenario JSON are rupees; the API converts to paise via toPaise().",
+    "quoteLineItemUnit": "rupees",
+    "suppressOutboundEmail": true,
+    "idempotency": "Entities matched by exact request title on re-run. Run scripts/generate_assets.py before step 2."
+  },
+  "users": [
+    {
+      "seedKey": "arjun-mehta",
+      "displayName": "Arjun Mehta",
+      "email": "arjun.mehta@nestlancer.com",
+      "profileFile": "profiles/arjun-mehta.json",
+      "summary": "Proprietor at Mehta Wholesale Traders (Ahmedabad)"
+    },
+    {
+      "seedKey": "samira-patel",
+      "displayName": "Samira Patel",
+      "email": "samira.patel@nestlancer.com",
+      "profileFile": "profiles/samira-patel.json",
+      "summary": "Founder & Creative Director at Patel Digital Marketing (Mumbai)"
+    },
+    {
+      "seedKey": "rahul-desai",
+      "displayName": "Rahul Desai",
+      "email": "rahul.desai@nestlancer.com",
+      "profileFile": "profiles/rahul-desai.json",
+      "summary": "Operations Head at Desai Logistics Solutions (Pune)"
+    },
+    {
+      "seedKey": "ananya-iyer",
+      "displayName": "Ananya Iyer",
+      "email": "ananya.iyer@nestlancer.com",
+      "profileFile": "profiles/ananya-iyer.json",
+      "summary": "VP Engineering at Iyer FinServ Pvt Ltd (Bengaluru)"
+    },
+    {
+      "seedKey": "priya-nair",
+      "displayName": "Priya Nair",
+      "email": "priya.nair@nestlancer.com",
+      "profileFile": "profiles/priya-nair.json",
+      "summary": "Head of Learning & Development at Nair Learning Systems (Kochi)"
+    },
+    {
+      "seedKey": "vikram-shah",
+      "displayName": "Vikram Shah",
+      "email": "vikram.shah@nestlancer.com",
+      "profileFile": "profiles/vikram-shah.json",
+      "summary": "Director at Shah Textile Exports (Surat)"
+    },
+    {
+      "seedKey": "kavya-reddy",
+      "displayName": "Kavya Reddy",
+      "email": "kavya.reddy@nestlancer.com",
+      "profileFile": "profiles/kavya-reddy.json",
+      "summary": "CTO at Reddy Pharma Labs (Hyderabad)"
+    },
+    {
+      "seedKey": "rajan-kumar",
+      "displayName": "Rajan Kumar",
+      "email": "rajan.kumar@nestlancer.com",
+      "profileFile": "profiles/rajan-kumar.json",
+      "summary": "Plant Head at Kumar Precision Tools (Chennai)"
+    },
+    {
+      "seedKey": "divya-sharma",
+      "displayName": "Divya Sharma",
+      "email": "divya.sharma@nestlancer.com",
+      "profileFile": "profiles/divya-sharma.json",
+      "summary": "Founder at Sharma Handicrafts (Jaipur)"
+    },
+    {
+      "seedKey": "amit-verma",
+      "displayName": "Amit Verma",
+      "email": "amit.verma@nestlancer.com",
+      "profileFile": "profiles/amit-verma.json",
+      "summary": "Managing Partner at Verma Properties (Delhi)"
+    },
+    {
+      "seedKey": "neha-gupta",
+      "displayName": "Neha Gupta",
+      "email": "neha.gupta@nestlancer.com",
+      "profileFile": "profiles/neha-gupta.json",
+      "summary": "CEO at Gupta HR Cloud (Noida)"
+    },
+    {
+      "seedKey": "suresh-iyer",
+      "displayName": "Suresh Iyer",
+      "email": "suresh.iyer@nestlancer.com",
+      "profileFile": "profiles/suresh-iyer.json",
+      "summary": "Proprietor at Iyer Agro Supplies (Coimbatore)"
+    },
+    {
+      "seedKey": "pooja-kulkarni",
+      "displayName": "Pooja Kulkarni",
+      "email": "pooja.kulkarni@nestlancer.com",
+      "profileFile": "profiles/pooja-kulkarni.json",
+      "summary": "Operations Head at Kulkarni Clinic Chain (Pune)"
+    },
+    {
+      "seedKey": "karthik-menon",
+      "displayName": "Karthik Menon",
+      "email": "karthik.menon@nestlancer.com",
+      "profileFile": "profiles/karthik-menon.json",
+      "summary": "Founder at Menon PayTech (Bengaluru)"
+    },
+    {
+      "seedKey": "sandeep-chopra",
+      "displayName": "Sandeep Chopra",
+      "email": "sandeep.chopra@nestlancer.com",
+      "profileFile": "profiles/sandeep-chopra.json",
+      "summary": "Director at Chopra Fleet Logistics (Chandigarh)"
+    }
+  ]
+}

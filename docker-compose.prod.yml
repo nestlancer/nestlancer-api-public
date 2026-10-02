@@ -1,0 +1,1011 @@
+# AUTO-GENERATED — edit scripts/docker/workloads.manifest.json then:
+#   node scripts/docker/generate-prod-compose.mjs
+#
+# Production stack: pre-built images (no bind mounts). Secrets via Infisical → .env.infisical
+#   bash scripts/docker/compose-prod.sh up -d
+#
+# Hard mem/CPU limits on every service (SSH-safe on 6c/12GB VPS).
+
+x-prod-service: &prod-service
+  env_file:
+    - .env.infisical
+  # Images ship these under .pnpm but do not link them at node_modules/@opentelemetry.
+  entrypoint:
+    - /bin/sh
+    - -c
+    - |
+      set -e
+      cd /app
+      mkdir -p node_modules/@opentelemetry
+      link_one() {
+        src=$$(ls -d node_modules/.pnpm/$$1 2>/dev/null | head -1 || true)
+        [ -n "$$src" ] || return 0
+        target="/app/$$src/node_modules/@opentelemetry/$$2"
+        dest="node_modules/@opentelemetry/$$2"
+        [ -e "$$target" ] || return 0
+        [ -e "$$dest" ] || ln -sfn "$$target" "$$dest"
+      }
+      link_one '@opentelemetry+api@*' api
+      link_one '@opentelemetry+sdk-node@*' sdk-node
+      link_one '@opentelemetry+auto-instrumentations-node@*' auto-instrumentations-node
+      link_one '@opentelemetry+exporter-trace-otlp-http@*' exporter-trace-otlp-http
+      link_one '@opentelemetry+resources@*' resources
+      link_one '@opentelemetry+semantic-conventions@*' semantic-conventions
+      exec docker-entrypoint.sh "$$@"
+    - --
+  # Image CMD is dropped when entrypoint is overridden (Compose 5). Set it here.
+  command:
+    - dumb-init
+    - node
+    - dist/main.js
+  networks:
+    - nestlancer-prod
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options:
+      max-size: '10m'
+      max-file: '3'
+
+networks:
+  nestlancer-prod:
+    name: nestlancer-prod
+    driver: bridge
+
+services:
+  gateway:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/gateway:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-gateway
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.50
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-gateway
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=384'
+      AUTH_SERVICE_URL: http://svc-auth:3001
+      USERS_SERVICE_URL: http://svc-users:3002
+      PAYMENTS_SERVICE_URL: http://svc-payments:3003
+      WEBHOOKS_SERVICE_URL: http://svc-webhooks:3004
+      ADMIN_SERVICE_URL: http://svc-admin:3005
+      REQUESTS_SERVICE_URL: http://svc-requests:3006
+      QUOTES_SERVICE_URL: http://svc-quotes:3007
+      PROJECTS_SERVICE_URL: http://svc-projects:3008
+      PROGRESS_SERVICE_URL: http://svc-progress:3009
+      MESSAGING_SERVICE_URL: http://svc-messaging:3010
+      NOTIFICATIONS_SERVICE_URL: http://svc-notifications:3011
+      MEDIA_SERVICE_URL: http://svc-media:3012
+      PORTFOLIO_SERVICE_URL: http://svc-portfolio:3013
+      BLOG_SERVICE_URL: http://svc-blog:3014
+      CONTACT_SERVICE_URL: http://svc-contact:3015
+      HEALTH_SERVICE_URL: http://svc-health:3016
+    ports:
+      - '4000:3000'
+      - '${METRICS_BIND_HOST:-0.0.0.0}:23000:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/v1/health/live']
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+
+  ws-gateway:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/ws-gateway:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-ws-gateway
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.50
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-ws-gateway
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=384'
+    ports:
+      - '4100:3100'
+      - '${METRICS_BIND_HOST:-0.0.0.0}:23100:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3100/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      gateway:
+        condition: service_healthy
+
+
+  svc-auth:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/auth:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-auth
+    mem_limit: 384m
+    memswap_limit: 384m
+    # bcrypt is CPU-bound; 0.35 made cost-12 compares ~2s. Give auth a full core.
+    cpus: 1.0
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 384M
+        reservations:
+          cpus: '0.15'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-auth
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PORT: "3001"
+      BCRYPT_SALT_ROUNDS: '10'
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24001:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/v1/auth/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-users:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/users:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-users
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-users
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PORT: "3002"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24002:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3002/api/v1/users/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-payments:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/payments:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-payments
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-payments
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PORT: "3003"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24003:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3003/api/v1/payments/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-webhooks:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/webhooks:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-webhooks
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-webhooks
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      PORT: "3004"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24004:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3004/api/v1/webhooks/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-admin:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/admin:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-admin
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-admin
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PORT: "3005"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24005:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3005/api/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-requests:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/requests:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-requests
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-requests
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PORT: "3006"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24006:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3006/api/v1/requests/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-quotes:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/quotes:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-quotes
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-quotes
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PROJECTS_SERVICE_URL: http://svc-projects:3008
+      PORT: "3007"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24007:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3007/api/v1/quotes/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-projects:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/projects:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-projects
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-projects
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      MESSAGING_SERVICE_URL: http://svc-messaging:3010
+      PORT: "3008"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24008:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3008/api/v1/projects/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-progress:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/progress:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-progress
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-progress
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      PORT: "3009"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24009:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3009/api/v1/progress/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-messaging:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/messaging:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-messaging
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-messaging
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PORT: "3010"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24010:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3010/api/v1/messages/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-notifications:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/notifications:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-notifications
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.35
+    deploy:
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 96M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-notifications
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      PORT: "3011"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24011:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3011/api/v1/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-media:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/media:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-media
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.50
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-media
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      PORT: "3012"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24012:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3012/api/v1/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-portfolio:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/portfolio:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-portfolio
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-portfolio
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      PORT: "3013"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24013:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3013/api/v1/portfolio/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-blog:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/blog:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-blog
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-blog
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      PORT: "3014"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24014:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3014/api/v1/posts/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-contact:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/contact:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-contact
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-contact
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      PORT: "3015"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24015:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3015/api/v1/contact/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  svc-health:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/health:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-health
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-health
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WS_GATEWAY_INTERNAL_URL: http://ws-gateway:3100/health
+      PORT: "3016"
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:24016:9464'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3016/api/v1/health/live']
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+
+  worker-analytics:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/analytics-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-analytics-worker
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-analytics-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: analyticsWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25001:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-audit:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/audit-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-audit-worker
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-audit-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: auditWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25002:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-cdn:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/cdn-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-cdn-worker
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-cdn-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: cdnWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25003:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-document:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/document-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-document-worker
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.50
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-document-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      WORKER_HEARTBEAT_NAME: documentWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25004:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-email:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/email-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-email-worker
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-email-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: emailWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25005:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-export:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/export-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-export-worker
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.50
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-export-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=256'
+      WORKER_HEARTBEAT_NAME: exportWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25006:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-media:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/media-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-media-worker
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-media-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: mediaWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25007:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-notification:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/notification-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-notification-worker
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-notification-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: notificationWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25008:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-outbox:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/outbox-poller:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-outbox-poller
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-outbox-poller
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: outboxPoller
+      # Cut idle Redis/DB poll CPU (was 5s → ~25% of a core).
+      POLLING_INTERVAL_MS: '15000'
+      OUTBOX_POLL_INTERVAL: '15000'
+      LOCK_TTL_SECONDS: '45'
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25009:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+
+  worker-webhook:
+    <<: *prod-service
+    image: ${NESTLANCER_IMAGE_REGISTRY:-ghcr.io/nestlancer}/webhook-worker:${NESTLANCER_IMAGE_TAG:-latest}
+    container_name: nl-prod-webhook-worker
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    environment:
+      OTEL_SERVICE_NAME: nl-prod-webhook-worker
+      METRICS_ENABLED: 'true'
+      METRICS_PORT: '9464'
+      METRICS_BIND_HOST: '0.0.0.0'
+      NODE_OPTIONS: '--max-old-space-size=192'
+      WORKER_HEARTBEAT_NAME: webhookWorker
+    ports:
+      - '${METRICS_BIND_HOST:-0.0.0.0}:25010:9464'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:9464/metrics').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 5
+    depends_on:
+      - gateway
+  # ── Promtail (App VPS sidecar — ships nl-* logs → Loki on Infra VPS) ─────
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: nl-prod-promtail
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.20
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 32M
+    env_file:
+      - .env.infisical
+    environment:
+      LOKI_PUSH_URL: ${LOKI_PUSH_URL:-http://100.115.123.41:3100/loki/api/v1/push}
+      OBSERVABILITY_ENV: production
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/promtail.yml:/etc/promtail/config.yml:ro
+      - promtail-positions:/tmp/promtail
+    command:
+      - -config.file=/etc/promtail/config.yml
+      - -config.expand-env=true
+    healthcheck:
+      test: ['CMD-SHELL', 'bash -c "echo >/dev/tcp/127.0.0.1/9080"']
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 5
+    networks:
+      - nestlancer-prod
+    restart: unless-stopped
+
+volumes:
+  promtail-positions:
+

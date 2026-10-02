@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-auth
+spec:
+  selector:
+    app: svc-auth
+  ports:
+    - port: 3001
+      targetPort: http
+      name: http

@@ -1,0 +1,52 @@
+{
+  "seedKey": "samira-website-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Patel Digital Agency Website Redesign",
+        "description": "Modernise pateldigital.in — showcase our FMCG and real-estate campaign portfolio, improve mobile UX, and add a headless CMS (Sanity) so our content team can publish case studies and blog posts without developer help.",
+        "category": "design",
+        "budget": {
+          "min": 2000000,
+          "max": 4000000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-08-01T00:00:00Z",
+          "deadline": "2026-09-15T23:59:59Z",
+          "flexible": true
+        },
+        "requirements": [
+          "Portfolio gallery with case-study templates",
+          "Sanity CMS for blog and team pages",
+          "Core Web Vitals optimisation",
+          "Contact form with Zoho CRM sync"
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "addNote",
+      "endpoint": "POST /admin/requests/:id/notes",
+      "payload": {
+        "content": "Good fit for agency portfolio track. Discovery call with Samira scheduled for 22 June."
+      }
+    }
+  ]
+}

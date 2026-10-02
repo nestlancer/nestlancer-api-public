@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-health
+spec:
+  selector:
+    app: svc-health
+  ports:
+    - port: 3016
+      targetPort: http
+      name: http

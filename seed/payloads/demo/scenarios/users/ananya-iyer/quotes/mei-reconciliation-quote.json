@@ -1,0 +1,66 @@
+{
+  "seedKey": "mei-reconciliation-quote",
+  "requestSeedKey": "mei-reconciliation-req",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/reconciliation-service/assets/quote-proposal.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createQuote",
+      "endpoint": "POST /admin/requests/:id/quotes",
+      "payload": {
+        "items": [
+          {
+            "description": "Razorpay webhook receiver, signature verification, and idempotency store",
+            "quantity": 1,
+            "unitPrice": 14400
+          },
+          {
+            "description": "Settlement reconciliation engine, ledger matching, and outbox",
+            "quantity": 1,
+            "unitPrice": 24000
+          },
+          {
+            "description": "Admin replay UI, discrepancy dashboard, and handoff",
+            "quantity": 1,
+            "unitPrice": 9600
+          }
+        ],
+        "schedulePreset": "30-40-30",
+        "currency": "INR",
+        "taxPercentage": 0,
+        "validUntil": "2026-07-30T23:59:59Z",
+        "requiresContract": false,
+        "revisionsIncluded": 2,
+        "internalNotes": "NDA signed 12 June — Razorpay test keys shared."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "accept",
+      "endpoint": "POST /quotes/:id/accept",
+      "payload": {
+        "acceptTerms": true,
+        "signatureName": "Ananya Iyer",
+        "signatureDate": "2026-06-04T14:30:00Z",
+        "notes": "Approved after legal and compliance review. Kickoff 15 June."
+      }
+    }
+  ]
+}

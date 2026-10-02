@@ -1,0 +1,60 @@
+// =============================================================================
+// Contact Domain Models
+// =============================================================================
+
+enum ContactStatus {
+  NEW
+  READ
+  RESPONDED
+  ARCHIVED
+  SPAM
+}
+
+enum ContactSubject {
+  GENERAL
+  SUPPORT
+  SALES
+  BILLING
+  PARTNERSHIP
+  BUG_REPORT
+  OTHER
+}
+
+model ContactMessage {
+  id        String         @id @default(uuid(7))
+  ticketId  String         @unique
+  name      String
+  email     String
+  subject   ContactSubject @default(GENERAL)
+  message                   String
+  status                    ContactStatus  @default(NEW)
+  referencePortfolioItemId    String?
+  referencePortfolioTitle   String?
+  ipInfo                    Json?
+  createdAt                 DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  referencePortfolioItem PortfolioItem? @relation("ContactPortfolioRef", fields: [referencePortfolioItemId], references: [id], onDelete: SetNull)
+  responses              ContactResponseLog[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@index([referencePortfolioItemId])
+}
+
+model ContactResponseLog {
+  id               String   @id @default(uuid(7))
+  contactMessageId String
+  adminId          String
+  subject          String
+  message          String
+  sentAt           DateTime @default(now())
+  createdAt        DateTime @default(now())
+
+  contactMessage   ContactMessage @relation(fields: [contactMessageId], references: [id], onDelete: Cascade)
+  admin            User           @relation("ContactResponses", fields: [adminId], references: [id], onDelete: Restrict)
+
+  @@index([contactMessageId])
+  @@index([adminId])
+}

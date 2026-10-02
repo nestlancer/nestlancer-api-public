@@ -1,0 +1,36 @@
+{
+  "phase": "07-group-messages",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "groupThread",
+      "endpoint": "POST /messages/threads/group",
+      "title": "Agency partner coordination — festive campaigns",
+      "memberEmails": [
+        "samira.patel@nestlancer.com",
+        "arjun.mehta@nestlancer.com"
+      ],
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Welcome both — this group is for coordinating cross-client festive campaign learnings. @Samira Patel @Arjun Mehta"
+        },
+        {
+          "sender": "client",
+          "senderEmail": "samira.patel@nestlancer.com",
+          "content": "Sharing our Navratri page conversion stats — 4.8% on Meta traffic with Marathi headline variant."
+        },
+        {
+          "sender": "client",
+          "senderEmail": "arjun.mehta@nestlancer.com",
+          "content": "Useful reference. Our D2C spice store is targeting similar numbers for Navratri — checkout UPI flow is priority this week."
+        },
+        {
+          "sender": "admin",
+          "content": "Great — I'll schedule a joint review of Razorpay UPI checkout patterns that worked across both projects."
+        }
+      ]
+    }
+  ]
+}

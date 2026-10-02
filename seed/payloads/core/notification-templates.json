@@ -1,0 +1,418 @@
+[
+  {
+    "name": "request-submitted-admin",
+    "eventType": "request.submitted",
+    "titleTemplate": "New request submitted",
+    "messageTemplate": "{{submitterName}} submitted \"{{requestTitle}}\" ({{category}}).",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "request-status-changed-user",
+    "eventType": "request.statusChanged",
+    "titleTemplate": "Request status updated",
+    "messageTemplate": "Your request \"{{requestTitle}}\" is now {{statusLabel}}.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "request-assigned-admin",
+    "eventType": "request.assigned",
+    "titleTemplate": "Request assigned to you",
+    "messageTemplate": "You were assigned request \"{{requestTitle}}\".",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "quote-received-user",
+    "eventType": "quote.received",
+    "titleTemplate": "New quote received",
+    "messageTemplate": "You received a quote for {{projectTitle}}.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "quote-revised-user",
+    "eventType": "quote.revised",
+    "titleTemplate": "Quote revised",
+    "messageTemplate": "Your quote for {{projectTitle}} was updated.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "quote-accepted-admin",
+    "eventType": "quote.accepted",
+    "titleTemplate": "Quote accepted",
+    "messageTemplate": "{{clientName}} accepted the quote for {{projectTitle}}.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "quote-declined-admin",
+    "eventType": "quote.declined",
+    "titleTemplate": "Quote declined",
+    "messageTemplate": "A client declined a quote.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "quote-changes-requested-admin",
+    "eventType": "quote.changesRequested",
+    "titleTemplate": "Quote changes requested",
+    "messageTemplate": "A client requested changes to a quote.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "payment-due-user",
+    "eventType": "payment.due",
+    "titleTemplate": "Payment requested",
+    "messageTemplate": "Please pay {{milestoneName}} ({{amountLabel}}) to continue your project.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "payment-received-user",
+    "eventType": "payment.received",
+    "titleTemplate": "Payment received",
+    "messageTemplate": "Your payment of {{amountLabel}} for {{projectTitle}} was received.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "payment-failed-user",
+    "eventType": "payment.failed",
+    "titleTemplate": "Payment failed",
+    "messageTemplate": "Your payment could not be processed. Please try again.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "payment-refunded-user",
+    "eventType": "payment.refunded",
+    "titleTemplate": "Payment refunded",
+    "messageTemplate": "A refund of {{amountLabel}} has been issued for your payment.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "payment-manual-recorded-user",
+    "eventType": "payment.manualRecorded",
+    "titleTemplate": "{{amountLabel}} recorded for {{projectTitle}}",
+    "messageTemplate": "An offline payment of {{amountLabel}} for {{projectTitle}} was recorded on your account.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "payment-dispute-opened-admin",
+    "eventType": "payment.disputeOpened",
+    "titleTemplate": "Payment dispute opened",
+    "messageTemplate": "A payment dispute was opened and needs review.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "payment-dispute-resolved-user",
+    "eventType": "payment.disputeResolved",
+    "titleTemplate": "Payment dispute resolved",
+    "messageTemplate": "Your payment dispute has been resolved.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "message-new",
+    "eventType": "message.new",
+    "titleTemplate": "New message",
+    "messageTemplate": "{{senderName}} sent a message in {{conversationLabel}}: \"{{messagePreview}}\"",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "message-mentioned",
+    "eventType": "message.mentioned",
+    "titleTemplate": "You were mentioned",
+    "messageTemplate": "{{senderName}} mentioned you in {{conversationLabel}}: \"{{messagePreview}}\"",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "message-flagged-admin",
+    "eventType": "message.flagged",
+    "titleTemplate": "Message flagged",
+    "messageTemplate": "A message was flagged for moderation review.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "contact-inquiry-admin",
+    "eventType": "contact.inquiry",
+    "titleTemplate": "New contact inquiry",
+    "messageTemplate": "A new contact form submission was received.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "contact-replied-user",
+    "eventType": "contact.replied",
+    "titleTemplate": "Reply to your inquiry",
+    "messageTemplate": "We replied to your contact request.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "comment-pending-admin",
+    "eventType": "comment.pending",
+    "titleTemplate": "Comment awaiting moderation",
+    "messageTemplate": "A new blog comment is pending approval.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "comment-reported-admin",
+    "eventType": "comment.reported",
+    "titleTemplate": "Comment reported",
+    "messageTemplate": "A blog comment was reported and needs review.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "revision-requested-admin",
+    "eventType": "revision.requested",
+    "titleTemplate": "Milestone revision requested",
+    "messageTemplate": "A client requested revisions on {{milestoneName}}.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "revision-completed-user",
+    "eventType": "revision.completed",
+    "titleTemplate": "Revision completed",
+    "messageTemplate": "Requested revisions on {{milestoneName}} are complete.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "project-status-changed-user",
+    "eventType": "project.statusChanged",
+    "titleTemplate": "Project status updated",
+    "messageTemplate": "{{projectTitle}} status changed to {{statusLabel}}.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "project-completed-user",
+    "eventType": "project.completed",
+    "titleTemplate": "Project completed",
+    "messageTemplate": "Your project \"{{projectTitle}}\" has been completed.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "project-created-admin",
+    "eventType": "project.created",
+    "titleTemplate": "New project created",
+    "messageTemplate": "Project \"{{projectTitle}}\" was created from an accepted quote.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "milestone-completed-user",
+    "eventType": "milestone.completed",
+    "titleTemplate": "Milestone completed",
+    "messageTemplate": "{{milestoneName}} on {{projectTitle}} has been completed.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "milestone-deemed-approved-user",
+    "eventType": "milestone.deemedApproved",
+    "titleTemplate": "Milestone deemed approved",
+    "messageTemplate": "{{milestoneName}} was auto-approved after the review period.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "project-deadline-extended-user",
+    "eventType": "project.deadlineExtended",
+    "titleTemplate": "Project deadline extended",
+    "messageTemplate": "The deadline for {{projectTitle}} was extended.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "project-duplication-ready",
+    "eventType": "project.duplicationReady",
+    "titleTemplate": "Project duplication complete",
+    "messageTemplate": "Your duplicated project is ready to open.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "project-revision-requested-admin",
+    "eventType": "project.revisionRequested",
+    "titleTemplate": "Project revision requested",
+    "messageTemplate": "A client requested changes on a project.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "feedback-submitted-admin",
+    "eventType": "feedback.submitted",
+    "titleTemplate": "New feedback received",
+    "messageTemplate": "A client submitted feedback on {{projectTitle}}.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "export-ready",
+    "eventType": "export.ready",
+    "titleTemplate": "Your export is ready",
+    "messageTemplate": "Your requested export is ready to download.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "document-ready-user",
+    "eventType": "document.ready",
+    "titleTemplate": "{{documentTitle}}",
+    "messageTemplate": "Your {{documentTitle}} for {{projectTitle}} is ready to download.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "deliverable-ready-user",
+    "eventType": "deliverable.ready",
+    "titleTemplate": "New deliverable ready",
+    "messageTemplate": "A new deliverable on {{projectTitle}} is ready for review: {{deliverableName}}.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "progress-entry-created-user",
+    "eventType": "progress.entryCreated",
+    "titleTemplate": "Project progress update",
+    "messageTemplate": "New update on {{projectTitle}}: {{entryTitle}}",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "quote-expiring-user",
+    "eventType": "quote.expiring",
+    "titleTemplate": "Quote expiring soon",
+    "messageTemplate": "Your quote for {{projectTitle}} expires soon.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "quote-expired-user",
+    "eventType": "quote.expired",
+    "titleTemplate": "Quote expired",
+    "messageTemplate": "Your quote for {{projectTitle}} has expired.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "media-quarantined-admin",
+    "eventType": "media.quarantined",
+    "titleTemplate": "Media quarantined",
+    "messageTemplate": "An uploaded file was quarantined and needs review.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "media-released-user",
+    "eventType": "media.released",
+    "titleTemplate": "Media released",
+    "messageTemplate": "Your quarantined file has been released.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "account-force-password-reset-user",
+    "eventType": "account.forcePasswordReset",
+    "titleTemplate": "Password reset required",
+    "messageTemplate": "An administrator requires you to reset your password.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "account-password-reset-user",
+    "eventType": "account.passwordReset",
+    "titleTemplate": "Password reset",
+    "messageTemplate": "Your password was reset successfully.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "account-suspended-user",
+    "eventType": "account.suspended",
+    "titleTemplate": "Account suspended",
+    "messageTemplate": "Your account has been suspended.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "account-deleted-user",
+    "eventType": "account.deleted",
+    "titleTemplate": "Account deleted",
+    "messageTemplate": "Your account has been deleted.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "account-restored-user",
+    "eventType": "account.restored",
+    "titleTemplate": "Account restored",
+    "messageTemplate": "Your account has been restored.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "account-role-changed-user",
+    "eventType": "account.roleChanged",
+    "titleTemplate": "Account role changed",
+    "messageTemplate": "Your account role was updated.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "account-deletion-scheduled-user",
+    "eventType": "account.deletionScheduled",
+    "titleTemplate": "Account deletion scheduled",
+    "messageTemplate": "Your account is scheduled for deletion.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "account-deletion-cancelled-user",
+    "eventType": "account.deletionCancelled",
+    "titleTemplate": "Account deletion cancelled",
+    "messageTemplate": "Your scheduled account deletion was cancelled.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "security-password-changed-user",
+    "eventType": "security.passwordChanged",
+    "titleTemplate": "Password changed",
+    "messageTemplate": "Your password was changed successfully.",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  },
+  {
+    "name": "webhook-delivery-failed-admin",
+    "eventType": "webhook.deliveryFailed",
+    "titleTemplate": "Webhook delivery failed",
+    "messageTemplate": "An outbound webhook delivery failed after all retries.",
+    "channels": ["IN_APP"],
+    "priority": "HIGH"
+  },
+  {
+    "name": "system-announcement-user",
+    "eventType": "system.announcement",
+    "titleTemplate": "System announcement",
+    "messageTemplate": "{{message}}",
+    "channels": ["IN_APP"],
+    "priority": "NORMAL"
+  }
+]

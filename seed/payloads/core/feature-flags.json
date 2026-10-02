@@ -1,0 +1,74 @@
+[
+  {
+    "flag": "TWO_FACTOR_ENFORCEMENT",
+    "enabled": false,
+    "description": "Enforce 2FA for all admin accounts",
+    "rolloutPercentage": 0
+  },
+  {
+    "flag": "WEBHOOK_OUTBOUND",
+    "enabled": false,
+    "description": "Enable outbound webhook delivery",
+    "rolloutPercentage": 0
+  },
+  {
+    "flag": "VIRUS_SCANNING",
+    "enabled": true,
+    "description": "Enable virus scanning for uploaded files",
+    "rolloutPercentage": 100
+  },
+  {
+    "flag": "MAINTENANCE_MODE",
+    "enabled": false,
+    "description": "Enable system-wide maintenance mode",
+    "rolloutPercentage": 0
+  },
+  {
+    "flag": "RATE_LIMITING",
+    "enabled": true,
+    "description": "Enable API rate limiting",
+    "rolloutPercentage": 100
+  },
+  {
+    "flag": "EMAIL_NOTIFICATIONS",
+    "enabled": true,
+    "description": "Enable email notification delivery",
+    "rolloutPercentage": 100
+  },
+  {
+    "flag": "PUSH_NOTIFICATIONS",
+    "enabled": false,
+    "description": "Enable push notification delivery",
+    "rolloutPercentage": 0
+  },
+  {
+    "flag": "ADVANCED_ANALYTICS",
+    "enabled": false,
+    "description": "Enable advanced analytics dashboard",
+    "rolloutPercentage": 0
+  },
+  {
+    "flag": "BLOG_COMMENTS",
+    "enabled": true,
+    "description": "Enable blog commenting system",
+    "rolloutPercentage": 100
+  },
+  {
+    "flag": "PORTFOLIO_PUBLIC",
+    "enabled": true,
+    "description": "Make portfolio items publicly visible",
+    "rolloutPercentage": 100
+  },
+  {
+    "flag": "CHUNKED_UPLOADS",
+    "enabled": false,
+    "description": "Enable chunked file upload support",
+    "rolloutPercentage": 0
+  },
+  {
+    "flag": "CDN_PROCESSING",
+    "enabled": false,
+    "description": "Enable CDN processing for media files",
+    "rolloutPercentage": 0
+  }
+]

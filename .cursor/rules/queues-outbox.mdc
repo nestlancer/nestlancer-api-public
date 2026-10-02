@@ -1,0 +1,20 @@
+---
+description: RabbitMQ queue, outbox, and worker processing rules
+globs: "{libs/queue,libs/outbox,workers/*}/src/**/*.ts,**/*{event,queue,outbox,processor}*.ts"
+alwaysApply: false
+---
+
+# Queues and Outbox
+
+## Patterns
+- Transactional outbox → RabbitMQ topic exchanges / routing keys in `libs/queue`
+- Workers ack on success; nack without requeue on failure; use DLQ helpers intentionally
+- Prefetch defaults to 1 — keep handlers short and idempotent
+
+## Rules
+- Every cross-service side effect goes through outbox in the same DB transaction as the write
+- Consumers must be idempotent (dedupe by event id / business key)
+- On poison messages: mark failed + DLQ; do not infinite-retry silently
+- Version event payloads; avoid breaking consumers without dual-read
+- Do not publish directly from request handlers when an outbox path exists
+- When adding workers, update `scripts/docker/workloads.manifest.json` and regenerate compose/k3s — keep image CI in sync

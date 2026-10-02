@@ -1,0 +1,133 @@
+# Production origin proxy for Cloudflare-proxied hosts.
+#
+# Cloudflare SSL mode must be Full or Full (strict).
+# Full (strict) requires a Cloudflare Origin Certificate (or other trusted cert)
+# saved under docker/caddy/certs/ — NOT `tls internal` (that causes HTTP 526).
+#
+# Cert files are mounted at /etc/caddy/certs/ (see docker-compose.prod.proxy.yml).
+# Persist them in the repo/project dir so VPS resets do not burn Let's Encrypt quota.
+
+{
+	email ops@nestlancer.com
+	auto_https disable_redirects
+	log {
+		output stdout
+		level ERROR
+		format filter {
+			wrap json
+			fields {
+				request>headers>Authorization delete
+				request>headers>authorization delete
+				request>headers>Cookie delete
+				request>headers>cookie delete
+				request>headers>Set-Cookie delete
+				# Drop secrets from query string (replace-regex was corrupting uri in logs).
+				request>uri query delete token
+				request>uri query delete access_token
+			}
+		}
+	}
+	# Do not auto-issue LE certs for these hosts — we use persisted files.
+	# (Avoids rate-limit burns during prod testing / stack resets.)
+}
+
+# Ensure X-Request-Id exists (replace, never append). Do not mutate a
+# client-supplied X-Correlation-Id — a bare `request_header Name` APPENDS,
+# which produced `client-id, uuid` on the response (NL-BUG-API-101).
+# Origin echoes X-Correlation-Id; Caddy publishes the server request id.
+# `defer` applies after reverse_proxy so we replace the origin header instead
+# of ending up with two X-Request-Id values.
+(request_ids) {
+	request_header >X-Request-Id {http.request.uuid}
+	header {
+		X-Request-Id {http.request.uuid}
+		defer
+	}
+}
+
+(api_backend) {
+	import request_ids
+	handle /ws* {
+		reverse_proxy ws-gateway:3100 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+	handle {
+		reverse_proxy gateway:3000
+	}
+}
+
+(prod_tls) {
+	tls /etc/caddy/certs/origin.pem /etc/caddy/certs/origin.key
+}
+
+# Next.js rewrites cannot include ":port" (path-to-regexp reads it as a
+# pattern). Frontends call this host on port 80 and stay off the public API.
+http://host.docker.internal {
+	reverse_proxy gateway:3000
+}
+
+http://api.nestlancer.com {
+	import api_backend
+}
+
+api.nestlancer.com {
+	import prod_tls
+	import api_backend
+}
+
+http://app.nestlancer.com {
+	import request_ids
+	reverse_proxy nl-prod-frontend-web:9000
+}
+
+app.nestlancer.com {
+	import prod_tls
+	import request_ids
+	reverse_proxy nl-prod-frontend-web:9000
+}
+
+http://admin.nestlancer.com {
+	import request_ids
+	reverse_proxy nl-prod-frontend-admin:9010
+}
+
+admin.nestlancer.com {
+	import prod_tls
+	import request_ids
+	reverse_proxy nl-prod-frontend-admin:9010
+}
+
+http://landing.nestlancer.com {
+	import request_ids
+	reverse_proxy nl-prod-frontend-landing:9020
+}
+
+landing.nestlancer.com {
+	import prod_tls
+	import request_ids
+	reverse_proxy nl-prod-frontend-landing:9020
+}
+
+# Brand apex + www (DNS A → same VPS; CF proxied). Serve landing; www → apex.
+http://nestlancer.com {
+	redir https://nestlancer.com{uri} permanent
+}
+
+nestlancer.com {
+	import prod_tls
+	import request_ids
+	reverse_proxy nl-prod-frontend-landing:9020
+}
+
+http://www.nestlancer.com {
+	redir https://nestlancer.com{uri} permanent
+}
+
+www.nestlancer.com {
+	import prod_tls
+	redir https://nestlancer.com{uri} permanent
+}

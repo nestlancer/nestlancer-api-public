@@ -1,0 +1,91 @@
+{
+  "seedKey": "priya-training-project",
+  "projectKey": "training-portal",
+  "quoteSeedKey": "priya-training-quote-revised",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "LMS Platform Setup",
+          "description": "Course builder, video hosting, quiz engine, and Malayalam subtitle pipeline.",
+          "startDate": "2026-08-05",
+          "endDate": "2026-09-01",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        },
+        {
+          "name": "Okta SAML & HR Dashboard",
+          "description": "Okta SSO integration with extended IT timeline and department completion dashboard.",
+          "startDate": "2026-09-02",
+          "endDate": "2026-10-15",
+          "amount": 0,
+          "currency": "INR",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 1566000,
+        "currency": "INR",
+        "notes": "Deposit \u2014 UTR: FED20260805021 (Nair Learning Systems)",
+        "invoiceNumber": null
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "LMS Platform Setup",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update \u2014 course builder and video pipeline",
+        "description": "Course builder with SCORM import scaffolded. Video upload pipeline supports Malayalam subtitle track on compliance modules.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "LMS Platform Setup",
+      "files": [
+        "projects/training-portal/assets/deliverables/milestone-1-lms-setup.pdf"
+      ],
+      "description": "LMS staging environment \u2014 admin guide, course import template, and quiz engine config."
+    },
+    {
+      "order": 5,
+      "actor": "both",
+      "action": "projectMessaging",
+      "endpoint": "POST /messages/project/:id",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Priya \u2014 LMS staging is ready for your Kochi team to upload pilot courses. Malayalam subtitle workflow documented in the handoff pack.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "client",
+          "content": "Thanks. IT confirmed Okta metadata exchange can start next week \u2014 please keep the HR dashboard in the September sprint.",
+          "type": "TEXT"
+        }
+      ]
+    }
+  ]
+}

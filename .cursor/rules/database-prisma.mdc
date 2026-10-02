@@ -1,0 +1,25 @@
+---
+description: Prisma schema, migrations, and database access rules
+globs: "prisma/**/*.{prisma,sql,ts},libs/database/src/**/*.ts"
+alwaysApply: false
+---
+
+# Database and Prisma
+
+## Layout
+- Modular schemas: `prisma/schema/*.prisma`
+- Migrations: `prisma/migrations/*/migration.sql`
+- Seeds: `prisma/seeds/{,dev/,prod/}`
+
+## Commands
+- Local iterate: `pnpm db:migrate` (`migrate dev`)
+- Shared/CI/prod: `pnpm db:migrate:deploy` only — never `migrate dev` / `db:reset` against shared DBs
+- After schema edits: `pnpm db:generate` and commit migration SQL
+
+## Rules
+- Use `PrismaWriteService` for mutations and `PrismaReadService` for reads
+- Business writes that emit events must create outbox rows in the same transaction
+- Prefer soft-delete helpers already in `libs/database` where the model supports it
+- Runtime uses `DATABASE_URL`; migrations use privileged `MIGRATION_DATABASE_URL` — do not put migration creds in app containers
+- No hard-coded DB hosts/passwords in `prisma.config.ts`, seeds, or docs
+- Breaking schema changes need expand/contract notes and backward-compatible deploy order

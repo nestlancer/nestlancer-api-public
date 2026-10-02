@@ -1,0 +1,42 @@
+{
+  email {$LETSENCRYPT_EMAIL}
+}
+
+(request_ids) {
+  # Replace, never append — a bare `request_header Name` comma-joins with the
+  # client value and breaks strict X-Correlation-ID matching (NL-BUG-API-101).
+  request_header >X-Request-Id {http.request.uuid}
+  header {
+    X-Request-Id {http.request.uuid}
+    defer
+  }
+}
+
+{$DEV_API_HOST} {
+  import request_ids
+  handle /ws* {
+    reverse_proxy ws-gateway:3100
+  }
+  handle /minio/* {
+    uri strip_prefix /minio
+    reverse_proxy host.docker.internal:9010
+  }
+  handle {
+    reverse_proxy gateway:3000
+  }
+}
+
+{$DEV_WEB_HOST} {
+  import request_ids
+  reverse_proxy nestlancer-frontend-web-dev:9000
+}
+
+{$DEV_ADMIN_HOST} {
+  import request_ids
+  reverse_proxy nestlancer-frontend-admin-dev:9010
+}
+
+{$DEV_LANDING_HOST} {
+  import request_ids
+  reverse_proxy nestlancer-frontend-landing-dev:9020
+}

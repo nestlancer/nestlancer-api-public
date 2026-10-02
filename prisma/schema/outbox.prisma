@@ -1,0 +1,28 @@
+// =============================================================================
+// Outbox Event Model (Transactional Outbox Pattern – ADR-004)
+// =============================================================================
+
+enum OutboxStatus {
+  PENDING
+  PUBLISHED
+  FAILED
+}
+
+model Outbox {
+  id            String       @id @default(uuid(7))
+  type          String
+  aggregateType String?
+  aggregateId   String?
+  payload       Json
+  status        OutboxStatus @default(PENDING)
+  error         String?
+  retries       Int          @default(0)
+  nextRetryAt   DateTime?    // Used for exponential backoff; event is eligible when null or <= now
+  createdAt     DateTime     @default(now())
+  publishedAt   DateTime?
+
+  @@index([status])
+  @@index([aggregateType, aggregateId])
+  @@index([status, nextRetryAt])
+  @@unique([aggregateId], map: "Outbox_quote_accepted_once", where: { type: "QUOTE_ACCEPTED", aggregateId: { not: null } })
+}

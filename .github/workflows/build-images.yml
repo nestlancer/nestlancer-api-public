@@ -1,0 +1,122 @@
+# Build and push production backend images to GHCR.
+# Phased bake: shared monorepo-builder checkpoint, then gateways → services → workers.
+# Durable GHA cache (mode=max) so interrupted jobs resume without full redo.
+
+name: Build Production Images
+
+on:
+  workflow_call:
+    outputs:
+      image_tag:
+        description: Image tag pushed to GHCR (version without v, or latest)
+        value: ${{ jobs.meta.outputs.tag }}
+      registry:
+        description: GHCR prefix ghcr.io/<owner>
+        value: ${{ jobs.meta.outputs.registry }}
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: backend-prod-images-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  DOCKERFILE: docker/prod-monorepo/Dockerfile
+  BAKE_FILE: docker/prod-monorepo/docker-bake.hcl
+
+jobs:
+  meta:
+    name: Resolve tags
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+      registry: ${{ steps.meta.outputs.registry }}
+    steps:
+      - id: meta
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          echo "registry=${{ env.REGISTRY }}/${OWNER}" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+            echo "tag=${TAG#v}" >> "$GITHUB_OUTPUT"
+          elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+  images:
+    name: Build and push
+    needs: meta
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkpoint monorepo-builder (deps + compile + deploy)
+        env:
+          REGISTRY: ${{ needs.meta.outputs.registry }}
+          TAG: ${{ needs.meta.outputs.tag }}
+        run: |
+          docker buildx bake \
+            -f "$BAKE_FILE" \
+            --set "*.context=." \
+            --set "*.cache-from=type=gha,scope=backend-monorepo" \
+            --set "*.cache-to=type=gha,mode=max,scope=backend-monorepo" \
+            --set "*.output=type=cacheonly" \
+            monorepo-builder
+
+      - name: Build and push gateways
+        env:
+          REGISTRY: ${{ needs.meta.outputs.registry }}
+          TAG: ${{ needs.meta.outputs.tag }}
+        run: |
+          docker buildx bake \
+            -f "$BAKE_FILE" \
+            --set "*.context=." \
+            --set "*.cache-from=type=gha,scope=backend-monorepo" \
+            --set "*.cache-to=type=gha,mode=max,scope=backend-monorepo" \
+            --push \
+            gateways
+
+      - name: Build and push services
+        env:
+          REGISTRY: ${{ needs.meta.outputs.registry }}
+          TAG: ${{ needs.meta.outputs.tag }}
+        run: |
+          docker buildx bake \
+            -f "$BAKE_FILE" \
+            --set "*.context=." \
+            --set "*.cache-from=type=gha,scope=backend-monorepo" \
+            --set "*.cache-to=type=gha,mode=max,scope=backend-monorepo" \
+            --push \
+            services
+
+      - name: Build and push workers
+        env:
+          REGISTRY: ${{ needs.meta.outputs.registry }}
+          TAG: ${{ needs.meta.outputs.tag }}
+        run: |
+          docker buildx bake \
+            -f "$BAKE_FILE" \
+            --set "*.context=." \
+            --set "*.cache-from=type=gha,scope=backend-monorepo" \
+            --set "*.cache-to=type=gha,mode=max,scope=backend-monorepo" \
+            --push \
+            workers

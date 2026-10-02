@@ -1,0 +1,53 @@
+{
+  "seedKey": "kavya-reddy",
+  "displayName": "Kavya Reddy",
+  "summary": "CTO at Reddy Pharma Labs in Hyderabad.",
+  "profile": {
+    "email": "kavya.reddy@nestlancer.com",
+    "firstName": "Kavya",
+    "lastName": "Reddy",
+    "phone": "+919848221190",
+    "company": "Reddy Pharma Labs",
+    "jobTitle": "CTO",
+    "timezone": "Asia/Kolkata",
+    "city": "Hyderabad",
+    "industry": "pharma",
+    "headline": "CTO \u00b7 Reddy Pharma Labs (Hyderabad \u00b7 Pharma)",
+    "bio": "Kavya is CTO at Reddy Pharma Labs in Hyderabad. She needs GMP batch traceability and inspection-ready audit exports.",
+    "skills": [
+      "CTO",
+      "GMP Compliance",
+      "Batch Tracking",
+      "Quality Assurance"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/kavya-reddy.jpg"
+}

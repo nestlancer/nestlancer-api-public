@@ -1,0 +1,48 @@
+{
+  "seedKey": "rahul-desai",
+  "displayName": "Rahul Desai",
+  "summary": "Operations Head at Desai Logistics Solutions in Pune.",
+  "profile": {
+    "email": "rahul.desai@nestlancer.com",
+    "firstName": "Rahul",
+    "lastName": "Desai",
+    "phone": "+919766543210",
+    "company": "Desai Logistics Solutions",
+    "jobTitle": "Operations Head",
+    "timezone": "Asia/Kolkata",
+    "city": "Pune",
+    "industry": "logistics",
+    "headline": "Operations Head \u00b7 Desai Logistics Solutions (Pune \u00b7 Logistics)",
+    "bio": "Rahul heads operations at Desai Logistics Solutions in Pune. He needs live shipment status for the warehouse team and daily MIS exports.",
+    "skills": [
+      "Operations Head",
+      "Fleet Management",
+      "Warehouse Ops",
+      "Last-Mile Delivery"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/rahul-desai.jpg"
+}

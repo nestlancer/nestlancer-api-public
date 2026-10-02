@@ -1,0 +1,53 @@
+{
+  "seedKey": "arjun-mehta",
+  "displayName": "Arjun Mehta",
+  "summary": "Proprietor at Mehta Wholesale Traders in Ahmedabad.",
+  "profile": {
+    "email": "arjun.mehta@nestlancer.com",
+    "firstName": "Arjun",
+    "lastName": "Mehta",
+    "phone": "+919825012345",
+    "company": "Mehta Wholesale Traders",
+    "jobTitle": "Proprietor",
+    "timezone": "Asia/Kolkata",
+    "city": "Ahmedabad",
+    "industry": "wholesale",
+    "headline": "Proprietor \u00b7 Mehta Wholesale Traders (Ahmedabad \u00b7 Wholesale)",
+    "bio": "Arjun runs Mehta Wholesale Traders in Ahmedabad. He uses the portal for dealer orders, GST invoices, and dispatch across his city routes.",
+    "skills": [
+      "Proprietor",
+      "B2B Trade",
+      "Inventory",
+      "GST Invoicing"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/arjun-mehta.jpg"
+}

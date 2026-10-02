@@ -1,0 +1,63 @@
+{
+  "seedKey": "alex-analytics-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Live Shipment Tracking Dashboard",
+        "description": "Customer-facing and internal dashboard showing live shipment status — WebSocket updates from our PostgreSQL dispatch warehouse, RBAC for clients vs ops team, Delhivery and Blue Dart AWB integration, and CSV export for daily MIS reports sent to Rahul's ops group every morning.",
+        "category": "webDevelopment",
+        "budget": {
+          "min": 3000000,
+          "max": 6000000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-07-15T00:00:00Z",
+          "deadline": "2026-09-15T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "WebSocket live status updates",
+          "Delhivery + Blue Dart AWB lookup",
+          "Client portal with shipment history",
+          "Daily MIS CSV export",
+          "RBAC for ops vs client users"
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "Reviewing Delhivery API sandbox access with Rahul's IT team."
+      }
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "addNote",
+      "endpoint": "POST /admin/requests/:id/notes",
+      "payload": {
+        "content": "Estimate 8 weeks with 2 engineers — Blue Dart integration adds 1 week."
+      }
+    }
+  ]
+}

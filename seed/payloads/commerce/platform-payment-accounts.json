@@ -1,0 +1,17 @@
+[
+  {
+    "label": "Primary settlement — HDFC Current",
+    "type": "BOTH",
+    "accountHolderName": "Nestlancer Pvt Ltd",
+    "bankName": "HDFC Bank",
+    "accountNumber": "50200012345678",
+    "ifsc": "HDFC0001234",
+    "accountType": "current",
+    "upiVpa": "nestlancer@hdfcbank",
+    "instructions": "Use the project or invoice reference in the transfer note so we can match payment quickly.",
+    "currency": "INR",
+    "isActive": true,
+    "isPrimary": true,
+    "sortOrder": 0
+  }
+]

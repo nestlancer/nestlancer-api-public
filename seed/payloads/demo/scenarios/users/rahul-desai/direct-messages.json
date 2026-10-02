@@ -1,0 +1,25 @@
+{
+  "phase": "07-messaging",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "both",
+      "action": "directThread",
+      "endpoint": "POST /messages/threads/direct",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Hi Rahul — noted your decline on the Warehouse & Fleet Operations Portal quote. Happy to revisit a lighter MVP scope in Q1 2027."
+        },
+        {
+          "sender": "client",
+          "content": "Thanks. ERP migration is the priority this quarter. The Live Shipment Tracking Dashboard request is still under your review — that one we want to proceed with."
+        },
+        {
+          "sender": "admin",
+          "content": "Understood. Shipment dashboard is assigned internally — we'll have a revised scope note for your ops team by next week."
+        }
+      ]
+    }
+  ]
+}

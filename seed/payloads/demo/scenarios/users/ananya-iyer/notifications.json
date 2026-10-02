@@ -1,0 +1,18 @@
+{
+  "phase": "system",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "sendNotification",
+      "endpoint": "POST /admin/notifications/send",
+      "recipient": "client",
+      "title": "Refund initiated",
+      "message": "Duplicate advance payment resolved — ₹500 refund is processing to Iyer FinServ's registered account.",
+      "type": "payment.refunded",
+      "channels": [
+        "IN_APP"
+      ]
+    }
+  ]
+}

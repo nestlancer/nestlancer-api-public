@@ -1,0 +1,62 @@
+FAIL contact tests/unit/contact.admin.controller.spec.ts (7.254 s)
+  ContactAdminController
+    ✕ should be defined (15 ms)
+
+  ● ContactAdminController › should be defined
+
+    Nest can't resolve dependencies of the RolesGuard (?). Please make sure that the argument Reflector at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If Reflector is a provider, is it part of the current RootTestModule?
+    - If Reflector is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing Reflector */ ]
+      })
+
+      10 |
+      11 |   beforeEach(async () => {
+    > 12 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+      13 |       controllers: [ContactAdminController],
+      14 |       providers: [
+      15 |         {
+
+      at TestingInjector.lookupComponentInParentModules (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/injector.js:262:19)
+      at TestingInjector.resolveComponentInstance (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/injector.js:215:33)
+      at TestingInjector.resolveComponentInstance (../../node_modules/.pnpm/@nestjs+testing@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_twflvzbpix2tihvjrti4h5amrm/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/injector.js:129:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/injector.js:144:27)
+      at TestingInjector.loadInstance (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/injector.js:70:13)
+      at TestingInjector.loadInjectable (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/instance-loader.js:80:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstancesOfInjectables (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/instance-loader.js:79:9)
+      at ../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/instance-loader.js:41:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../../node_modules/.pnpm/@nestjs+core@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_re_5pouvm7uahnmyas6gy3oxno45q/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../../node_modules/.pnpm/@nestjs+testing@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_twflvzbpix2tihvjrti4h5amrm/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../../node_modules/.pnpm/@nestjs+testing@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_twflvzbpix2tihvjrti4h5amrm/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../../node_modules/.pnpm/@nestjs+testing@10.4.22_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validator@0.14.3_twflvzbpix2tihvjrti4h5amrm/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (tests/unit/contact.admin.controller.spec.ts:12:35)
+
+Unable to check memory usage Error: write EPIPE
+    at ChildProcess.target._send (node:internal/child_process:878:20)
+    at ChildProcess.target.send (node:internal/child_process:751:19)
+    at ChildProcessWorker.checkMemoryUsage (/root/Desktop/nestlancer-backend-api/node_modules/.pnpm/jest-worker@29.7.0/node_modules/jest-worker/build/workers/ChildProcessWorker.js:475:19)
+    at ChildProcessWorker._onProcessEnd (/root/Desktop/nestlancer-backend-api/node_modules/.pnpm/jest-worker@29.7.0/node_modules/jest-worker/build/workers/ChildProcessWorker.js:394:14)
+    at ChildProcessWorker._onExit (/root/Desktop/nestlancer-backend-api/node_modules/.pnpm/jest-worker@29.7.0/node_modules/jest-worker/build/workers/ChildProcessWorker.js:375:14)
+    at ChildProcess.emit (node:events:524:28)
+    at ChildProcess.emit (node:domain:489:12)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12) {
+  errno: -32,
+  code: 'EPIPE',
+  syscall: 'write'
+}
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        7.806 s, estimated 9 s
+Ran all test suites matching /tests\/unit\/contact.admin.controller.spec.ts/i.

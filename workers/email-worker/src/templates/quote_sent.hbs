@@ -1,0 +1,72 @@
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td style="padding:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#0d9488;">
+      Quote ready
+    </td>
+  </tr>
+  <tr>
+    <td class="email-title" style="padding:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:32px;font-weight:700;color:#0a2540;">
+      Your quote is ready
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:26px;color:#334155;">
+      Hi {{userName}},
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:26px;color:#334155;">
+      A new quote is ready for <strong style="color:#0a2540;">{{projectTitle}}</strong>. Review the details and accept when you’re ready.
+    </td>
+  </tr>
+  {{#if amount}}
+  <tr>
+    <td style="padding:0 0 24px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f8fafc" style="background-color:#f8fafc;border:1px solid #e2e8f0;">
+        <tr>
+          <td width="4" bgcolor="#272a7a" style="width:4px;background-color:#272a7a;font-size:0;line-height:0;">&nbsp;</td>
+          <td style="padding:18px 18px;">
+            <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#64748b;">Total</p>
+            <p class="email-hero-num" style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:30px;line-height:36px;font-weight:700;color:#0a2540;">{{amount}}</p>
+            {{#if validUntil}}
+            <p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#64748b;">Valid until <strong style="color:#0a2540;">{{validUntil}}</strong></p>
+            {{/if}}
+            {{#if documentNumber}}
+            <p style="margin:6px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#94a3b8;">Quote {{documentNumber}}</p>
+            {{/if}}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  {{else}}
+  {{#if validUntil}}
+  <tr>
+    <td style="padding:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#64748b;">
+      Valid until <strong style="color:#0a2540;">{{validUntil}}</strong>
+    </td>
+  </tr>
+  {{/if}}
+  {{/if}}
+  {{#if link}}
+  <tr>
+    <td align="center" style="padding:0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" bgcolor="#0d9488" style="border-radius:8px;background-color:#0d9488;">
+            <!--[if mso]>
+            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{link}}" style="height:48px;v-text-anchor:middle;width:180px;" arcsize="17%" stroke="f" fillcolor="#0d9488">
+              <w:anchorlock/>
+              <center style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;">View quote</center>
+            </v:roundrect>
+            <![endif]-->
+            <!--[if !mso]><!-- -->
+            <a href="{{link}}" target="_blank" style="display:inline-block;padding:14px 28px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;line-height:20px;color:#ffffff !important;text-decoration:none;border-radius:8px;background-color:#0d9488;border:1px solid #0d9488;">View quote</a>
+            <!--<![endif]-->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  {{/if}}
+</table>

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc-contact
+  labels:
+    app: svc-contact
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svc-contact
+  template:
+    metadata:
+      labels:
+        app: svc-contact
+    spec:
+      imagePullSecrets:
+        - name: ghcr-credentials
+      containers:
+        - name: svc-contact
+          image: ghcr.io/nestlancer/contact:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3015
+              name: http
+          envFrom:
+            - secretRef:
+                name: nestlancer-secrets
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3015"
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health/ready
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health/live
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

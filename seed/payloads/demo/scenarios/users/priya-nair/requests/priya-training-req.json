@@ -1,0 +1,63 @@
+{
+  "seedKey": "priya-training-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Corporate LMS for 200 Employees",
+        "description": "Internal learning platform for Nair Learning Systems staff across Kochi, Bangalore, and Chennai — course builder with video modules, quiz engine, completion tracking, PDF certificate generation, and SAML SSO via our existing Okta tenant. Must support Malayalam subtitles on select compliance courses.",
+        "category": "custom",
+        "budget": {
+          "min": 3500000,
+          "max": 5000000,
+          "currency": "INR",
+          "flexible": false
+        },
+        "timeline": {
+          "preferredStartDate": "2026-08-01T00:00:00Z",
+          "deadline": "2026-10-31T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "Course builder with video upload",
+          "Quiz engine with pass/fail thresholds",
+          "SAML SSO via Okta",
+          "Admin reporting — completion rates by department",
+          "Malayalam subtitles on compliance modules"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "actor": "client",
+      "action": "uploadAttachments",
+      "endpoint": "POST /requests/:id/attachments",
+      "files": [
+        "projects/training-portal/assets/request-brief.pdf"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "LMS requirements reviewed — Okta SAML metadata received from Priya's IT team."
+      }
+    }
+  ]
+}

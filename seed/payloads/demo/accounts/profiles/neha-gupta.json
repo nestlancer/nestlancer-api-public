@@ -1,0 +1,53 @@
+{
+  "seedKey": "neha-gupta",
+  "displayName": "Neha Gupta",
+  "summary": "CEO at Gupta HR Cloud in Noida.",
+  "profile": {
+    "email": "neha.gupta@nestlancer.com",
+    "firstName": "Neha",
+    "lastName": "Gupta",
+    "phone": "+919811209874",
+    "company": "Gupta HR Cloud",
+    "jobTitle": "CEO",
+    "timezone": "Asia/Kolkata",
+    "city": "Noida",
+    "industry": "saas",
+    "headline": "CEO \u00b7 Gupta HR Cloud (Noida \u00b7 SaaS)",
+    "bio": "Neha is CEO of Gupta HR Cloud in Noida. She is launching multi-tenant attendance and leave workflows for mid-size employers.",
+    "skills": [
+      "CEO",
+      "Product Management",
+      "Multi-Tenant SaaS",
+      "Customer Onboarding"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/neha-gupta.jpg"
+}

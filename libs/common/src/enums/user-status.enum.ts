@@ -1,0 +1,6 @@
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  DELETED = 'DELETED',
+  PENDING_DELETION = 'PENDING_DELETION',
+}

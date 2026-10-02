@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-cdn
+  labels:
+    app: worker-cdn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-cdn
+  template:
+    metadata:
+      labels:
+        app: worker-cdn
+    spec:
+      imagePullSecrets:
+        - name: ghcr-credentials
+      containers:
+        - name: worker-cdn
+          image: ghcr.io/nestlancer/cdn-worker:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: nestlancer-secrets
+          env:
+            - name: NODE_ENV
+              value: production
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

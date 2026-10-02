@@ -1,0 +1,17 @@
+{
+  "phase": "system-notifications",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "sendNotification",
+      "endpoint": "POST /admin/notifications/send",
+      "title": "Quote declined — warehouse portal",
+      "message": "Your quote decline for the Warehouse & Fleet Operations Portal has been recorded. We can revisit scope in Q1 2027.",
+      "type": "quote.declined",
+      "channels": [
+        "IN_APP"
+      ]
+    }
+  ]
+}

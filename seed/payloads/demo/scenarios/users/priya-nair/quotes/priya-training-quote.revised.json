@@ -1,0 +1,70 @@
+{
+  "seedKey": "priya-training-quote-revised",
+  "requestSeedKey": "priya-training-req",
+  "parentQuoteSeedKey": "priya-training-quote",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/training-portal/assets/quote-proposal-revised.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "reviseQuote",
+      "endpoint": "POST /admin/quotes/:id/revise",
+      "payload": {
+        "items": [
+          {
+            "description": "LMS platform setup, course builder, and video hosting",
+            "quantity": 1,
+            "unitPrice": 16800
+          },
+          {
+            "description": "Quiz engine, PDF certificates, and Malayalam subtitle support",
+            "quantity": 1,
+            "unitPrice": 16800
+          },
+          {
+            "description": "Okta SAML SSO integration (extended timeline) and launch",
+            "quantity": 1,
+            "unitPrice": 8400
+          },
+          {
+            "description": "Optional add-on: Malayalam-English bilingual CMS module",
+            "quantity": 1,
+            "unitPrice": 6000
+          },
+          {
+            "description": "HR department-wise completion dashboard",
+            "quantity": 1,
+            "unitPrice": 4200
+          }
+        ],
+        "internalNotes": "Revised per Priya's change requests — CMS split out, Okta milestone extended, HR dashboard added."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "accept",
+      "endpoint": "POST /quotes/:id/accept",
+      "payload": {
+        "acceptTerms": true,
+        "signatureName": "Priya Nair",
+        "signatureDate": "2026-07-01T11:00:00Z"
+      }
+    }
+  ]
+}

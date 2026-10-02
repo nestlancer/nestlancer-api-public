@@ -1,0 +1,18 @@
+// =============================================================================
+// Idempotency Key Model (ADR-007)
+// =============================================================================
+
+model IdempotencyKey {
+  id           String    @id @default(uuid(7))
+  key          String    @unique
+  path         String
+  method       String
+  requestHash  String?
+  responseCode Int?
+  responseBody Json?
+  lockedAt     DateTime?
+  expiresAt    DateTime
+  createdAt    DateTime  @default(now())
+
+  @@index([expiresAt])
+}

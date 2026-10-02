@@ -1,0 +1,43 @@
+{
+  "seedKey": "priya-nair",
+  "displayName": "Priya Nair",
+  "summary": "Head of Learning & Development at Nair Learning Systems in Kochi.",
+  "profile": {
+    "email": "priya.nair@nestlancer.com",
+    "firstName": "Priya",
+    "lastName": "Nair",
+    "phone": "+919895011223",
+    "company": "Nair Learning Systems",
+    "jobTitle": "Head of Learning & Development",
+    "timezone": "Asia/Kolkata",
+    "city": "Kochi",
+    "industry": "edtech",
+    "headline": "Head of Learning & Development \u00b7 Nair Learning Systems (Kochi \u00b7 Edtech)",
+    "bio": "Priya leads learning and development at Nair Learning Systems in Kochi. She is rolling out a bilingual CMS and a corporate LMS for employee training.",
+    "skills": [
+      "Head of Learning & Development",
+      "LMS Administration",
+      "Online Assessments",
+      "Learning Design"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/priya-nair.jpg"
+}

@@ -1,0 +1,25 @@
+{
+  "phase": "07-direct-messages",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "both",
+      "action": "directThread",
+      "endpoint": "POST /messages/threads/direct",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Priya — LMS setup is on track. I'll revise the Okta and HR dashboard quote to the scope you marked, then resend it for acceptance."
+        },
+        {
+          "sender": "client",
+          "content": "Please keep Malayalam subtitle support in the first release. The blockchain credential request can stay closed."
+        },
+        {
+          "sender": "admin",
+          "content": "Understood. Subtitles stay in the current milestone. I'll confirm the revised quote in writing before we invoice the next installment."
+        }
+      ]
+    }
+  ]
+}

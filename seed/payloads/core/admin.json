@@ -1,0 +1,12 @@
+{
+  "firstName": "Riya",
+  "lastName": "Kapoor",
+  "phone": "+919820014477",
+  "headline": "Client Success · Nestlancer",
+  "bio": "Riya Kapoor leads client delivery at Nestlancer — quotes, milestones, and day-to-day project communication for teams across India.",
+  "timezone": "Asia/Kolkata",
+  "language": "en",
+  "theme": "system",
+  "currency": "INR",
+  "notificationSettings": { "email": true, "push": false, "digest": "weekly" }
+}

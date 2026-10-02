@@ -1,0 +1,24 @@
+{
+  "name": "@nestlancer/auth-lib",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/jwt": "^10.0.0",
+    "@nestjs/passport": "^10.0.0",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.0",
+    "@types/passport-jwt": "^4.0.0",
+    "@nestlancer/common": "workspace:*",
+    "@nestjs/core": "^10.0.0",
+    "rxjs": "^7.8.1"
+  },
+  "scripts": {
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:cov": "jest --coverage"
+  }
+}

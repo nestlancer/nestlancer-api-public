@@ -1,0 +1,66 @@
+{
+  "seedKey": "arjun-mehta-ecommerce-quote",
+  "requestSeedKey": "arjun-mehta-ecommerce-req",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/e-commerce-platform/assets/quote-proposal.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createQuote",
+      "endpoint": "POST /admin/requests/:id/quotes",
+      "payload": {
+        "items": [
+          {
+            "description": "UX design, wireframes, and Shiprocket integration architecture",
+            "quantity": 1,
+            "unitPrice": 22500
+          },
+          {
+            "description": "Storefront, Razorpay checkout (UPI/COD), inventory API",
+            "quantity": 1,
+            "unitPrice": 37500
+          },
+          {
+            "description": "QA, Shiprocket go-live, Hindi SEO, and handoff",
+            "quantity": 1,
+            "unitPrice": 15000
+          }
+        ],
+        "schedulePreset": "30-40-30",
+        "currency": "INR",
+        "taxPercentage": 0,
+        "validUntil": "2026-08-15T23:59:59Z",
+        "requiresContract": true,
+        "revisionsIncluded": 3,
+        "termsAndConditions": "Service agreement required before milestone work begins. Navratri launch window is binding.",
+        "internalNotes": "Target Navratri launch window — milestone 2 must cover checkout before design polish."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "accept",
+      "endpoint": "POST /quotes/:id/accept",
+      "payload": {
+        "acceptTerms": true,
+        "signatureName": "Arjun Mehta",
+        "signatureDate": "2026-06-15T10:30:00Z"
+      }
+    }
+  ]
+}

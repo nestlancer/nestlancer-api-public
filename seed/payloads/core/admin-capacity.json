@@ -1,0 +1,7 @@
+{
+  "availabilityStatus": "AVAILABLE",
+  "maxConcurrentProjects": 25,
+  "autoRejectWhenBusy": false,
+  "unavailableMessage": null,
+  "unavailableUntil": null
+}

@@ -1,0 +1,13 @@
+dist/
+coverage/
+node_modules/
+.turbo/
+*.min.js
+prisma/migrations/
+prisma/generated/
+docker/
+deploy/
+*.hbs
+pnpm-lock.yaml
+docs/api/openapi-v1.json
+docs/api/postman-collection.json

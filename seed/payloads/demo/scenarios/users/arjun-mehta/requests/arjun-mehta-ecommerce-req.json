@@ -1,0 +1,63 @@
+{
+  "seedKey": "arjun-mehta-ecommerce-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Khandesh Spice D2C E-Commerce Store",
+        "description": "Direct-to-consumer online store for our Khandesh masala brand — product variants (50g/200g/500g packs), Razorpay checkout with UPI and COD, Shiprocket integration for pan-India delivery, and a Next.js storefront with Hindi/English toggle for SEO in tier-2 cities.",
+        "category": "webDevelopment",
+        "budget": {
+          "min": 5000000,
+          "max": 10000000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-07-01T00:00:00Z",
+          "deadline": "2026-10-01T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "Variant-based product catalog with HSN codes",
+          "Razorpay checkout — UPI, cards, COD",
+          "Shiprocket shipping rate calculator",
+          "Customer accounts with reorder",
+          "Admin panel for inventory and order dispatch"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "actor": "client",
+      "action": "uploadAttachments",
+      "endpoint": "POST /requests/:id/attachments",
+      "files": [
+        "projects/e-commerce-platform/assets/request-brief.pdf"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "D2C spice vertical — Shiprocket + Razorpay combo is our standard stack."
+      }
+    }
+  ]
+}

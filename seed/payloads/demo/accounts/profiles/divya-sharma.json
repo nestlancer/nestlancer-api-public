@@ -1,0 +1,53 @@
+{
+  "seedKey": "divya-sharma",
+  "displayName": "Divya Sharma",
+  "summary": "Founder at Sharma Handicrafts in Jaipur.",
+  "profile": {
+    "email": "divya.sharma@nestlancer.com",
+    "firstName": "Divya",
+    "lastName": "Sharma",
+    "phone": "+919829441076",
+    "company": "Sharma Handicrafts",
+    "jobTitle": "Founder",
+    "timezone": "Asia/Kolkata",
+    "city": "Jaipur",
+    "industry": "ecommerce",
+    "headline": "Founder \u00b7 Sharma Handicrafts (Jaipur \u00b7 E-commerce)",
+    "bio": "Divya founded Sharma Handicrafts in Jaipur. She sells an artisan catalog online with UPI checkout and Shiprocket fulfilment.",
+    "skills": [
+      "Founder",
+      "D2C Growth",
+      "Catalog Management",
+      "Checkout Optimization"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/divya-sharma.jpg"
+}

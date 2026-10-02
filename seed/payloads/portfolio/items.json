@@ -1,0 +1,283 @@
+[
+  {
+    "slug": "healthtech-dashboard",
+    "title": "HealthTech Dashboard",
+    "shortDescription": "Real-time patient monitoring dashboard for hospitals.",
+    "fullDescription": "Built a comprehensive healthcare analytics platform with real-time vitals monitoring, appointment scheduling, and HIPAA-compliant data storage. Used Next.js, NestJS, and PostgreSQL with WebSocket for live updates.\n\n## Outcomes\n\n- Sub-2s dashboard load for clinical staff\n- 500+ doctors on a single multi-tenant deploy\n- 99.9% uptime over the first production quarter",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "web-development",
+    "tags": [
+      "React",
+      "NestJS",
+      "PostgreSQL",
+      "WebSocket",
+      "Healthcare"
+    ],
+    "featured": true,
+    "imageLocal": "images/healthtech-dashboard.jpg",
+    "client": {
+      "name": "MedCorp India",
+      "industry": "Healthcare",
+      "testimonial": {
+        "quote": "Exceptional quality and attention to detail. Delivered ahead of schedule.",
+        "author": "CTO, MedCorp India",
+        "rating": 5,
+        "enabled": true
+      }
+    },
+    "projectDetails": {
+      "duration": "4 months",
+      "technologies": [
+        "Next.js",
+        "NestJS",
+        "PostgreSQL",
+        "Redis",
+        "Docker"
+      ]
+    },
+    "seo": {
+      "metaTitle": "HealthTech Dashboard - Portfolio | Nestlancer",
+      "metaDescription": "Real-time healthcare analytics platform built with Next.js and NestJS."
+    }
+  },
+  {
+    "slug": "ecommerce-mobile-app",
+    "title": "E-Commerce Mobile App",
+    "shortDescription": "Cross-platform shopping app with Razorpay integration.",
+    "fullDescription": "Developed a React Native e-commerce app with product catalog, cart, wishlists, and Razorpay payment gateway. Features include push notifications, order tracking, and offline mode.\n\n## Outcomes\n\n- Checkout conversion up 18% vs prior web-only funnel\n- Offline cart sync for low-connectivity markets\n- Native push for order lifecycle events",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "mobile-app",
+    "tags": [
+      "React Native",
+      "Node.js",
+      "Razorpay",
+      "TypeScript"
+    ],
+    "featured": true,
+    "imageLocal": "images/ecommerce-mobile-app.jpg",
+    "client": {
+      "name": "ShopEasy",
+      "industry": "E-Commerce",
+      "testimonial": {
+        "quote": "The app launched on schedule and payments just worked.",
+        "author": "Head of Product, ShopEasy",
+        "rating": 5,
+        "enabled": true
+      }
+    },
+    "projectDetails": {
+      "duration": "3 months",
+      "technologies": [
+        "React Native",
+        "Node.js",
+        "MongoDB",
+        "Razorpay"
+      ]
+    },
+    "seo": {
+      "metaTitle": "E-Commerce Mobile App - Portfolio | Nestlancer",
+      "metaDescription": "Cross-platform shopping app with Razorpay checkout."
+    }
+  },
+  {
+    "slug": "saas-analytics-platform",
+    "title": "SaaS Analytics Platform",
+    "shortDescription": "Business intelligence platform with custom dashboards.",
+    "fullDescription": "Built a multi-tenant SaaS analytics platform with customizable dashboards, data visualization, and automated reporting. Processes millions of events daily.\n\n## Outcomes\n\n- Tenant-isolated query paths with predictable P95 latency\n- Self-serve dashboard builder for non-technical operators\n- Nightly report exports without blocking OLTP traffic",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "web-development",
+    "tags": [
+      "Vue.js",
+      "Python",
+      "PostgreSQL",
+      "Redis",
+      "Analytics"
+    ],
+    "featured": true,
+    "imageLocal": "images/saas-analytics-platform.jpg",
+    "client": {
+      "name": "InsightOps",
+      "industry": "SaaS"
+    },
+    "projectDetails": {
+      "duration": "6 months",
+      "technologies": [
+        "Vue.js",
+        "FastAPI",
+        "PostgreSQL",
+        "Redis",
+        "ClickHouse"
+      ]
+    },
+    "seo": {
+      "metaTitle": "SaaS Analytics Platform - Portfolio | Nestlancer",
+      "metaDescription": "Multi-tenant BI dashboards and automated reporting."
+    }
+  },
+  {
+    "slug": "fintech-payments-hub",
+    "title": "Fintech Payments Hub",
+    "shortDescription": "Unified payouts and reconciliation for a lending platform.",
+    "fullDescription": "Designed and shipped a payments hub that normalizes Razorpay webhooks, idempotent payouts, and daily reconciliation exports for finance ops.\n\n## Outcomes\n\n- Zero duplicate payouts under replayed webhooks\n- Finance-ready settlement CSV in under 5 minutes\n- Clear audit trail for every ledger movement",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "ecommerce",
+    "tags": [
+      "NestJS",
+      "Razorpay",
+      "PostgreSQL",
+      "Queues"
+    ],
+    "featured": true,
+    "imageLocal": "images/fintech-payments-hub.jpg",
+    "client": {
+      "name": "PayFlow Lending",
+      "industry": "Fintech",
+      "testimonial": {
+        "quote": "Reconciliation stopped being a weekly fire drill.",
+        "author": "VP Engineering, PayFlow",
+        "rating": 5,
+        "enabled": true
+      }
+    },
+    "projectDetails": {
+      "duration": "5 months",
+      "technologies": [
+        "NestJS",
+        "PostgreSQL",
+        "RabbitMQ",
+        "Razorpay"
+      ]
+    },
+    "seo": {
+      "metaTitle": "Fintech Payments Hub - Portfolio | Nestlancer",
+      "metaDescription": "Idempotent payouts and reconciliation for lending ops."
+    }
+  },
+  {
+    "slug": "brand-identity-system",
+    "title": "Brand Identity System",
+    "shortDescription": "Design tokens, type, and component foundations for a B2B brand.",
+    "fullDescription": "Delivered a complete visual identity with a tokenized design system, marketing site layouts, and handoff kits for engineering.\n\n## Outcomes\n\n- Shared Figma library across marketing and product\n- Accessible color contrast across light surfaces\n- Faster landing-page production with reusable sections",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "ui-ux-design",
+    "tags": [
+      "Figma",
+      "Design Systems",
+      "Brand",
+      "Accessibility"
+    ],
+    "featured": false,
+    "imageLocal": "images/brand-identity-system.jpg",
+    "client": {
+      "name": "Northline Soft",
+      "industry": "B2B SaaS"
+    },
+    "projectDetails": {
+      "duration": "8 weeks",
+      "technologies": [
+        "Figma",
+        "Storybook",
+        "CSS Tokens"
+      ]
+    },
+    "seo": {
+      "metaTitle": "Brand Identity System - Portfolio | Nestlancer",
+      "metaDescription": "Tokenized brand and UI foundations for B2B SaaS."
+    }
+  },
+  {
+    "slug": "marketplace-redesign",
+    "title": "Marketplace Redesign",
+    "shortDescription": "Conversion-focused UX overhaul for a multi-vendor storefront.",
+    "fullDescription": "Rebuilt the buyer journey with clearer category navigation, trust signals, and a streamlined checkout path.\n\n## Outcomes\n\n- Higher add-to-cart rate on mobile\n- Reduced support tickets about order status\n- Consistent vendor store templates",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "ecommerce",
+    "tags": [
+      "UX",
+      "E-Commerce",
+      "Checkout",
+      "Research"
+    ],
+    "featured": false,
+    "imageLocal": "images/marketplace-redesign.jpg",
+    "client": {
+      "name": "Bazaar Collective",
+      "industry": "Marketplace"
+    },
+    "projectDetails": {
+      "duration": "10 weeks",
+      "technologies": [
+        "Figma",
+        "Next.js",
+        "Analytics"
+      ]
+    },
+    "seo": {
+      "metaTitle": "Marketplace Redesign - Portfolio | Nestlancer",
+      "metaDescription": "Buyer journey and checkout UX for multi-vendor commerce."
+    }
+  },
+  {
+    "slug": "fitness-tracking-app",
+    "title": "Fitness Tracking App",
+    "shortDescription": "iOS/Android workout tracker with coach dashboards.",
+    "fullDescription": "Shipped a React Native fitness app with workout plans, wearable sync hooks, and a coach web dashboard for progress reviews.\n\n## Outcomes\n\n- Daily active sessions sustained after launch week\n- Coach review time cut with shared progress views\n- Offline workout logging with later sync",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "mobile-app",
+    "tags": [
+      "React Native",
+      "Fitness",
+      "Dashboards"
+    ],
+    "featured": false,
+    "imageLocal": "images/fitness-tracking-app.jpg",
+    "client": {
+      "name": "FitTrack Studio",
+      "industry": "Health & Fitness"
+    },
+    "projectDetails": {
+      "duration": "4 months",
+      "technologies": [
+        "React Native",
+        "NestJS",
+        "PostgreSQL"
+      ]
+    },
+    "seo": {
+      "metaTitle": "Fitness Tracking App - Portfolio | Nestlancer",
+      "metaDescription": "Cross-platform workout tracking with coach dashboards."
+    }
+  },
+  {
+    "slug": "b2b-portal-ux",
+    "title": "B2B Client Portal UX",
+    "shortDescription": "Information architecture and UI for a client self-serve portal.",
+    "fullDescription": "Mapped complex account, billing, and project workflows into a clear portal IA with role-aware navigation and empty states.\n\n## Outcomes\n\n- Fewer \"where do I find…\" support chats\n- Clearer escalation paths for open issues\n- Design specs engineering could implement without guesswork",
+    "contentFormat": "MARKDOWN",
+    "categorySlug": "ui-ux-design",
+    "tags": [
+      "UX",
+      "IA",
+      "B2B",
+      "Portal"
+    ],
+    "featured": false,
+    "imageLocal": "images/b2b-portal-ux.jpg",
+    "client": {
+      "name": "Harbor Ops",
+      "industry": "Operations Software"
+    },
+    "projectDetails": {
+      "duration": "6 weeks",
+      "technologies": [
+        "Figma",
+        "User Interviews",
+        "Prototyping"
+      ]
+    },
+    "seo": {
+      "metaTitle": "B2B Client Portal UX - Portfolio | Nestlancer",
+      "metaDescription": "Role-aware IA and UI for a B2B self-serve portal."
+    }
+  }
+]

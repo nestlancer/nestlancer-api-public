@@ -1,0 +1,41 @@
+{
+  "phase": "system-notifications",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "sendNotification",
+      "endpoint": "POST /admin/notifications/send",
+      "title": "Quote revision acknowledged",
+      "message": "We've received your change requests on the Corporate LMS quote — revised proposal sent for your review.",
+      "type": "quote.changesRequested",
+      "channels": [
+        "IN_APP"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "sendNotification",
+      "endpoint": "POST /admin/notifications/send",
+      "title": "Revised LMS quote ready",
+      "message": "Your updated Corporate LMS proposal (INR 52,200) is ready — CMS add-on split out and HR dashboard included.",
+      "type": "quote.received",
+      "channels": [
+        "IN_APP"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendNotification",
+      "endpoint": "POST /admin/notifications/send",
+      "title": "LMS project started",
+      "message": "Your Corporate LMS project is now active. Deposit received — course builder work begins this week.",
+      "type": "project.created",
+      "channels": [
+        "IN_APP"
+      ]
+    }
+  ]
+}

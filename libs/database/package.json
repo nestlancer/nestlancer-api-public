@@ -1,0 +1,20 @@
+{
+  "name": "@nestlancer/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@prisma/client": "^7.4.1",
+    "prisma": "^7.4.1",
+    "@nestjs/core": "^10.0.0",
+    "rxjs": "^7.8.1"
+  },
+  "scripts": {
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:cov": "jest --coverage"
+  }
+}

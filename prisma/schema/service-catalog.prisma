@@ -1,0 +1,36 @@
+// =============================================================================
+// Service Catalog & Admin Capacity Models
+// =============================================================================
+
+model ServicePackage {
+  id                 String   @id @default(uuid(7))
+  name               String
+  slug               String   @unique
+  description        String
+  category           String
+  basePricePaise     Int
+  estimatedDays      Int      @default(7)
+  revisionsIncluded  Int      @default(2)
+  deliverables       Json?
+  addOns             Json?
+  isActive           Boolean  @default(true)
+  sortOrder          Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  requests           ProjectRequest[]
+
+  @@index([category])
+  @@index([isActive])
+}
+
+model AdminCapacitySettings {
+  id                    String   @id @default(uuid(7))
+  availabilityStatus    String   @default("AVAILABLE")
+  maxConcurrentProjects Int      @default(25)
+  autoRejectWhenBusy    Boolean  @default(false)
+  unavailableMessage    String?
+  unavailableUntil      DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}

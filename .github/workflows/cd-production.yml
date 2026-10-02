@@ -1,0 +1,119 @@
+# Production CD: build images on GitHub (GHCR), then SSH to VPS and pull/run.
+
+name: Backend CD (Production)
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: backend-production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  images:
+    name: Build GHCR images
+    uses: ./.github/workflows/build-images.yml
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+
+  deploy:
+    name: Deploy Production
+    needs: images
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy production stack via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+          INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_REGISTRY: ${{ needs.images.outputs.registry }}
+          IMAGE_TAG: ${{ needs.images.outputs.image_tag }}
+        with:
+          host: ${{ secrets.PRODUCTION_VPS_HOST }}
+          username: ${{ secrets.PRODUCTION_VPS_USERNAME }}
+          password: ${{ secrets.PRODUCTION_VPS_PASSWORD }}
+          envs: INFISICAL_CLIENT_ID,INFISICAL_CLIENT_SECRET,GHCR_TOKEN,IMAGE_REGISTRY,IMAGE_TAG
+          script: |
+            set -euo pipefail
+            DEPLOY_PATH="${{ secrets.PRODUCTION_VPS_DEPLOY_PATH }}"
+            if [ -z "$DEPLOY_PATH" ] || [ ! -d "$DEPLOY_PATH/.git" ]; then
+              DEPLOY_PATH="/root/nestlancer-backend-api-prod"
+            fi
+            if [ ! -d "$DEPLOY_PATH/.git" ]; then
+              echo "Deploy path missing — cloning into $DEPLOY_PATH"
+              mkdir -p "$(dirname "$DEPLOY_PATH")"
+              git clone git@github.com:nestlancer/nestlancer-backend-api.git "$DEPLOY_PATH"
+            fi
+            cd "$DEPLOY_PATH"
+
+            PREV_SHA="$(git rev-parse HEAD)"
+            echo "$PREV_SHA" > .deploy-previous-sha
+
+            git fetch origin main --tags
+            git pull origin main
+
+            rollback_on_fail() {
+              echo "Deploy failed — rolling back to ${PREV_SHA}"
+              git reset --hard "$PREV_SHA"
+              COMPOSE_FILE=docker-compose.prod.yml ./scripts/deploy/rollback.sh "$PREV_SHA" || true
+              exit 1
+            }
+            trap rollback_on_fail ERR
+
+            export INFISICAL_TOKEN=$(infisical login \
+              --method=universal-auth \
+              --client-id="$INFISICAL_CLIENT_ID" \
+              --client-secret="$INFISICAL_CLIENT_SECRET" \
+              --silent --plain)
+
+            PROJECT_ID="${{ secrets.INFISICAL_PROJECT_ID }}"
+            [ -z "$PROJECT_ID" ] && [ -f .infisical.json ] && \
+              PROJECT_ID="$(node -p "JSON.parse(require('fs').readFileSync('.infisical.json','utf8')).workspaceId")"
+
+            INFISICAL_ENV=prod SKIP_INFISICAL_EXPORT=0 \
+              INFISICAL_CLIENT_ID="$INFISICAL_CLIENT_ID" \
+              INFISICAL_CLIENT_SECRET="$INFISICAL_CLIENT_SECRET" \
+              INFISICAL_PROJECT_ID="$PROJECT_ID" \
+              ./scripts/docker/compose-prod.sh config >/dev/null
+
+            chmod +x scripts/db/migrate-deploy-ci.sh scripts/deploy/smoke-health.sh scripts/deploy/k3s-deploy.sh scripts/docker/compose-prod.sh
+
+            export NESTLANCER_IMAGE_REGISTRY="${IMAGE_REGISTRY:-ghcr.io/${{ github.repository_owner }}}"
+            export NESTLANCER_IMAGE_TAG="${IMAGE_TAG:-latest}"
+
+            if [ "${{ vars.NESTLANCER_DEPLOY_MODE || 'compose' }}" = "k3s" ] && command -v kubectl >/dev/null 2>&1; then
+              export GHCR_TOKEN
+              export GHCR_USERNAME="${{ github.actor }}"
+              export SKIP_INFISICAL_EXPORT=1
+              ./scripts/deploy/k3s-deploy.sh production
+            else
+              if [ ! -f node_modules/prisma/build/index.js ]; then
+                echo "Installing pnpm deps for Prisma migrate..."
+                corepack enable
+                pnpm install --frozen-lockfile
+              fi
+              ./scripts/db/migrate-deploy-ci.sh
+              echo "$GHCR_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+              COMPOSE_PULL=always INFISICAL_ENV=prod ./scripts/docker/compose-prod.sh pull
+              # Force-recreate so Infisical secret updates (e.g. RAZORPAY_WEBHOOK_SECRET) always load.
+              COMPOSE_PULL=never FORCE_RECREATE=1 INFISICAL_ENV=prod ./scripts/docker/compose-prod.sh up -d --force-recreate
+              # Origin TLS must exist under docker/caddy/certs (or Infisical CADDY_ORIGIN_*_B64).
+              chmod +x scripts/docker/ensure-prod-origin-certs.sh scripts/docker/proxy-prod-up.sh
+              bash scripts/docker/proxy-prod-up.sh
+              GATEWAY_URL="${GATEWAY_URL:-http://127.0.0.1:4000}" ./scripts/deploy/smoke-health.sh
+            fi
+            trap - ERR
+            echo "Production deploy succeeded at $(git rev-parse --short HEAD) images=${NESTLANCER_IMAGE_REGISTRY}*:${NESTLANCER_IMAGE_TAG}"

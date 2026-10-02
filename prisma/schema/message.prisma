@@ -1,0 +1,72 @@
+// =============================================================================
+// Messaging Domain Models
+// =============================================================================
+
+enum MessageType {
+  TEXT
+  FILE
+  SYSTEM
+  NOTIFICATION
+}
+
+enum MessageModerationAction {
+  FLAGGED
+  DISMISSED
+  ESCALATED
+  REMOVED
+  RESTORED
+}
+
+model Message {
+  id          String      @id @default(uuid(7))
+  projectId   String?
+  threadId    String?
+  senderId    String
+  content     String?
+  replyToId   String?
+  type        MessageType @default(TEXT)
+  readBy      Json?
+  reactions   Json?
+  editedAt    DateTime?
+  deletedAt   DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  project     Project?     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  thread      ChatThread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  sender      User        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  replyTo     Message?    @relation("ThreadReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies     Message[]   @relation("ThreadReplies")
+  moderationEvents MessageModerationEvent[]
+
+  @@index([projectId])
+  @@index([threadId])
+  @@index([senderId])
+  @@index([replyToId])
+  @@index([createdAt])
+  @@index([threadId, createdAt])
+  @@index([projectId, createdAt])
+  @@index([type, deletedAt])
+}
+
+/// Durable audit trail for flag / escalate / remove / restore actions.
+model MessageModerationEvent {
+  id              String                  @id @default(uuid(7))
+  messageId       String
+  action          MessageModerationAction
+  actorId         String?
+  originalContent String?
+  originalType    MessageType?
+  restoredContent String?
+  note            String?
+  metadata        Json?
+  createdAt       DateTime                @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  actor   User?   @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([messageId, createdAt])
+  @@index([action, createdAt])
+  @@index([actorId])
+  @@index([createdAt])
+}

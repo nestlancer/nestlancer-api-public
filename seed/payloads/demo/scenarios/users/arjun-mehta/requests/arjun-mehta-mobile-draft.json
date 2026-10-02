@@ -1,0 +1,34 @@
+{
+  "seedKey": "arjun-mehta-mobile-draft",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Field Sales Dealer Mobile App",
+        "description": "Android-first app for our 12 field sales reps covering Gujarat — offline catalogue browsing, on-the-spot order capture synced when back online, Razorpay payment link generation, and visit logging with GPS check-in. Requirements still being finalised with the sales team.",
+        "category": "mobileApp",
+        "budget": {
+          "min": 6000000,
+          "max": 10000000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-09-01T00:00:00Z",
+          "deadline": "2026-12-01T23:59:59Z",
+          "flexible": true
+        },
+        "requirements": [
+          "Offline-first product catalogue",
+          "Order sync with B2B portal backend",
+          "Razorpay payment link from app",
+          "GPS visit check-in for reps"
+        ]
+      }
+    }
+  ]
+}

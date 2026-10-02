@@ -1,0 +1,78 @@
+// =============================================================================
+// Generated Document Models — versioning, numbering, cloud storage registry
+// =============================================================================
+
+enum DocumentType {
+  QUOTE
+  CONTRACT
+  INVOICE
+  RECEIPT
+  REMINDER
+  REPORT
+  EXPORT_GDPR
+  EXPORT_PROJECT
+  EXPORT_AUDIT
+  EXPORT_REVENUE
+  EXPORT_LOGS
+}
+
+enum DocumentStatus {
+  PENDING
+  GENERATED
+  FAILED
+  SUPERSEDED
+}
+
+model DocumentSequence {
+  id         String       @id @default(uuid(7))
+  type       DocumentType
+  year       Int
+  lastNumber Int          @default(0)
+
+  @@unique([type, year])
+}
+
+model GeneratedDocument {
+  id               String         @id @default(uuid(7))
+  documentNumber   String         @unique
+  documentType     DocumentType
+  entityType       String
+  entityId         String
+  versionNumber    Int            @default(1)
+  isLatest         Boolean        @default(true)
+  isImmutable      Boolean        @default(false)
+  fileHash         String?
+  storageBucket    String
+  storageKey       String
+  mimeType         String         @default("application/pdf")
+  fileSize         Int?
+  issuedAt         DateTime       @default(now())
+  issuedToUserId   String?
+  triggeredByEvent String?
+  triggeredByUserId String?
+  changeReason     String?
+  metadata         Json?
+  status           DocumentStatus @default(GENERATED)
+  supersededById   String?
+  previousVersionId String?
+  createdAt        DateTime       @default(now())
+
+  issuedToUser User? @relation("UserDocuments", fields: [issuedToUserId], references: [id], onDelete: SetNull)
+  triggeredByUser User? @relation("TriggeredDocuments", fields: [triggeredByUserId], references: [id], onDelete: SetNull)
+  supersededBy    GeneratedDocument?  @relation("DocumentSupersession", fields: [supersededById], references: [id], onDelete: SetNull)
+  supersedes      GeneratedDocument[] @relation("DocumentSupersession")
+  previousVersion GeneratedDocument?  @relation("DocumentVersionChain", fields: [previousVersionId], references: [id], onDelete: SetNull)
+  nextVersions    GeneratedDocument[] @relation("DocumentVersionChain")
+  quotesAsCurrent Quote[]             @relation("QuoteDocument")
+  quotesAsContract Quote[]            @relation("ContractDocument")
+  paymentsAsInvoice Payment[]        @relation("PaymentInvoice")
+  paymentsAsReceipt Payment[]         @relation("PaymentReceipt")
+
+  @@index([entityType, entityId])
+  @@index([documentType, entityId])
+  @@index([entityType, entityId, isLatest])
+  @@index([issuedToUserId])
+  @@index([triggeredByUserId])
+  @@index([supersededById])
+  @@index([previousVersionId])
+}

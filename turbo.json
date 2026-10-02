@@ -1,0 +1,108 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["tsconfig.base.json"],
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "DATABASE_READ_REPLICA_URLS",
+    "REDIS_CACHE_URL",
+    "REDIS_PUBSUB_URL",
+    "RABBITMQ_URL",
+    "JWT_ACCESS_SECRET",
+    "JWT_REFRESH_SECRET",
+    "RAZORPAY_KEY_ID",
+    "RAZORPAY_KEY_SECRET",
+    "AUTH_SERVICE_URL",
+    "USERS_SERVICE_URL",
+    "PAYMENTS_SERVICE_URL",
+    "WEBHOOKS_SERVICE_URL",
+    "ADMIN_SERVICE_URL",
+    "REQUESTS_SERVICE_URL",
+    "QUOTES_SERVICE_URL",
+    "PROJECTS_SERVICE_URL",
+    "PROGRESS_SERVICE_URL",
+    "MESSAGING_SERVICE_URL",
+    "NOTIFICATIONS_SERVICE_URL",
+    "MEDIA_SERVICE_URL",
+    "PORTFOLIO_SERVICE_URL",
+    "BLOG_SERVICE_URL",
+    "CONTACT_SERVICE_URL",
+    "HEALTH_SERVICE_URL",
+    "NOTIFICATION_WORKER_REDIS_HOST",
+    "NOTIFICATION_WORKER_REDIS_PORT",
+    "NOTIFICATION_WORKER_REDIS_PASSWORD",
+    "NOTIFICATION_WORKER_VAPID_PUBLIC_KEY",
+    "NOTIFICATION_WORKER_VAPID_PRIVATE_KEY",
+    "NOTIFICATION_WORKER_VAPID_SUBJECT",
+    "TEMPLATES_PATH",
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASS",
+    "SMTP_SECURE",
+    "EMAIL_PROVIDER",
+    "FROM_EMAIL",
+    "FROM_NAME",
+    "REPLY_TO",
+    "BILLING_FROM_EMAIL",
+    "BILLING_FROM_NAME",
+    "BILLING_REPLY_TO",
+    "SUPPORT_FROM_EMAIL",
+    "SUPPORT_FROM_NAME",
+    "CONTACT_INBOX_EMAIL",
+    "ZEPTOMAIL_DC",
+    "ZEPTOMAIL_SMTP_HOST",
+    "ZEPTOMAIL_SMTP_PORT",
+    "ZEPTOMAIL_SMTP_USER",
+    "ZEPTOMAIL_SMTP_SECURE",
+    "ZEPTOMAIL_TOKEN"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "cache": true
+    },
+    "test:unit": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": true
+    },
+    "test:integration": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "cache": false
+    },
+    "test:e2e": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "cache": false
+    },
+    "test:cov": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "cache": true
+    },
+    "lint": {
+      "outputs": [],
+      "cache": true
+    },
+    "lint:fix": {
+      "outputs": [],
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

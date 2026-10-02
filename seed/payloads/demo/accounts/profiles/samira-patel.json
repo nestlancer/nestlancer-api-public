@@ -1,0 +1,48 @@
+{
+  "seedKey": "samira-patel",
+  "displayName": "Samira Patel",
+  "summary": "Founder & Creative Director at Patel Digital Marketing in Mumbai.",
+  "profile": {
+    "email": "samira.patel@nestlancer.com",
+    "firstName": "Samira",
+    "lastName": "Patel",
+    "phone": "+919810020033",
+    "company": "Patel Digital Marketing",
+    "jobTitle": "Founder & Creative Director",
+    "timezone": "Asia/Kolkata",
+    "city": "Mumbai",
+    "industry": "marketing",
+    "headline": "Founder & Creative Director \u00b7 Patel Digital Marketing (Mumbai \u00b7 Marketing)",
+    "bio": "Samira founded Patel Digital Marketing in Mumbai. She commissions campaign pages and site redesigns for festive retail clients.",
+    "skills": [
+      "Founder & Creative Director",
+      "Campaign Strategy",
+      "Landing Pages",
+      "Performance Marketing"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/samira-patel.jpg"
+}

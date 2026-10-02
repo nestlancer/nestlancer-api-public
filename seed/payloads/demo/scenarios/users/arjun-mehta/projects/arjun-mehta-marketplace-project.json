@@ -1,0 +1,217 @@
+{
+  "seedKey": "arjun-mehta-marketplace-project",
+  "projectKey": "marketplace-web-app",
+  "quoteSeedKey": "arjun-mehta-marketplace-quote",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "Dealer Portal MVP",
+          "description": "Dealer onboarding, bulk ordering, GST invoices, Razorpay advance links, and fulfilment admin.",
+          "startDate": "2026-06-10",
+          "endDate": "2026-07-15",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 2950000,
+        "currency": "INR",
+        "notes": "Deposit — UTR: HDFC20260610001 (Mehta Wholesale Traders)",
+        "invoiceNumber": null
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Dealer Portal MVP",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update — dealer onboarding flow",
+        "description": "Completed dealer registration with GSTIN validation, credit-limit display from Tally export, and bulk cart with MOQ enforcement for masala SKUs.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Dealer Portal MVP",
+      "payload": {
+        "type": "INTERNAL_NOTE",
+        "title": "Internal — Tally export format validated",
+        "description": "Confirmed Tally credit-limit CSV matches dealer onboarding import. No schema changes needed for Surat rollout.",
+        "notifyClient": false,
+        "visibility": "INTERNAL"
+      }
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Dealer Portal MVP",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update — Razorpay payment links",
+        "description": "Integrated Razorpay payment links for advance orders. Tested with HDFC UPI and NEFT fallback. Admin panel shows pending vs confirmed orders.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 6,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Dealer Portal MVP",
+      "files": [
+        "projects/marketplace-web-app/assets/deliverables/milestone-1-handoff.pdf"
+      ],
+      "description": "MVP handoff — staging URLs, dealer login guide, and Razorpay webhook setup doc."
+    },
+    {
+      "order": 7,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Dealer Portal MVP",
+      "payload": {
+        "type": "DELIVERABLE_UPLOAD",
+        "title": "MVP handoff pack ready for review",
+        "description": "Dealer portal MVP deliverable uploaded — includes staging URLs and Razorpay webhook setup guide.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 8,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "Dealer Portal MVP"
+    },
+    {
+      "order": 9,
+      "actor": "client",
+      "action": "approveDeliverable",
+      "endpoint": "POST /deliverables/:id/approve",
+      "deliverableIndex": 0,
+      "payload": {
+        "feedback": "Handoff pack reviewed — dealer login guide is clear."
+      }
+    },
+    {
+      "order": 10,
+      "actor": "client",
+      "action": "approveMilestone",
+      "endpoint": "POST /progress/milestones/:id/approve",
+      "milestoneName": "Dealer Portal MVP",
+      "payload": {
+        "feedback": "Dealer ordering and GST invoices working smoothly. Approved."
+      }
+    },
+    {
+      "order": 11,
+      "actor": "admin",
+      "action": "requestMilestonePayment",
+      "endpoint": "POST /admin/payments/milestones/:id/request-payment",
+      "milestoneName": "Final payment"
+    },
+    {
+      "order": 12,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneName": "Final payment",
+      "payload": {
+        "amount": 2950000,
+        "currency": "INR",
+        "notes": "Final payment after delivery approval — UTR: HDFC20260715001",
+        "invoiceNumber": null
+      }
+    },
+    {
+      "order": 13,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/projects/:id/status",
+      "status": "REVIEW",
+      "reason": "Dealer portal live. 38 of 40 Gujarat dealers onboarded within first week.",
+      "notifyClient": true
+    },
+    {
+      "order": 14,
+      "actor": "both",
+      "action": "projectMessaging",
+      "endpoint": "POST /messages/project/:id",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Arjun ji — dealer portal is live on production. Razorpay webhooks verified with your HDFC account.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "client",
+          "content": "Bahut accha! Surat dealers are already placing bulk orders. Can we add SMS order confirmation next quarter?",
+          "type": "TEXT"
+        }
+      ]
+    },
+    {
+      "order": 15,
+      "actor": "client",
+      "action": "submitFeedback",
+      "endpoint": "POST /projects/:id/feedback",
+      "payload": {
+        "comment": "Excellent delivery quality. Dealer onboarding was smoother than expected.",
+        "rating": 5
+      }
+    },
+    {
+      "order": 16,
+      "actor": "client",
+      "action": "approveProject",
+      "endpoint": "POST /projects/:id/approve",
+      "payload": {
+        "rating": 5,
+        "feedback": {
+          "quality": 5,
+          "communication": 5,
+          "timeliness": 5,
+          "professionalism": 5,
+          "overallSatisfaction": 5
+        },
+        "comments": "Approved — ready for production."
+      }
+    },
+    {
+      "order": 17,
+      "actor": "admin",
+      "action": "finalDelivery",
+      "endpoint": "POST /messages/project/:id",
+      "message": "Final delivery bundle attached — source code, deployment runbook, and dealer onboarding checklist.",
+      "files": [
+        "projects/marketplace-web-app/assets/final/nestlancer-marketplace-v1.0.zip"
+      ]
+    }
+  ]
+}

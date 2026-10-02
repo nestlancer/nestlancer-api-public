@@ -1,0 +1,35 @@
+[
+  {
+    "id": "019e0000-0000-7000-8000-000000000001",
+    "name": "Web Application MVP",
+    "slug": "web-application-mvp",
+    "description": "End-to-end MVP delivery: discovery, design, frontend and backend implementation, QA, and production handoff.",
+    "category": "webDevelopment",
+    "basePricePaise": 5900000,
+    "estimatedDays": 30,
+    "revisionsIncluded": 2,
+    "deliverables": [
+      { "description": "Discovery & requirements workshop", "quantity": 1, "unitPrice": 15000 },
+      { "description": "UI/UX design (core screens)", "quantity": 1, "unitPrice": 25000 },
+      { "description": "Frontend MVP implementation", "quantity": 1, "unitPrice": 120000 },
+      { "description": "Backend API & database", "quantity": 1, "unitPrice": 150000 },
+      { "description": "QA, deployment & handoff", "quantity": 1, "unitPrice": 50000 }
+    ],
+    "addOns": [
+      {
+        "description": "Admin dashboard module",
+        "quantity": 1,
+        "unitPrice": 80000,
+        "optional": true
+      },
+      {
+        "description": "Payment gateway integration",
+        "quantity": 1,
+        "unitPrice": 40000,
+        "optional": true
+      }
+    ],
+    "isActive": true,
+    "sortOrder": 10
+  }
+]

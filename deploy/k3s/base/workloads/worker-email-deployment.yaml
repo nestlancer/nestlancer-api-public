@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-email
+  labels:
+    app: worker-email
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-email
+  template:
+    metadata:
+      labels:
+        app: worker-email
+    spec:
+      imagePullSecrets:
+        - name: ghcr-credentials
+      containers:
+        - name: worker-email
+          image: ghcr.io/nestlancer/email-worker:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: nestlancer-secrets
+          env:
+            - name: NODE_ENV
+              value: production
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

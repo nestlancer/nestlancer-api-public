@@ -1,0 +1,60 @@
+{
+  "seedKey": "alex-admin-portal-quote",
+  "requestSeedKey": "alex-admin-portal-req",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/admin-portal-enhancements/assets/quote-proposal.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createQuote",
+      "endpoint": "POST /admin/requests/:id/quotes",
+      "payload": {
+        "items": [
+          {
+            "description": "Warehouse inventory API, audit logs, and CSV export modules",
+            "quantity": 1,
+            "unitPrice": 9900
+          },
+          {
+            "description": "Fleet GPS widgets, role-based dashboards, UAT and deployment",
+            "quantity": 1,
+            "unitPrice": 9900
+          }
+        ],
+        "schedulePreset": "50-50",
+        "currency": "INR",
+        "taxPercentage": 0,
+        "validUntil": "2026-08-01T23:59:59Z",
+        "requiresContract": false,
+        "revisionsIncluded": 2,
+        "internalNotes": "Trakzee GPS API integration included — client provides sandbox keys."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "decline",
+      "endpoint": "POST /quotes/:id/decline",
+      "payload": {
+        "reason": "budgetConstraints",
+        "feedback": "Scope exceeds Q3 IT budget. Revisit in Q1 2027 after ERP migration stabilises.",
+        "requestRevision": false
+      }
+    }
+  ]
+}

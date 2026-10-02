@@ -1,0 +1,37 @@
+services:
+  dev-proxy:
+    image: caddy:2.8-alpine
+    container_name: nl-dev-proxy
+    depends_on:
+      - gateway
+      - ws-gateway
+    environment:
+      DEV_API_HOST: ${DEV_API_HOST:-dev-api.nestlancer.com}
+      DEV_WEB_HOST: ${DEV_WEB_HOST:-dev-app.nestlancer.com}
+      DEV_ADMIN_HOST: ${DEV_ADMIN_HOST:-dev-admin.nestlancer.com}
+      DEV_LANDING_HOST: ${DEV_LANDING_HOST:-dev-landing.nestlancer.com}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-ops@nestlancer.com}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./.docker/caddy/data:/data
+      - ./.docker/caddy/config:/config
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - nestlancer-dev
+    restart: unless-stopped
+    # Hard caps so Caddy cannot starve SSH on a 12GB VPS
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.20
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 32M

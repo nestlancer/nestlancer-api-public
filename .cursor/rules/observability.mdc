@@ -1,0 +1,19 @@
+---
+description: Logging, tracing, metrics, and error envelope conventions
+globs: "{libs/logger,libs/tracing,libs/metrics,libs/common}/src/**/*.ts,**/main.ts"
+alwaysApply: false
+---
+
+# Observability
+
+## Patterns
+- Structured logger (`@nestlancer/logger`), correlation IDs (`@nestlancer/tracing`), Prometheus (`@nestlancer/metrics`)
+- `AllExceptionsFilter` returns stable error envelopes; stacks stay server-side
+
+## Rules
+- Propagate/create correlation IDs on gateway and workers; include them in logs
+- Unknown errors → generic client message; log details with redaction
+- Do not log raw tokens, passwords, card data, or full webhook payloads with secrets
+- Prefer existing metrics helpers over ad-hoc counters
+- Health endpoints stay cheap and unauthenticated only for liveness/readiness intent
+- When adding critical paths (pay, auth, outbox), add actionable logs + metrics, not just `console.log`

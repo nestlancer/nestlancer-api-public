@@ -1,0 +1,53 @@
+{
+  "seedKey": "pooja-kulkarni",
+  "displayName": "Pooja Kulkarni",
+  "summary": "Operations Head at Kulkarni Clinic Chain in Pune.",
+  "profile": {
+    "email": "pooja.kulkarni@nestlancer.com",
+    "firstName": "Pooja",
+    "lastName": "Kulkarni",
+    "phone": "+919823118640",
+    "company": "Kulkarni Clinic Chain",
+    "jobTitle": "Operations Head",
+    "timezone": "Asia/Kolkata",
+    "city": "Pune",
+    "industry": "healthcare",
+    "headline": "Operations Head \u00b7 Kulkarni Clinic Chain (Pune \u00b7 Healthcare)",
+    "bio": "Pooja heads operations for Kulkarni Clinic Chain in Pune. She is digitising multi-branch appointment booking and doctor rosters.",
+    "skills": [
+      "Operations Head",
+      "Clinic Operations",
+      "Patient Scheduling",
+      "Healthcare IT"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/pooja-kulkarni.jpg"
+}

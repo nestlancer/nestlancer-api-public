@@ -1,0 +1,53 @@
+{
+  "seedKey": "rajan-kumar",
+  "displayName": "Rajan Kumar",
+  "summary": "Plant Head at Kumar Precision Tools in Chennai.",
+  "profile": {
+    "email": "rajan.kumar@nestlancer.com",
+    "firstName": "Rajan",
+    "lastName": "Kumar",
+    "phone": "+919444301128",
+    "company": "Kumar Precision Tools",
+    "jobTitle": "Plant Head",
+    "timezone": "Asia/Kolkata",
+    "city": "Chennai",
+    "industry": "manufacturing",
+    "headline": "Plant Head \u00b7 Kumar Precision Tools (Chennai \u00b7 Manufacturing)",
+    "bio": "Rajan is plant head at Kumar Precision Tools in Chennai. He tracks OEE, shift reports, and CNC downtime from the shop floor.",
+    "skills": [
+      "Plant Head",
+      "Operations",
+      "OEE Analytics",
+      "Supply Chain"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/rajan-kumar.jpg"
+}

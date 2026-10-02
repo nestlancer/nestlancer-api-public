@@ -1,0 +1,59 @@
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td style="padding:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#059669;">
+      Receipt
+    </td>
+  </tr>
+  <tr>
+    <td class="email-title" style="padding:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:32px;font-weight:700;color:#0a2540;">
+      Payment received
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:26px;color:#334155;">
+      Hi {{userName}},
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:26px;color:#334155;">
+      We’ve received your payment for <strong style="color:#0a2540;">{{projectTitle}}</strong>. Keep this email as your confirmation.
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 24px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ecfdf5" style="background-color:#ecfdf5;border:1px solid #a7f3d0;">
+        <tr>
+          <td width="4" bgcolor="#059669" style="width:4px;background-color:#059669;font-size:0;line-height:0;">&nbsp;</td>
+          <td style="padding:18px 18px;">
+            <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#047857;">Amount paid</p>
+            <p class="email-hero-num" style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:30px;line-height:36px;font-weight:700;color:#0a2540;">{{currency}} {{amount}}</p>
+            {{#if receiptNumber}}
+            <p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#64748b;">Receipt <strong style="color:#0a2540;">{{receiptNumber}}</strong></p>
+            {{/if}}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  {{#if receiptLink}}
+  <tr>
+    <td align="center" style="padding:0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" bgcolor="#0d9488" style="border-radius:8px;background-color:#0d9488;">
+            <!--[if mso]>
+            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{receiptLink}}" style="height:48px;v-text-anchor:middle;width:180px;" arcsize="17%" stroke="f" fillcolor="#0d9488">
+              <w:anchorlock/>
+              <center style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;">View receipt</center>
+            </v:roundrect>
+            <![endif]-->
+            <!--[if !mso]><!-- -->
+            <a href="{{receiptLink}}" target="_blank" style="display:inline-block;padding:14px 28px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;line-height:20px;color:#ffffff !important;text-decoration:none;border-radius:8px;background-color:#0d9488;border:1px solid #0d9488;">View receipt</a>
+            <!--<![endif]-->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  {{/if}}
+</table>

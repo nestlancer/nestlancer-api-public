@@ -1,0 +1,84 @@
+[
+  {
+    "name": "verification",
+    "subject": "Verify your Nestlancer account",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:26px;line-height:1.25;font-weight:700;color:#0a2540;\">Verify your email</h1><p style=\"margin:0 0 8px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0d9488;\">Almost there</p><p style=\"margin:0 0 20px;color:#334155;\">Hi {{userName}},</p><p style=\"margin:0 0 28px;color:#334155;\">Thanks for joining Nestlancer. Confirm your email address so we can secure your account.</p><p style=\"text-align:center;margin:0 0 28px;\"><a href=\"{{link}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">Verify email</a></p><p style=\"margin:0;color:#64748b;font-size:14px;\">This link expires in 24 hours. If you did not create an account, ignore this email.</p>",
+    "variables": { "required": ["userName", "link"], "optional": [] },
+    "description": "Email verification template sent after registration"
+  },
+  {
+    "name": "welcome",
+    "subject": "Welcome to Nestlancer!",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:26px;line-height:1.25;font-weight:700;color:#0a2540;\">Welcome to Nestlancer</h1><p style=\"margin:0 0 8px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0d9488;\">You're in</p><p style=\"margin:0 0 20px;color:#334155;\">Hi {{userName}},</p><p style=\"margin:0 0 28px;color:#334155;\">Your account is verified and ready. Manage projects, quotes, and payments in one place.</p><p style=\"text-align:center;margin:0;\"><a href=\"{{dashboardLink}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">Go to dashboard</a></p>",
+    "variables": { "required": ["userName", "dashboardLink"], "optional": [] },
+    "description": "Welcome email sent after email verification"
+  },
+  {
+    "name": "password-reset",
+    "subject": "Reset your Nestlancer password",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:26px;line-height:1.25;font-weight:700;color:#0a2540;\">Reset your password</h1><p style=\"margin:0 0 8px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0d9488;\">Security</p><p style=\"margin:0 0 20px;color:#334155;\">Hi {{userName}},</p><p style=\"margin:0 0 28px;color:#334155;\">We received a request to reset your Nestlancer password. Choose a new one with the button below.</p><p style=\"text-align:center;margin:0 0 28px;\"><a href=\"{{link}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">Reset password</a></p><p style=\"margin:0;color:#64748b;font-size:14px;\">This link expires in 1 hour. If you didn't request this, ignore this email.</p>",
+    "variables": { "required": ["userName", "link"], "optional": [] },
+    "description": "Password reset email template"
+  },
+  {
+    "name": "quote-sent",
+    "subject": "New quote for your project: {{projectTitle}}",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:26px;line-height:1.25;font-weight:700;color:#0a2540;\">Your quote is ready</h1><p style=\"margin:0 0 20px;color:#334155;\">Hi {{userName}}, a quote is ready for <strong>{{projectTitle}}</strong>.</p><p style=\"margin:0 0 8px;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#64748b;\">Total</p><p style=\"margin:0 0 28px;font-size:28px;font-weight:700;color:#0a2540;\">&#8377;{{amount}}</p><p style=\"text-align:center;margin:0 0 16px;\"><a href=\"{{link}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">View quote</a></p><p style=\"margin:0;color:#64748b;font-size:14px;\">Valid until {{validUntil}}.</p>",
+    "variables": {
+      "required": ["userName", "projectTitle", "amount", "link", "validUntil"],
+      "optional": []
+    },
+    "description": "Quote sent notification email"
+  },
+  {
+    "name": "payment-receipt",
+    "subject": "Payment receipt for {{projectTitle}}",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:26px;line-height:1.25;font-weight:700;color:#0a2540;\">Payment received</h1><p style=\"margin:0 0 20px;color:#334155;\">Hi {{userName}}, we received your payment for <strong>{{projectTitle}}</strong>.</p><p style=\"margin:0 0 8px;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f766e;\">Amount paid</p><p style=\"margin:0 0 12px;font-size:28px;font-weight:700;color:#0a2540;\">&#8377;{{amount}}</p><p style=\"margin:0 0 28px;color:#64748b;font-size:14px;\">Receipt {{receiptNumber}}</p><p style=\"text-align:center;margin:0;\"><a href=\"{{receiptLink}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">View receipt</a></p>",
+    "variables": {
+      "required": ["userName", "projectTitle", "amount", "receiptNumber", "receiptLink"],
+      "optional": []
+    },
+    "description": "Payment receipt email template"
+  },
+  {
+    "name": "project-update",
+    "subject": "Update on your project: {{projectTitle}}",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:24px;line-height:1.25;font-weight:700;color:#0a2540;\">Project update</h1><p style=\"margin:0 0 20px;color:#334155;\">Hi {{userName}}, there's a new update on <strong>{{projectTitle}}</strong>:</p><p style=\"margin:0 0 28px;padding:16px 18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;color:#334155;\">{{updateMessage}}</p><p style=\"text-align:center;margin:0;\"><a href=\"{{link}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">View progress</a></p>",
+    "variables": {
+      "required": ["userName", "projectTitle", "updateMessage", "link"],
+      "optional": []
+    },
+    "description": "Project progress update email"
+  },
+  {
+    "name": "milestone-completed",
+    "subject": "Milestone completed: {{milestoneName}}",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:24px;line-height:1.25;font-weight:700;color:#0a2540;\">Milestone completed</h1><p style=\"margin:0 0 28px;color:#334155;\">Hi {{userName}}, milestone <strong>{{milestoneName}}</strong> for project <strong>{{projectTitle}}</strong> is complete.</p><p style=\"text-align:center;margin:0;\"><a href=\"{{link}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">View project</a></p>",
+    "variables": {
+      "required": ["userName", "milestoneName", "projectTitle", "link"],
+      "optional": []
+    },
+    "description": "Milestone completion notification email"
+  },
+  {
+    "name": "new-message",
+    "subject": "New message in {{projectTitle}}",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:24px;line-height:1.25;font-weight:700;color:#0a2540;\">New message</h1><p style=\"margin:0 0 28px;color:#334155;\">Hi {{userName}}, {{senderName}} sent you a message in project <strong>{{projectTitle}}</strong>.</p><p style=\"text-align:center;margin:0;\"><a href=\"{{link}}\" style=\"display:inline-block;padding:14px 32px;background-color:#0d9488;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;\">View message</a></p>",
+    "variables": { "required": ["userName", "senderName", "projectTitle", "link"], "optional": [] },
+    "description": "New message notification email"
+  },
+  {
+    "name": "account-suspended",
+    "subject": "Your Nestlancer account has been suspended",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:24px;line-height:1.25;font-weight:700;color:#0a2540;\">Account suspended</h1><p style=\"margin:0 0 20px;color:#334155;\">Hi {{userName}}, your Nestlancer account has been suspended.</p><p style=\"margin:0 0 20px;padding:16px 18px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;color:#991b1b;\"><strong>Reason:</strong> {{reason}}</p><p style=\"margin:0;color:#64748b;font-size:14px;\">If you believe this is an error, please contact support.</p>",
+    "variables": { "required": ["userName", "reason"], "optional": [] },
+    "description": "Account suspension notification email"
+  },
+  {
+    "name": "contact-received",
+    "subject": "We received your message – Ticket #{{ticketId}}",
+    "body": "<h1 style=\"margin:0 0 12px;font-size:26px;line-height:1.25;font-weight:700;color:#0a2540;\">We received your message</h1><p style=\"margin:0 0 20px;color:#334155;\">Hi {{name}}, thank you for contacting Nestlancer.</p><p style=\"margin:0 0 8px;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#64748b;\">Ticket ID</p><p style=\"margin:0 0 20px;font-size:22px;font-weight:700;color:#0a2540;\">{{ticketId}}</p><p style=\"margin:0;color:#64748b;font-size:14px;\">We will respond within 24-48 hours.</p>",
+    "variables": { "required": ["name", "ticketId"], "optional": [] },
+    "description": "Contact form submission acknowledgment email"
+  }
+]

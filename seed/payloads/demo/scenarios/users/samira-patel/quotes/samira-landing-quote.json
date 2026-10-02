@@ -1,0 +1,56 @@
+{
+  "seedKey": "samira-landing-quote",
+  "requestSeedKey": "samira-landing-req",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/landing-page-suite/assets/quote-proposal.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createQuote",
+      "endpoint": "POST /admin/requests/:id/quotes",
+      "payload": {
+        "items": [
+          {
+            "description": "Design and development — 3 festive campaign landing pages with Zoho + GA4",
+            "quantity": 1,
+            "unitPrice": 12000
+          }
+        ],
+        "schedulePreset": "50-50",
+        "currency": "INR",
+        "taxPercentage": 0,
+        "validUntil": "2026-05-01T23:59:59Z",
+        "requiresContract": false,
+        "revisionsIncluded": 2,
+        "internalNotes": "Fixed-price agency rate — includes 2 revision rounds per page."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "accept",
+      "endpoint": "POST /quotes/:id/accept",
+      "payload": {
+        "acceptTerms": true,
+        "signatureName": "Samira Patel",
+        "signatureDate": "2026-03-10T09:00:00Z",
+        "notes": "Approved — need all three pages live before 10 September for Navratri ad spend."
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+---
+description: CI, Docker, and deploy safety for backend
+globs: ".github/workflows/*.{yml,yaml},docker/**/*,docker-compose*.yml,deploy/**/*,scripts/{docker,deploy}/**/*"
+alwaysApply: false
+---
+
+# CI and Deploy
+
+## Existing gates
+- CI: format, lint, OpenAPI, Prisma generate, build, unit tests
+- CD: Infisical export → migrate → compose/k3s → smoke health
+
+## Rules
+- Prefer `--frozen-lockfile` style installs in CI
+- Keep `scripts/docker/workloads.manifest.json` as source of truth; regenerate compose/k3s (`pnpm docker:prod:generate`, `pnpm k3s:generate`)
+- Do not silently ignore image pull / login failures in deploy scripts
+- Pin deploy to the release commit/tag being shipped — avoid always deploying floating `main` for production tags
+- After deploy: run smoke (`scripts/deploy/smoke-health.sh`) before declaring success
+- Add security scanning when touching CI (dependency audit, image scan) — currently absent; do not remove Dependabot
+- Never weaken SSH/host hardening scripts without an explicit security review note

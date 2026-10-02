@@ -1,0 +1,46 @@
+# Origin reverse proxy for production Compose.
+# Start after both prod stacks are up (networks must exist):
+#   pnpm docker:prod:proxy:up
+#   # or: bash scripts/docker/proxy-prod-up.sh
+#
+# Requires persisted TLS material in docker/caddy/certs/origin.{pem,key}
+# (Cloudflare Origin Certificate recommended — see docker/caddy/certs/README.md).
+
+services:
+  prod-proxy:
+    image: caddy:2.8-alpine
+    container_name: nl-prod-proxy
+    volumes:
+      - ./docker/caddy/Caddyfile.prod:/etc/caddy/Caddyfile:ro
+      - ./docker/caddy/certs:/etc/caddy/certs:ro
+      - ./.docker/caddy-prod/data:/data
+      - ./.docker/caddy-prod/config:/config
+    ports:
+      - '80:80'
+      - '443:443'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - nestlancer-prod
+      - nestlancer-frontend-prod
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.20
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:2019/config/ >/dev/null || exit 1']
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+
+networks:
+  nestlancer-prod:
+    external: true
+  nestlancer-frontend-prod:
+    external: true

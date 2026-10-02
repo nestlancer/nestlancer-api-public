@@ -1,0 +1,100 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nestlancer
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      kind: Ingress
+      name: nestlancer-api
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: api.nestlancer.com
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: api.nestlancer.com
+
+# Image overrides (defaults to imageRegistry; set K8S_IMAGE_REGISTRY_OVERRIDE or k8sImageRegistryOverride to customize)
+images:
+  - name: ghcr.io/nestlancer/gateway
+    newName: ghcr.io/nestlancer/gateway
+    newTag: latest
+  - name: ghcr.io/nestlancer/ws-gateway
+    newName: ghcr.io/nestlancer/ws-gateway
+    newTag: latest
+  - name: ghcr.io/nestlancer/auth
+    newName: ghcr.io/nestlancer/auth
+    newTag: latest
+  - name: ghcr.io/nestlancer/users
+    newName: ghcr.io/nestlancer/users
+    newTag: latest
+  - name: ghcr.io/nestlancer/payments
+    newName: ghcr.io/nestlancer/payments
+    newTag: latest
+  - name: ghcr.io/nestlancer/webhooks
+    newName: ghcr.io/nestlancer/webhooks
+    newTag: latest
+  - name: ghcr.io/nestlancer/admin
+    newName: ghcr.io/nestlancer/admin
+    newTag: latest
+  - name: ghcr.io/nestlancer/requests
+    newName: ghcr.io/nestlancer/requests
+    newTag: latest
+  - name: ghcr.io/nestlancer/quotes
+    newName: ghcr.io/nestlancer/quotes
+    newTag: latest
+  - name: ghcr.io/nestlancer/projects
+    newName: ghcr.io/nestlancer/projects
+    newTag: latest
+  - name: ghcr.io/nestlancer/progress
+    newName: ghcr.io/nestlancer/progress
+    newTag: latest
+  - name: ghcr.io/nestlancer/messaging
+    newName: ghcr.io/nestlancer/messaging
+    newTag: latest
+  - name: ghcr.io/nestlancer/notifications
+    newName: ghcr.io/nestlancer/notifications
+    newTag: latest
+  - name: ghcr.io/nestlancer/media
+    newName: ghcr.io/nestlancer/media
+    newTag: latest
+  - name: ghcr.io/nestlancer/portfolio
+    newName: ghcr.io/nestlancer/portfolio
+    newTag: latest
+  - name: ghcr.io/nestlancer/blog
+    newName: ghcr.io/nestlancer/blog
+    newTag: latest
+  - name: ghcr.io/nestlancer/contact
+    newName: ghcr.io/nestlancer/contact
+    newTag: latest
+  - name: ghcr.io/nestlancer/health
+    newName: ghcr.io/nestlancer/health
+    newTag: latest
+  - name: ghcr.io/nestlancer/analytics-worker
+    newName: ghcr.io/nestlancer/analytics-worker
+    newTag: latest
+  - name: ghcr.io/nestlancer/audit-worker
+    newName: ghcr.io/nestlancer/audit-worker
+    newTag: latest
+  - name: ghcr.io/nestlancer/cdn-worker
+    newName: ghcr.io/nestlancer/cdn-worker
+    newTag: latest
+  - name: ghcr.io/nestlancer/email-worker
+    newName: ghcr.io/nestlancer/email-worker
+    newTag: latest
+  - name: ghcr.io/nestlancer/media-worker
+    newName: ghcr.io/nestlancer/media-worker
+    newTag: latest
+  - name: ghcr.io/nestlancer/notification-worker
+    newName: ghcr.io/nestlancer/notification-worker
+    newTag: latest
+  - name: ghcr.io/nestlancer/outbox-poller
+    newName: ghcr.io/nestlancer/outbox-poller
+    newTag: latest
+  - name: ghcr.io/nestlancer/webhook-worker
+    newName: ghcr.io/nestlancer/webhook-worker
+    newTag: latest

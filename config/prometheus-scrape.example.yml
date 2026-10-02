@@ -1,0 +1,41 @@
+# Add to Prometheus on INFRA VPS (job: nestlancer-apps)
+# Generate targets: bash scripts/generate-app-metrics-targets.sh
+#
+# Replace APP_VPS_HOST with the App VPS Tailscale IP (NOT 172.22.0.1).
+
+scrape_configs:
+  - job_name: nestlancer-apps
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - 'APP_VPS_HOST:13000' # gateway
+          - 'APP_VPS_HOST:13100' # ws-gateway
+          - 'APP_VPS_HOST:14001' # auth
+          - 'APP_VPS_HOST:14002' # users
+          - 'APP_VPS_HOST:14003' # payments
+          - 'APP_VPS_HOST:14004' # webhooks
+          - 'APP_VPS_HOST:14005' # admin
+          - 'APP_VPS_HOST:14006' # requests
+          - 'APP_VPS_HOST:14007' # quotes
+          - 'APP_VPS_HOST:14008' # projects
+          - 'APP_VPS_HOST:14009' # progress
+          - 'APP_VPS_HOST:14010' # messaging
+          - 'APP_VPS_HOST:14011' # notifications
+          - 'APP_VPS_HOST:14012' # media
+          - 'APP_VPS_HOST:14013' # portfolio
+          - 'APP_VPS_HOST:14014' # blog
+          - 'APP_VPS_HOST:14015' # contact
+          - 'APP_VPS_HOST:14016' # health
+          - 'APP_VPS_HOST:15001' # analytics-worker
+          - 'APP_VPS_HOST:15002' # audit-worker
+          - 'APP_VPS_HOST:15003' # cdn-worker
+          - 'APP_VPS_HOST:15004' # document-worker
+          - 'APP_VPS_HOST:15005' # email-worker
+          - 'APP_VPS_HOST:15006' # export-worker
+          - 'APP_VPS_HOST:15007' # media-worker
+          - 'APP_VPS_HOST:15008' # notification-worker
+          - 'APP_VPS_HOST:15009' # outbox-poller
+          - 'APP_VPS_HOST:15010' # webhook-worker
+        labels:
+          env: production
+          stack: nestlancer

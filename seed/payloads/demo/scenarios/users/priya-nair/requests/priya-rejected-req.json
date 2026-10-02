@@ -1,0 +1,52 @@
+{
+  "seedKey": "priya-rejected-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Blockchain-Based Skill Credential Platform",
+        "description": "Issue tamper-proof skill certificates on a public blockchain with wallet integration for learners. Explored after a vendor pitch — outside our current regulatory and technical capacity for Kerala government-funded programmes.",
+        "category": "custom",
+        "budget": {
+          "min": 15000000,
+          "max": 20000000,
+          "currency": "INR",
+          "flexible": false
+        },
+        "timeline": {
+          "preferredStartDate": "2026-10-01T00:00:00Z",
+          "deadline": "2027-06-01T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "Wallet-based certificate storage",
+          "Smart contract minting",
+          "Verifier portal for employers"
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "rejected",
+        "notes": "Outside current service scope — Kerala government-funded programmes require ISO-compliant PDF certificates, not blockchain. Suggested revisiting with standard LMS certificate module."
+      }
+    }
+  ]
+}

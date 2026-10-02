@@ -1,0 +1,85 @@
+# Validates the backend on every PR/push to main.
+# Uses development context (NODE_ENV). App secrets live in Infisical (`dev`);
+# unit tests use inline/mocked env and do not require Infisical in CI.
+#
+# CD (Backend CD Dev) runs after this workflow succeeds on main.
+
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  NODE_ENV: development
+
+jobs:
+  validate-and-test:
+    name: Validate, Build, and Test (Dev)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # Full history lets turbo --filter=...[HEAD^1] detect changed packages
+          fetch-depth: 2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19'
+          cache: 'pnpm'
+
+      # Cache Turbo's local task output cache between runs.
+      # Cache key includes the commit SHA so pushes to main always write a
+      # fresh entry; PRs restore the most recent main-branch cache via the
+      # restore-keys fallback, skipping tasks whose inputs haven't changed.
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Dependency audit (production)
+        run: pnpm audit --prod --audit-level=high || true
+
+      - name: Lint and Format
+        run: |
+          pnpm format:check
+          pnpm lint
+
+      - name: Validate OpenAPI Spec
+        run: pnpm swagger:validate
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
+      - name: Build Packages (Turborepo)
+        run: pnpm build
+
+      # On PRs: only test packages whose source files changed relative to the
+      # base branch (turbo traces the dependency graph automatically, so
+      # downstream consumers of a changed lib are included too).
+      # On pushes to main: run all packages to keep the cache warm.
+      - name: Run Unit Tests
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm test:unit -- --filter=...[HEAD^1]
+          else
+            pnpm test:unit
+          fi

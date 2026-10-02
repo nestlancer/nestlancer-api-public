@@ -1,0 +1,65 @@
+{
+  "seedKey": "karthik-menon-upi-switch-quote",
+  "requestSeedKey": "karthik-menon-upi-switch-req",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/upi-switch/assets/quote-proposal.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createQuote",
+      "endpoint": "POST /admin/requests/:id/quotes",
+      "payload": {
+        "items": [
+          {
+            "description": "Discovery, architecture, and UPI Adapter MVP setup",
+            "quantity": 1,
+            "unitPrice": 40000
+          },
+          {
+            "description": "Core implementation and integrations",
+            "quantity": 1,
+            "unitPrice": 40000
+          },
+          {
+            "description": "QA, UAT support, and handoff",
+            "quantity": 1,
+            "unitPrice": 40000
+          }
+        ],
+        "schedulePreset": "30-40-30",
+        "currency": "INR",
+        "taxPercentage": 0,
+        "validUntil": "2026-09-30T23:59:59Z",
+        "requiresContract": false,
+        "revisionsIncluded": 2,
+        "internalNotes": "Menon PayTech — Bengaluru fintech engagement."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "accept",
+      "endpoint": "POST /quotes/:id/accept",
+      "payload": {
+        "acceptTerms": true,
+        "signatureName": "Karthik Menon",
+        "signatureDate": "2026-07-15T10:00:00Z"
+      }
+    }
+  ]
+}

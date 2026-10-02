@@ -1,0 +1,59 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nestlancer
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - ingress.yaml
+  - workloads/gateway-deployment.yaml
+  - workloads/gateway-service.yaml
+  - workloads/ws-gateway-deployment.yaml
+  - workloads/ws-gateway-service.yaml
+  - workloads/svc-auth-deployment.yaml
+  - workloads/svc-auth-service.yaml
+  - workloads/svc-users-deployment.yaml
+  - workloads/svc-users-service.yaml
+  - workloads/svc-payments-deployment.yaml
+  - workloads/svc-payments-service.yaml
+  - workloads/svc-webhooks-deployment.yaml
+  - workloads/svc-webhooks-service.yaml
+  - workloads/svc-admin-deployment.yaml
+  - workloads/svc-admin-service.yaml
+  - workloads/svc-requests-deployment.yaml
+  - workloads/svc-requests-service.yaml
+  - workloads/svc-quotes-deployment.yaml
+  - workloads/svc-quotes-service.yaml
+  - workloads/svc-projects-deployment.yaml
+  - workloads/svc-projects-service.yaml
+  - workloads/svc-progress-deployment.yaml
+  - workloads/svc-progress-service.yaml
+  - workloads/svc-messaging-deployment.yaml
+  - workloads/svc-messaging-service.yaml
+  - workloads/svc-notifications-deployment.yaml
+  - workloads/svc-notifications-service.yaml
+  - workloads/svc-media-deployment.yaml
+  - workloads/svc-media-service.yaml
+  - workloads/svc-portfolio-deployment.yaml
+  - workloads/svc-portfolio-service.yaml
+  - workloads/svc-blog-deployment.yaml
+  - workloads/svc-blog-service.yaml
+  - workloads/svc-contact-deployment.yaml
+  - workloads/svc-contact-service.yaml
+  - workloads/svc-health-deployment.yaml
+  - workloads/svc-health-service.yaml
+  - workloads/worker-analytics-deployment.yaml
+  - workloads/worker-audit-deployment.yaml
+  - workloads/worker-cdn-deployment.yaml
+  - workloads/worker-email-deployment.yaml
+  - workloads/worker-media-deployment.yaml
+  - workloads/worker-notification-deployment.yaml
+  - workloads/worker-outbox-deployment.yaml
+  - workloads/worker-webhook-deployment.yaml
+
+# Apply secrets separately (not committed):
+# kubectl create secret generic nestlancer-secrets -n <namespace> --from-env-file=.env.production
+# kubectl create secret docker-registry ghcr-credentials -n <namespace> \
+#   --docker-server=ghcr.io --docker-username=GITHUB_USER --docker-password=GITHUB_PAT
+# ClusterIssuer (once per cluster): kubectl apply -k deploy/k3s/base/cert-manager

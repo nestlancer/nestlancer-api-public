@@ -1,0 +1,72 @@
+{
+  "seedKey": "mei-mobile-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "UPI Merchant Collections Mobile App",
+        "description": "React Native app for our 200 field agents collecting UPI payments from rural merchants — Razorpay Payment Links, offline receipt capture synced when online, daily collection summary push to team leads, and Hindi/Kannada UI for Karnataka and Andhra field teams.",
+        "category": "mobileApp",
+        "budget": {
+          "min": 8000000,
+          "max": 12000000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-07-01T00:00:00Z",
+          "deadline": "2026-11-01T23:59:59Z",
+          "flexible": true
+        },
+        "requirements": [
+          "Razorpay Payment Links from mobile",
+          "Offline receipt queue with sync",
+          "Hindi and Kannada UI",
+          "Daily collection summary notifications",
+          "Agent GPS check-in"
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "Assigned to mobile team — Phase 1 proposal: auth + Razorpay links + offline queue."
+      }
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "addNote",
+      "endpoint": "POST /admin/requests/:id/notes",
+      "payload": {
+        "content": "Propose Phase 1: agent login, Razorpay Payment Links, offline receipt sync. Kannada UI in Phase 2."
+      }
+    },
+    {
+      "order": 6,
+      "actor": "admin",
+      "action": "assign",
+      "endpoint": "POST /admin/requests/:id/assign",
+      "payload": {
+        "assigneeEmail": "ops@nestlancer.com"
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "seedKey": "arjun-mehta-marketplace-quote",
+  "requestSeedKey": "arjun-mehta-marketplace-req",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/marketplace-web-app/assets/quote-proposal.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createQuote",
+      "endpoint": "POST /admin/requests/:id/quotes",
+      "payload": {
+        "items": [
+          {
+            "description": "Discovery, dealer onboarding UX, and GST invoice module",
+            "quantity": 1,
+            "unitPrice": 15000
+          },
+          {
+            "description": "B2B ordering portal — cart, credit limits, Razorpay links, admin panel",
+            "quantity": 1,
+            "unitPrice": 44000
+          }
+        ],
+        "schedulePreset": "50-50",
+        "currency": "INR",
+        "taxPercentage": 0,
+        "validUntil": "2026-08-15T23:59:59Z",
+        "requiresContract": false,
+        "revisionsIncluded": 2,
+        "internalNotes": "Returning client from 2025 brochure site — VIP tier discount applied."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "accept",
+      "endpoint": "POST /quotes/:id/accept",
+      "payload": {
+        "acceptTerms": true,
+        "signatureName": "Arjun Mehta",
+        "signatureDate": "2026-06-10T01:27:19Z",
+        "notes": "Approved — please share proforma invoice for 50% advance via NEFT."
+      }
+    }
+  ]
+}

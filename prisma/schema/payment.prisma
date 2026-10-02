@@ -1,0 +1,231 @@
+// =============================================================================
+// Payment Domain Models
+// =============================================================================
+
+enum PaymentStatus {
+  CREATED
+  PENDING
+  PROCESSING
+  PENDING_VERIFICATION
+  COMPLETED
+  FAILED
+  REFUNDED
+  DISPUTED
+  CANCELLED
+}
+
+enum PlatformPaymentAccountType {
+  BANK
+  UPI
+  BOTH
+}
+
+/**
+ * Platform legal identity for invoices/receipts/quotes (NL-BUG-PDF-001).
+ * Managed in admin like settlement accounts; PDFs only print fields that are set.
+ */
+model CompanyLegalProfile {
+  id          String   @id @default(uuid(7))
+  label       String   @default("Primary")
+  legalName   String?
+  tradeName   String?
+  address     String?
+  state       String?
+  stateCode   String?
+  gstin       String?
+  pan         String?
+  cin         String?
+  email       String?
+  phone       String?
+  website     String?
+  isActive    Boolean  @default(true)
+  isPrimary   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdById String?
+  updatedById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User? @relation("CompanyLegalProfileCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("CompanyLegalProfileUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([isActive, isPrimary])
+  @@index([sortOrder])
+}
+
+model PlatformPaymentAccount {
+  id                 String                     @id @default(uuid(7))
+  label              String
+  type               PlatformPaymentAccountType
+  accountHolderName  String?
+  bankName           String?
+  accountNumber      String?
+  ifsc               String?
+  accountType        String?
+  upiVpa             String?
+  instructions       String?
+  currency           String                     @default("INR")
+  isActive           Boolean                    @default(true)
+  isPrimary          Boolean                    @default(false)
+  sortOrder          Int                        @default(0)
+  createdById        String?
+  updatedById        String?
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+
+  createdBy          User?                      @relation("PlatformPaymentAccountCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy          User?                      @relation("PlatformPaymentAccountUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  payments           Payment[]
+
+  @@index([isActive, isPrimary])
+  @@index([sortOrder])
+}
+
+model Payment {
+  id              String        @id @default(uuid(7))
+  projectId       String
+  milestoneId     String?
+  clientId        String
+  amount          Int
+  currency        String        @default("INR")
+  status          PaymentStatus @default(CREATED)
+  method          String?
+  intentId        String?       @unique
+  externalId      String?
+  externalStatus  String?
+  providerDetails Json?
+  refundStatus    String?
+  amountRefunded  Int           @default(0)
+  receiptNumber   String?
+  receiptUrl      String?
+  invoiceNumber   String?
+  invoiceUrl      String?
+  currentInvoiceDocumentId String?
+  currentReceiptDocumentId String?
+  customNotes     String?
+  /// UTR / UPI reference for offline bank transfer
+  transferReference   String?
+  /// Client-claimed transfer time
+  transferPaidAt      DateTime?
+  platformAccountId   String?
+  verificationNotes   String?
+  verifiedById        String?
+  verifiedAt          DateTime?
+  rejectedReason      String?
+  paidAt              DateTime?
+  dueDate             DateTime?
+  paymentRequestedAt  DateTime?
+  lastReminderAt      DateTime?
+  reminderCount       Int           @default(0)
+  lateFeePaise        Int           @default(0)
+  failureReason       String?
+  createdAt           DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  project         Project       @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  milestone       Milestone?    @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+  client          User          @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  platformAccount PlatformPaymentAccount? @relation(fields: [platformAccountId], references: [id], onDelete: SetNull)
+  verifiedBy      User?         @relation("PaymentVerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
+  currentInvoiceDocument GeneratedDocument? @relation("PaymentInvoice", fields: [currentInvoiceDocumentId], references: [id], onDelete: SetNull)
+  currentReceiptDocument GeneratedDocument? @relation("PaymentReceipt", fields: [currentReceiptDocumentId], references: [id], onDelete: SetNull)
+  refunds         Refund[]
+  disputes        Dispute[]
+  proofs          PaymentProof[]
+
+  @@index([projectId])
+  @@index([milestoneId])
+  @@index([clientId])
+  @@index([externalId])
+  @@index([status])
+  @@index([clientId, status])
+  @@index([status, paidAt])
+  @@index([transferReference])
+  @@index([platformAccountId])
+  @@index([currentInvoiceDocumentId])
+  @@index([currentReceiptDocumentId])
+}
+
+model PaymentProof {
+  id           String   @id @default(uuid(7))
+  paymentId    String
+  mediaId      String
+  uploadedById String
+  createdAt    DateTime @default(now())
+
+  payment      Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  media        Media    @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+  uploadedBy   User     @relation("PaymentProofUploadedBy", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([paymentId])
+  @@index([mediaId])
+  @@index([uploadedById])
+}
+
+model Refund {
+  id              String   @id @default(uuid(7))
+  paymentId       String
+  externalId      String?  @unique
+  amount          Int
+  currency        String   @default("INR")
+  type            String
+  reason          String?
+  status          String
+  providerDetails Json?
+  processedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  payment         Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+}
+
+model SavedPaymentMethod {
+  id              String   @id @default(uuid(7))
+  userId          String
+  provider        String   @default("razorpay")
+  type            String   // card, upi, netbanking, wallet
+  tokenId         String?  // Provider token for saved method
+  last4           String?  // Last 4 digits for cards
+  cardBrand       String?  // visa, mastercard, etc.
+  cardExpMonth    Int?
+  cardExpYear     Int?
+  upiVpa          String?  // UPI VPA handle
+  bankName        String?  // For netbanking
+  walletProvider  String?  // paytm, phonepe, etc.
+  nickname        String?  // User-defined name
+  isDefault       Boolean  @default(false)
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tokenId])
+  @@index([userId])
+}
+
+model Dispute {
+  id               String   @id @default(uuid(7))
+  paymentId        String
+  externalId       String?  @unique
+  filedBy          String?
+  reason           String?
+  description      String?
+  status           String
+  amount           Int      @default(0)
+  currency         String   @default("INR")
+  resolutionType   String?
+  resolutionNotes  String?
+  evidence         Json?
+  evidenceDueBy    DateTime?
+  providerDetails  Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  payment          Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+  @@index([status])
+}

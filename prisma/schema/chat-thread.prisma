@@ -1,0 +1,82 @@
+// =============================================================================
+// Chat threads (direct admin↔client, admin-created groups) — non-project chat
+// =============================================================================
+
+enum ChatThreadType {
+  DIRECT
+  GROUP
+}
+
+enum ChatThreadMemberLeftReason {
+  LEFT
+  REMOVED
+}
+
+model ChatThread {
+  id            String         @id @default(uuid(7))
+  type          ChatThreadType
+  title         String?
+  createdById   String
+  archivedAt    DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  createdBy User               @relation("ChatThreadsCreated", fields: [createdById], references: [id], onDelete: Restrict)
+  members   ChatThreadMember[]
+  stints    ChatThreadMemberStint[]
+  userPrefs ChatThreadUserPrefs[]
+  messages  Message[]
+
+  @@index([type])
+  @@index([createdById])
+  @@index([archivedAt])
+}
+
+model ChatThreadMember {
+  threadId String
+  userId   String
+  joinedAt DateTime @default(now())
+
+  thread ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([threadId, userId])
+  @@index([userId])
+}
+
+/// Tracks each join/leave period for group (and direct) thread membership.
+/// Used to scope message history on leave, kick, and rejoin.
+model ChatThreadMemberStint {
+  id              String                    @id @default(uuid(7))
+  threadId        String
+  userId          String
+  joinedAt        DateTime                  @default(now())
+  leftAt          DateTime?
+  leftReason      ChatThreadMemberLeftReason?
+  userSentMessage Boolean                   @default(false)
+
+  thread ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, userId])
+  @@index([userId])
+  @@index([threadId, leftAt])
+}
+
+/// Per-user inbox prefs for direct/group threads (works even after leave).
+model ChatThreadUserPrefs {
+  threadId       String
+  userId         String
+  userArchivedAt DateTime?
+  userHiddenAt   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  thread ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([threadId, userId])
+  @@index([userId])
+  @@index([userId, userArchivedAt])
+  @@index([userId, userHiddenAt])
+}

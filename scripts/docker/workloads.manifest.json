@@ -1,0 +1,120 @@
+{
+  "imageRegistry": "ghcr.io/nestlancer",
+  "k8sImageRegistryOverride": "ghcr.io/your-org",
+  "k8sDefaultImageTag": "latest",
+  "ingress": {
+    "wsPath": "/ws"
+  },
+  "environments": {
+    "local": {
+      "namespace": "nestlancer-local",
+      "apiHost": "api.nestlancer.local",
+      "imageTag": "local",
+      "tls": false,
+      "certManagerIssuer": ""
+    },
+    "dev": {
+      "namespace": "nestlancer-dev",
+      "apiHost": "dev-api.nestlancer.com",
+      "imageTag": "dev",
+      "tls": true,
+      "certManagerIssuer": "letsencrypt-staging"
+    },
+    "staging": {
+      "namespace": "nestlancer-staging",
+      "apiHost": "api-staging.nestlancer.com",
+      "imageTag": "staging",
+      "tls": true,
+      "certManagerIssuer": "letsencrypt-staging"
+    },
+    "production": {
+      "namespace": "nestlancer",
+      "apiHost": "api.nestlancer.com",
+      "imageTag": "latest",
+      "tls": true,
+      "certManagerIssuer": "letsencrypt-prod"
+    }
+  },
+  "gateways": [
+    {
+      "id": "gateway",
+      "composeService": "gateway",
+      "port": 3000,
+      "metricsHostPort": 13000,
+      "dockerfile": "docker/gateway/Dockerfile",
+      "exposeHost": true,
+      "k8sName": "gateway"
+    },
+    {
+      "id": "ws-gateway",
+      "composeService": "ws-gateway",
+      "port": 3100,
+      "metricsHostPort": 13100,
+      "dockerfile": "docker/ws-gateway/Dockerfile",
+      "exposeHost": true,
+      "k8sName": "ws-gateway"
+    }
+  ],
+  "services": [
+    { "id": "auth", "composeService": "svc-auth", "port": 3001, "metricsHostPort": 14001, "k8sName": "svc-auth" },
+    { "id": "users", "composeService": "svc-users", "port": 3002, "metricsHostPort": 14002, "k8sName": "svc-users" },
+    { "id": "payments", "composeService": "svc-payments", "port": 3003, "metricsHostPort": 14003, "k8sName": "svc-payments" },
+    { "id": "webhooks", "composeService": "svc-webhooks", "port": 3004, "metricsHostPort": 14004, "k8sName": "svc-webhooks" },
+    { "id": "admin", "composeService": "svc-admin", "port": 3005, "metricsHostPort": 14005, "k8sName": "svc-admin" },
+    { "id": "requests", "composeService": "svc-requests", "port": 3006, "metricsHostPort": 14006, "k8sName": "svc-requests" },
+    { "id": "quotes", "composeService": "svc-quotes", "port": 3007, "metricsHostPort": 14007, "k8sName": "svc-quotes", "extraEnv": { "PROJECTS_SERVICE_URL": "http://svc-projects:3008" } },
+    {
+      "id": "projects",
+      "composeService": "svc-projects",
+      "port": 3008,
+      "metricsHostPort": 14008,
+      "k8sName": "svc-projects",
+      "extraEnv": { "MESSAGING_SERVICE_URL": "http://svc-messaging:3010" }
+    },
+    { "id": "progress", "composeService": "svc-progress", "port": 3009, "metricsHostPort": 14009, "k8sName": "svc-progress" },
+    { "id": "messaging", "composeService": "svc-messaging", "port": 3010, "metricsHostPort": 14010, "k8sName": "svc-messaging" },
+    {
+      "id": "notifications",
+      "composeService": "svc-notifications",
+      "port": 3011,
+      "metricsHostPort": 14011,
+      "k8sName": "svc-notifications"
+    },
+    { "id": "media", "composeService": "svc-media", "port": 3012, "metricsHostPort": 14012, "k8sName": "svc-media" },
+    { "id": "portfolio", "composeService": "svc-portfolio", "port": 3013, "metricsHostPort": 14013, "k8sName": "svc-portfolio" },
+    { "id": "blog", "composeService": "svc-blog", "port": 3014, "metricsHostPort": 14014, "k8sName": "svc-blog" },
+    { "id": "contact", "composeService": "svc-contact", "port": 3015, "metricsHostPort": 14015, "k8sName": "svc-contact" },
+    {
+      "id": "health",
+      "composeService": "svc-health",
+      "port": 3016,
+      "metricsHostPort": 14016,
+      "k8sName": "svc-health",
+      "extraEnv": { "WS_GATEWAY_INTERNAL_URL": "http://ws-gateway:3100/health" }
+    }
+  ],
+  "workers": [
+    { "id": "analytics-worker", "composeService": "worker-analytics", "metricsHostPort": 15001, "k8sName": "worker-analytics", "extraEnv": { "WORKER_HEARTBEAT_NAME": "analyticsWorker" } },
+    { "id": "audit-worker", "composeService": "worker-audit", "metricsHostPort": 15002, "k8sName": "worker-audit", "extraEnv": { "WORKER_HEARTBEAT_NAME": "auditWorker" } },
+    { "id": "cdn-worker", "composeService": "worker-cdn", "metricsHostPort": 15003, "k8sName": "worker-cdn", "extraEnv": { "WORKER_HEARTBEAT_NAME": "cdnWorker" } },
+    { "id": "document-worker", "composeService": "worker-document", "metricsHostPort": 15004, "k8sName": "worker-document", "extraEnv": { "WORKER_HEARTBEAT_NAME": "documentWorker" } },
+    { "id": "email-worker", "composeService": "worker-email", "metricsHostPort": 15005, "k8sName": "worker-email", "extraEnv": { "WORKER_HEARTBEAT_NAME": "emailWorker" } },
+    { "id": "export-worker", "composeService": "worker-export", "metricsHostPort": 15006, "k8sName": "worker-export", "extraEnv": { "WORKER_HEARTBEAT_NAME": "exportWorker" } },
+    { "id": "media-worker", "composeService": "worker-media", "metricsHostPort": 15007, "k8sName": "worker-media", "extraEnv": { "WORKER_HEARTBEAT_NAME": "mediaWorker" } },
+    {
+      "id": "notification-worker",
+      "composeService": "worker-notification",
+      "metricsHostPort": 15008,
+      "k8sName": "worker-notification",
+      "extraEnv": { "WORKER_HEARTBEAT_NAME": "notificationWorker" }
+    },
+    {
+      "id": "outbox-poller",
+      "composeService": "worker-outbox",
+      "metricsHostPort": 15009,
+      "k8sName": "worker-outbox",
+      "extraEnv": { "WORKER_HEARTBEAT_NAME": "outboxPoller" }
+    },
+    { "id": "webhook-worker", "composeService": "worker-webhook", "metricsHostPort": 15010, "k8sName": "worker-webhook", "extraEnv": { "WORKER_HEARTBEAT_NAME": "webhookWorker" } }
+  ]
+}

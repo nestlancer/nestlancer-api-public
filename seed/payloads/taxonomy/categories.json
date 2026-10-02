@@ -1,0 +1,42 @@
+{
+  "blog": [
+    { "name": "Technology", "slug": "technology", "description": "Tech articles and tutorials" },
+    { "name": "Design", "slug": "design", "description": "UI/UX design insights" },
+    { "name": "Business", "slug": "business", "description": "Business and studio insights" },
+    {
+      "name": "Case Studies",
+      "slug": "case-studies",
+      "description": "Project case studies and retrospectives"
+    }
+  ],
+  "portfolio": [
+    { "name": "Web Development", "slug": "web-development", "order": 1 },
+    { "name": "Mobile App", "slug": "mobile-app", "order": 2 },
+    { "name": "UI/UX Design", "slug": "ui-ux-design", "order": 3 },
+    { "name": "E-Commerce", "slug": "ecommerce", "order": 4 }
+  ],
+  "requestCategories": [
+    {
+      "key": "webDevelopment",
+      "label": "Web Development",
+      "description": "Websites and web applications"
+    },
+    { "key": "mobileApp", "label": "Mobile App", "description": "iOS and Android applications" },
+    { "key": "ecommerce", "label": "E-Commerce", "description": "Online stores and marketplaces" },
+    { "key": "design", "label": "Design", "description": "UI/UX and product design" },
+    { "key": "branding", "label": "Branding", "description": "Brand identity and visual systems" },
+    { "key": "marketing", "label": "Marketing", "description": "Digital marketing and campaigns" },
+    { "key": "seo", "label": "SEO", "description": "Search engine optimization" },
+    {
+      "key": "consulting",
+      "label": "Consulting",
+      "description": "Technical consulting and architecture"
+    },
+    {
+      "key": "maintenance",
+      "label": "Maintenance",
+      "description": "Ongoing support and improvements"
+    },
+    { "key": "custom", "label": "Custom", "description": "Other project types" }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "blog": [
+    { "name": "TypeScript", "slug": "typescript" },
+    { "name": "JavaScript", "slug": "javascript" },
+    { "name": "NestJS", "slug": "nestjs" },
+    { "name": "React", "slug": "react" },
+    { "name": "Next.js", "slug": "nextjs" },
+    { "name": "Node.js", "slug": "nodejs" }
+  ]
+}

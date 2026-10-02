@@ -1,0 +1,124 @@
+// =============================================================================
+// Portfolio Domain Models
+// =============================================================================
+
+enum PortfolioStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PortfolioVisibility {
+  PUBLIC
+  UNLISTED
+  PRIVATE
+}
+
+enum PortfolioMediaKind {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+model PortfolioItem {
+  id                String               @id @default(uuid(7))
+  slug              String
+  title             String
+  shortDescription  String
+  fullDescription   String
+  contentFormat     String               @default("markdown")
+  categoryId        String
+  status            PortfolioStatus      @default(DRAFT)
+  visibility        PortfolioVisibility  @default(PUBLIC)
+  featured          Boolean              @default(false)
+  order             Int                  @default(0)
+  likeCount         Int                  @default(0)
+  viewCount         Int                  @default(0)
+  clientName        String?
+  clientLogo        String?
+  clientIndustry    String?
+  clientWebsite     String?
+  clientTestimonial Json?
+  stats             Json?
+  thumbnailId       String?
+  videoId           String?
+  tags              Json?
+  projectDetails    Json?
+  links             Json?
+  seo               Json?
+  publishedAt       DateTime?
+  completedAt       DateTime?
+  sourceProjectId   String?              @unique
+  deletedAt         DateTime?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  category          PortfolioCategory    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  sourceProject     Project?             @relation(fields: [sourceProjectId], references: [id], onDelete: SetNull)
+  thumbnail         Media?               @relation("PortfolioThumbnail", fields: [thumbnailId], references: [id], onDelete: SetNull)
+  video             Media?               @relation("PortfolioVideo", fields: [videoId], references: [id], onDelete: SetNull)
+  images            PortfolioImage[]
+  likes             PortfolioLike[]
+  contactReferences ContactMessage[]     @relation("ContactPortfolioRef")
+  requestReferences ProjectRequest[]     @relation("RequestPortfolioRef")
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([visibility])
+  @@index([order])
+  @@index([thumbnailId])
+  @@index([videoId])
+  @@index([featured])
+  @@index([publishedAt])
+  @@index([status, visibility, featured])
+  @@index([deletedAt])
+  @@unique([slug], where: { deletedAt: null })
+}
+
+model PortfolioImage {
+  id              String              @id @default(uuid(7))
+  portfolioItemId String
+  mediaId         String
+  kind            PortfolioMediaKind  @default(IMAGE)
+  title           String?
+  alt             String?
+  caption         String?
+  order           Int                 @default(0)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  portfolioItem   PortfolioItem       @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  media           Media               @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@index([portfolioItemId])
+  @@index([mediaId])
+  @@index([order])
+  @@index([kind])
+}
+
+model PortfolioCategory {
+  id          String          @id @default(uuid(7))
+  name        String
+  slug        String          @unique
+  description String?
+  order       Int             @default(0)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  items       PortfolioItem[]
+}
+
+model PortfolioLike {
+  id              String        @id @default(uuid(7))
+  portfolioItemId String
+  userId          String?
+  ipHash          String?
+  createdAt       DateTime      @default(now())
+
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([portfolioItemId])
+  @@index([userId])
+  @@index([ipHash])
+}

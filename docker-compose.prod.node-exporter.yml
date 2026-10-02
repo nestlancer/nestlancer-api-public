@@ -1,0 +1,23 @@
+# Host metrics for Prometheus on the infra VPS.
+# Do not bind host port 9100: that port is the web frontend on this machine.
+# Prometheus scrapes 100.101.132.126:19100 (Tailscale only).
+services:
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: nl-prod-node-exporter
+    pid: host
+    restart: unless-stopped
+    command:
+      - --path.rootfs=/host
+      - --web.listen-address=:9100
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($|/)
+    volumes:
+      - /:/host:ro,rslave
+    ports:
+      - "100.101.132.126:19100:9100"
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:9100/metrics >/dev/null || exit 1']
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

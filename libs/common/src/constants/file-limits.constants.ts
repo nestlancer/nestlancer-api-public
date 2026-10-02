@@ -1,0 +1,14 @@
+/** File upload limits in bytes */
+export const FILE_LIMITS = {
+  MAX_FILE_SIZE: 50 * 1024 * 1024, // 50MB
+  MAX_IMAGE_SIZE: 10 * 1024 * 1024, // 10MB
+  MAX_VIDEO_SIZE: 100 * 1024 * 1024, // 100MB
+  MAX_DOCUMENT_SIZE: 25 * 1024 * 1024, // 25MB
+  MAX_AVATAR_SIZE: 5 * 1024 * 1024, // 5MB
+  MAX_CHUNK_SIZE: 5 * 1024 * 1024, // 5MB per chunk
+  MAX_TOTAL_UPLOAD_SIZE: 500 * 1024 * 1024, // 500MB total per project
+  IMAGE_MAX_WIDTH: 4096,
+  IMAGE_MAX_HEIGHT: 4096,
+  AVATAR_WIDTH: 256,
+  AVATAR_HEIGHT: 256,
+} as const;

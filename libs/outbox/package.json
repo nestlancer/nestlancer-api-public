@@ -1,0 +1,21 @@
+{
+  "name": "@nestlancer/outbox",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestlancer/common": "workspace:*",
+    "@nestlancer/database": "workspace:*",
+    "@nestlancer/queue": "workspace:*",
+    "@nestjs/core": "^10.0.0",
+    "rxjs": "^7.8.1"
+  },
+  "scripts": {
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:cov": "jest --coverage"
+  }
+}

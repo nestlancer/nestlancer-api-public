@@ -1,0 +1,22 @@
+---
+description: NestJS coding style, modules, and import order
+globs: "{gateway,ws-gateway,services/*,workers/*,libs/*}/src/**/*.ts"
+alwaysApply: false
+---
+
+# NestJS Conventions
+
+## Naming
+- Files: kebab-case with role suffix (`*.controller.ts`, `*.service.ts`, `*.module.ts`, `*.dto.ts`, `*.guard.ts`)
+- Classes: PascalCase; methods/vars: camelCase; env: `UPPER_SNAKE_CASE`
+
+## Structure
+- Feature module owns controller/service/DTO; shared logic goes in `libs/*` and is re-exported via `src/index.ts`
+- Prefer constructor injection; avoid `new` for Nest providers
+- Use existing interceptors/filters/pipes from `@nestlancer/common` instead of one-off error shapes
+
+## Style
+- Strict TypeScript (`tsconfig.base.json`); no `any` unless unavoidable and localized
+- ESLint import order: builtin → external (`@nestjs/*` first) → internal (`@nestlancer/*`) → relative → type
+- Prettier: single quotes, semicolons, trailing commas, 2 spaces, 100 cols
+- Conventional commits: `type(scope): subject` (lowercase subject)

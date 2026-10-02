@@ -1,0 +1,124 @@
+// =============================================================================
+// Progress Tracking Models
+// =============================================================================
+
+enum MilestoneStatus {
+  PENDING
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  APPROVED
+  REVISION_REQUESTED
+  CANCELLED
+}
+
+enum DeliverableStatus {
+  PENDING
+  IN_PROGRESS
+  READY_FOR_REVIEW
+  REVISION_REQUESTED
+  APPROVED
+  REJECTED
+}
+
+model Milestone {
+  id          String          @id @default(uuid(7))
+  projectId   String
+  name        String
+  description String?
+  amount      Int?
+  percentage  Float?
+  dueDate     DateTime?
+  status      MilestoneStatus @default(PENDING)
+  progress    Int             @default(0)
+  order       Int             @default(0)
+  startDate   DateTime?
+  endDate     DateTime?
+  completedAt       DateTime?
+  approvedAt        DateTime?
+  reviewStartedAt   DateTime?
+  reviewDeadlineAt  DateTime?
+  deemedAcceptedAt  DateTime?
+  revisionCount     Int             @default(0)
+  estimatedHours    Float?
+  actualHours       Float?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  deliverables Deliverable[]
+  payments     Payment[]
+  progressEntries ProgressEntry[]
+  timeEntries     TimeEntry[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model TimeEntry {
+  id              String    @id @default(uuid(7))
+  milestoneId     String
+  projectId       String
+  adminId         String
+  durationMinutes Int
+  description     String?
+  startedAt       DateTime?
+  endedAt         DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  milestone       Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  admin           User      @relation("TimeEntries", fields: [adminId], references: [id], onDelete: Restrict)
+
+  @@index([milestoneId])
+  @@index([projectId])
+  @@index([adminId])
+}
+
+model Deliverable {
+  id          String            @id @default(uuid(7))
+  milestoneId String
+  name        String
+  description String?
+  status      DeliverableStatus @default(PENDING)
+  priority    String?
+  tags        Json?
+  attachments Json?
+  dueAt       DateTime?
+  approvedAt  DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  milestone   Milestone         @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  progressEntries ProgressEntry[]
+
+  @@index([milestoneId])
+  @@index([status])
+}
+
+model ProgressEntry {
+  id             String       @id @default(uuid(7))
+  projectId      String
+  milestoneId    String?
+  deliverableId  String?
+  type           String
+  title          String
+  description    String?
+  actorId        String?
+  details        Json?
+  visibility     String       @default("client")
+  clientNotified Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone      Milestone?   @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+  deliverable    Deliverable? @relation(fields: [deliverableId], references: [id], onDelete: SetNull)
+  actor          User?        @relation("ProgressActors", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([milestoneId])
+  @@index([deliverableId])
+  @@index([actorId])
+}

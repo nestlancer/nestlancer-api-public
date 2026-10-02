@@ -1,0 +1,20 @@
+---
+description: OpenAPI contract, DTOs, and gateway API conventions
+globs: "**/*.controller.ts,**/dto/**/*.ts,gateway/src/**/*.ts,docs/api/**/*.json,scripts/openapi/**/*"
+alwaysApply: false
+---
+
+# API Contracts
+
+## Patterns
+- Controllers expose DTOs with class-validator; gateway merges OpenAPI
+- Committed spec: `docs/api/openapi-merged.json`
+- Envelope responses and `AllExceptionsFilter` standardize errors
+
+## Rules
+- Every new/changed endpoint updates Swagger decorators and DTOs
+- After API shape changes: `pnpm openapi:export` then `pnpm contract:check` / `pnpm openapi:lint`
+- Do not hand-edit `docs/api/openapi-merged.json` — regenerate
+- Breaking changes need `pnpm openapi:diff` awareness and frontend codegen coordination
+- Public vs authenticated routes must be explicit; never accidentally drop guards
+- Validate pagination/filter bounds; reject unknown properties (whitelist pipe)

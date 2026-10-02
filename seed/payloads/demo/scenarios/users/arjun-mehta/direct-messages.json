@@ -1,0 +1,25 @@
+{
+  "phase": "07-direct-messages",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "both",
+      "action": "directThread",
+      "endpoint": "POST /messages/threads/direct",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Arjun ji — quick check on the Spice D2C mid-payment. UTR pending for the 40% milestone installment."
+        },
+        {
+          "sender": "client",
+          "content": "Accounts team will release HDFC transfer by Monday. Navratri prep is keeping us busy — thanks for the checkout-first sprint."
+        },
+        {
+          "sender": "admin",
+          "content": "Noted. Milestone 2 staging link stays live through the weekend for your team to test UPI flows."
+        }
+      ]
+    }
+  ]
+}

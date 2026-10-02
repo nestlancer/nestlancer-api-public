@@ -1,0 +1,42 @@
+# Example Prometheus alert rules — import on INFRA VPS Alertmanager/Prometheus
+# File: /etc/prometheus/rules/nestlancer.yml
+
+groups:
+  - name: nestlancer-backend
+    rules:
+      - alert: NestlancerMetricsTargetDown
+        expr: up{job="nestlancer-apps"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'Nestlancer metrics target is down'
+          description: 'Prometheus cannot scrape an App VPS metrics endpoint — check APP_METRICS_TARGETS Tailscale IP'
+
+      - alert: NestlancerHighErrorRate
+        expr: |
+          sum(rate(nestlancer_http_requests_total{status=~"5.."}[5m]))
+          /
+          sum(rate(nestlancer_http_requests_total[5m]))
+          > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'HTTP error rate above 10%'
+
+      - alert: NestlancerOutboxStale
+        expr: outbox_stale_events_detected_total > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Stale outbox events detected'
+
+      - alert: NestlancerWebhookFailures
+        expr: rate(webhook_failed_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Webhook failure metric increasing'

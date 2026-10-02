@@ -1,0 +1,74 @@
+# Promtail runs on the App VPS (nl-promtail sidecar).
+# Reads Docker logs from nl-* containers and pushes to Loki on the Infra VPS.
+# LOKI_PUSH_URL is expanded at startup via -config.expand-env=true
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/promtail/positions.yaml
+
+clients:
+  - url: ${LOKI_PUSH_URL}
+    basic_auth:
+      username: ${LOKI_USERNAME}
+      password: ${LOKI_PASSWORD}
+
+scrape_configs:
+  - job_name: nestlancer-containers
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/nl-promtail'
+        action: drop
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/nl-.*'
+        action: keep
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/nl-demo-.*'
+        action: drop
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: container
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: logstream
+      - target_label: job
+        replacement: nestlancer
+      - target_label: env
+        replacement: ${OBSERVABILITY_ENV}
+    pipeline_stages:
+      # Existing Nest lines are ANSI text with a trailing [uuid].
+      # Newer app lines are JSON with correlationId and traceId.
+      # IDs go to structured metadata (not labels) so Loki cardinality stays bounded.
+      - decolorize: {}
+      - json:
+          expressions:
+            level: level
+            correlationId: correlationId
+            traceId: traceId
+            service: service
+      - regex:
+          expression: '\[(?P<bracketId>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\]'
+      - regex:
+          expression: '(?P<nestLevel>\b(?:ERROR|WARN|DEBUG|LOG)\b)'
+      - template:
+          source: correlation_id
+          template: '{{ or .correlationId .bracketId }}'
+      - template:
+          source: trace_id
+          template: '{{ .traceId }}'
+      - template:
+          source: level
+          template: '{{ if .level }}{{ ToLower .level }}{{ else if eq .nestLevel "LOG" }}info{{ else if .nestLevel }}{{ ToLower .nestLevel }}{{ end }}'
+      - labels:
+          level:
+      - structured_metadata:
+          correlation_id:
+          trace_id:
+          service:
+      - static_labels:
+          job: nestlancer
+          env: ${OBSERVABILITY_ENV}

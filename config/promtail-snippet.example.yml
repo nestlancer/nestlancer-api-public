@@ -1,0 +1,30 @@
+# Bare-metal / non-compose Promtail snippet (production App VPS)
+# Adjust paths and OBSERVABILITY_ENV as needed.
+
+server:
+  http_listen_port: 9080
+
+positions:
+  filename: /var/lib/promtail/positions.yaml
+
+clients:
+  - url: ${LOKI_PUSH_URL}
+    basic_auth:
+      username: ${LOKI_USERNAME}
+      password: ${LOKI_PASSWORD}
+
+scrape_configs:
+  - job_name: nestlancer-containers
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/nl-promtail'
+        action: drop
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/nl-.*'
+        action: keep
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: container

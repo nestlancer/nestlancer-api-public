@@ -1,0 +1,130 @@
+// =============================================================================
+// Blog Domain Models
+// =============================================================================
+
+enum BlogStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SPAM
+}
+
+model BlogPost {
+  id              String        @id @default(uuid(7))
+  slug            String
+  title           String
+  excerpt         String
+  content         String
+  contentFormat   String        @default("markdown")
+  authorId        String
+  categoryId      String
+  status          BlogStatus    @default(DRAFT)
+  commentsEnabled Boolean       @default(true)
+  featured        Boolean       @default(false)
+  featuredImageId String?
+  seo             Json?
+  readingTime     Int?
+  viewCount       Int           @default(0)
+  likeCount       Int           @default(0)
+  scheduledAt     DateTime?
+  publishedAt     DateTime?
+  deletedAt       DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  author          User          @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  category        BlogCategory  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  featuredImage   Media?        @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+  tags            BlogTag[]     @relation("BlogPostTags")
+  comments        BlogComment[]
+  likes           PostLike[]
+  bookmarks       PostBookmark[]
+
+  @@index([status])
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([featuredImageId])
+  @@index([publishedAt])
+  @@index([featured])
+  @@index([status, publishedAt])
+  @@index([deletedAt])
+  @@unique([slug], where: { deletedAt: null })
+}
+
+model BlogCategory {
+  id          String     @id @default(uuid(7))
+  name        String
+  slug        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  posts       BlogPost[]
+}
+
+model BlogTag {
+  id        String     @id @default(uuid(7))
+  name      String     @unique
+  slug      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  posts     BlogPost[] @relation("BlogPostTags")
+}
+
+model BlogComment {
+  id                String        @id @default(uuid(7))
+  postId            String
+  authorId          String
+  content           String
+  parentId          String?
+  status            CommentStatus @default(PENDING)
+  likes             Int           @default(0)
+  isPinned          Boolean       @default(false)
+  moderationMessage String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  post              BlogPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author            User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent            BlogComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  replies           BlogComment[] @relation("CommentReplies")
+
+  @@index([postId])
+  @@index([status])
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model PostLike {
+  id        String   @id @default(uuid(7))
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([userId])
+}
+
+model PostBookmark {
+  id        String   @id @default(uuid(7))
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([userId])
+}

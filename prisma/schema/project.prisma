@@ -1,0 +1,70 @@
+// =============================================================================
+// Project Domain Models
+// =============================================================================
+
+enum ProjectStatus {
+  CREATED
+  PENDING_CONTRACT
+  PENDING_PAYMENT
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  ARCHIVED
+  CANCELLED
+  REVISION_REQUESTED
+  ON_HOLD
+  PAYMENT_OVERDUE
+  SUSPENDED
+  DISPUTED
+}
+
+model Project {
+  id              String        @id @default(uuid(7))
+  quoteId         String        @unique
+  clientId        String
+  adminId         String?
+  title           String
+  description     String
+  status          ProjectStatus @default(CREATED)
+  overallProgress Int           @default(0)
+  startDate       DateTime?
+  targetEndDate   DateTime?
+  completedAt     DateTime?
+  deletedAt       DateTime?
+  tags            Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  quote           Quote         @relation(fields: [quoteId], references: [id], onDelete: Restrict)
+  client          User          @relation("ClientProjects", fields: [clientId], references: [id], onDelete: Restrict)
+  admin           User?         @relation("AdminProjects", fields: [adminId], references: [id], onDelete: SetNull)
+  milestones      Milestone[]
+  payments        Payment[]
+  messages        Message[]
+  progressEntries ProgressEntry[]
+  portfolioItem   PortfolioItem?
+  showcaseConsent ProjectShowcaseConsent?
+  timeEntries     TimeEntry[]
+
+  @@index([clientId])
+  @@index([adminId])
+  @@index([status])
+}
+
+model ProjectShowcaseConsent {
+  id                  String   @id @default(uuid(7))
+  projectId           String   @unique
+  allowPublicUse      Boolean  @default(false)
+  testimonialText     String?
+  testimonialAuthor   String?
+  rating              Int?
+  consentedAt         DateTime @default(now())
+  consentedByUserId   String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  project             Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  consentedByUser      User     @relation("ShowcaseConsents", fields: [consentedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([consentedByUserId])
+}

@@ -1,0 +1,63 @@
+{
+  "seedKey": "alex-admin-portal-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Warehouse & Fleet Operations Portal",
+        "description": "Internal operations portal for our Pune and Nashik warehouses — real-time inventory visibility, fleet GPS tracking dashboard, CSV export on dispatch lists, role-based widgets for warehouse managers vs fleet supervisors, and audit logs for compliance with our ISO 9001 process.",
+        "category": "custom",
+        "budget": {
+          "min": 1500000,
+          "max": 2500000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-08-01T00:00:00Z",
+          "deadline": "2026-09-05T23:59:59Z",
+          "flexible": true
+        },
+        "requirements": [
+          "Warehouse inventory dashboard",
+          "Fleet GPS summary widgets",
+          "CSV export on all list views",
+          "Role-based access for managers and supervisors",
+          "Audit log viewer with date filters"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "actor": "client",
+      "action": "uploadAttachments",
+      "endpoint": "POST /requests/:id/attachments",
+      "files": [
+        "projects/admin-portal-enhancements/assets/request-brief.pdf"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "Scope aligned with existing NestJS admin architecture — GPS data via client's Trakzee API."
+      }
+    }
+  ]
+}

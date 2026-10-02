@@ -1,0 +1,140 @@
+{
+  "seedKey": "sandeep-chopra-gps-fleet-project",
+  "projectKey": "gps-fleet",
+  "quoteSeedKey": "sandeep-chopra-gps-fleet-quote",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "Fleet Dashboard",
+          "description": "Foundation delivery",
+          "startDate": "2026-06-01",
+          "endDate": "2026-07-15",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        },
+        {
+          "name": "Phase 2 \u2014 Extended Scope",
+          "description": "Extended features and integrations",
+          "startDate": "2026-07-16",
+          "endDate": "2026-09-01",
+          "amount": 0,
+          "currency": "INR",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 2160000,
+        "currency": "INR",
+        "notes": "Deposit \u2014 Chopra Fleet Logistics"
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Fleet Dashboard",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update \u2014 Fleet Dashboard",
+        "description": "Fleet map and geofence alerts are in review with Chopra's dispatch team.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Fleet Dashboard",
+      "files": [
+        "projects/gps-fleet/assets/deliverables/milestone-1-spec.pdf"
+      ],
+      "description": "M1 specification and API contract."
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "Fleet Dashboard"
+    },
+    {
+      "order": 6,
+      "actor": "client",
+      "action": "approveMilestone",
+      "endpoint": "POST /progress/milestones/:id/approve",
+      "milestoneName": "Fleet Dashboard",
+      "payload": {
+        "feedback": "M1 approved \u2014 proceed to phase 2."
+      }
+    },
+    {
+      "order": 7,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Phase 2 \u2014 Extended Scope",
+      "payload": {
+        "type": "UPDATE",
+        "title": "In progress \u2014 Phase 2 \u2014 Extended Scope",
+        "description": "Phase 2 implementation underway \u2014 sharing the current staging build for early feedback.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 8,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Phase 2 \u2014 Extended Scope",
+      "files": [
+        "projects/gps-fleet/assets/review/gps-fleet-staging-review.zip"
+      ],
+      "description": "Staging build shared for progress review (work in progress; not final delivery)."
+    },
+    {
+      "order": 9,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Phase 2 \u2014 Extended Scope",
+      "payload": {
+        "type": "DELIVERABLE_UPLOAD",
+        "title": "Staging build ready for review",
+        "description": "Staging build uploaded for dispatch review. Live GPS replay and fuel reports are included; driver-app polish is scheduled for the next milestone.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 10,
+      "actor": "both",
+      "action": "projectMessaging",
+      "endpoint": "POST /messages/projects/:id",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Shared staging build for GPS Fleet Tracking Portal \u2014 please review progress; final delivery comes after phase 2 sign-off."
+        }
+      ]
+    }
+  ]
+}

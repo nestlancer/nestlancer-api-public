@@ -1,0 +1,170 @@
+# Build and push only production images affected by changes since the base branch.
+# Full releases (tags) should use build-images.yml instead.
+
+name: Build Affected Production Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      affected_base:
+        description: Git ref to compare against (turbo ... filter)
+        required: false
+        default: origin/main
+      image_tag:
+        description: Tag for pushed images
+        required: false
+        default: latest
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: backend-affected-images-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  DOCKERFILE: docker/prod-monorepo/Dockerfile
+  BAKE_FILE: docker/prod-monorepo/docker-bake.hcl
+
+jobs:
+  meta:
+    name: Resolve registry
+    runs-on: ubuntu-latest
+    outputs:
+      registry: ${{ steps.meta.outputs.registry }}
+      tag: ${{ steps.tag.outputs.tag }}
+      affected_base: ${{ steps.base.outputs.affected_base }}
+    steps:
+      - id: meta
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          echo "registry=${{ env.REGISTRY }}/${OWNER}" >> "$GITHUB_OUTPUT"
+      - id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.image_tag }}" ]; then
+            echo "tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          fi
+      - id: base
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.affected_base }}" ]; then
+            echo "affected_base=${{ inputs.affected_base }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "affected_base=origin/main" >> "$GITHUB_OUTPUT"
+          fi
+
+  affected:
+    name: Detect affected targets
+    needs: meta
+    runs-on: ubuntu-latest
+    outputs:
+      runtime_targets: ${{ steps.detect.outputs.runtime_targets }}
+      turbo_filters: ${{ steps.detect.outputs.turbo_filters }}
+      pdf_targets: ${{ steps.detect.outputs.pdf_targets }}
+      has_runtime: ${{ steps.detect.outputs.has_runtime }}
+      has_pdf: ${{ steps.detect.outputs.has_pdf }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - id: detect
+        env:
+          NESTLANCER_AFFECTED_BASE: ${{ needs.meta.outputs.affected_base }}
+          NESTLANCER_AFFECTED_VERBOSE: "1"
+        run: |
+          eval "$(bash scripts/docker/resolve-affected-targets.sh)"
+          echo "runtime_targets=${NESTLANCER_AFFECTED_TARGETS}" >> "$GITHUB_OUTPUT"
+          echo "turbo_filters=${NESTLANCER_AFFECTED_FILTERS}" >> "$GITHUB_OUTPUT"
+          echo "pdf_targets=${NESTLANCER_AFFECTED_PDF}" >> "$GITHUB_OUTPUT"
+          if [ -n "${NESTLANCER_AFFECTED_TARGETS}" ]; then
+            echo "has_runtime=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_runtime=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -n "${NESTLANCER_AFFECTED_PDF}" ]; then
+            echo "has_pdf=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_pdf=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  images:
+    name: Build affected images
+    needs: [meta, affected]
+    if: needs.affected.outputs.has_runtime == 'true' || needs.affected.outputs.has_pdf == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Warm monorepo build (affected filters)
+        if: needs.affected.outputs.has_runtime == 'true'
+        env:
+          REGISTRY: ${{ needs.meta.outputs.registry }}
+          TAG: ${{ needs.meta.outputs.tag }}
+        run: |
+          docker buildx build \
+            --target monorepo-build \
+            --output=type=cacheonly \
+            -f "$DOCKERFILE" \
+            --build-arg "NESTLANCER_BUILD_FILTERS=${{ needs.affected.outputs.turbo_filters }}" \
+            --build-arg "NESTLANCER_BUILD_TARGETS=${{ needs.affected.outputs.runtime_targets }}" \
+            --cache-from type=gha,scope=backend-monorepo \
+            --cache-to type=gha,mode=max,scope=backend-monorepo \
+            .
+
+      - name: Bake affected runtime images
+        if: needs.affected.outputs.has_runtime == 'true'
+        env:
+          REGISTRY: ${{ needs.meta.outputs.registry }}
+          TAG: ${{ needs.meta.outputs.tag }}
+        run: |
+          targets="${{ needs.affected.outputs.runtime_targets }}"
+          targets="${targets//,/ }"
+          docker buildx bake \
+            -f "$BAKE_FILE" \
+            --set "*.context=." \
+            --set "*.cache-from=type=gha,scope=backend-monorepo" \
+            --set "*.cache-to=type=gha,mode=max,scope=backend-monorepo" \
+            --set "*.args.NESTLANCER_BUILD_TARGETS=${{ needs.affected.outputs.runtime_targets }}" \
+            --push \
+            $targets
+
+      - name: Build affected PDF workers
+        if: needs.affected.outputs.has_pdf == 'true'
+        run: |
+          IFS=',' read -ra pdf <<< "${{ needs.affected.outputs.pdf_targets }}"
+          for worker in "${pdf[@]}"; do
+            docker buildx build \
+              -f "workers/${worker}/Dockerfile" \
+              --push \
+              --cache-from "type=gha,scope=backend-pdf-${worker}" \
+              --cache-to "type=gha,mode=max,scope=backend-pdf-${worker}" \
+              -t "${{ needs.meta.outputs.registry }}/${worker}:${{ needs.meta.outputs.tag }}" \
+              -t "${{ needs.meta.outputs.registry }}/${worker}:latest" \
+              .
+          done

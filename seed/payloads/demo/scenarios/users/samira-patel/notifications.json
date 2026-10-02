@@ -1,0 +1,18 @@
+{
+  "phase": "system",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "sendNotification",
+      "endpoint": "POST /admin/notifications/send",
+      "recipient": "client",
+      "title": "Refund processed",
+      "message": "A referral goodwill credit of ₹500 has been applied to your Festive Campaign Landing Pages invoice.",
+      "type": "payment.refunded",
+      "channels": [
+        "IN_APP"
+      ]
+    }
+  ]
+}

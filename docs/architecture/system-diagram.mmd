@@ -1,0 +1,177 @@
+%% Nestlancer System Architecture Diagram
+%% Full system visualization from external services to infrastructure
+
+graph TB
+    %% ──────────────────────────────────────────────
+    %% External Systems
+    %% ──────────────────────────────────────────────
+    subgraph External["External Systems"]
+        CF["Cloudflare CDN<br/>& Turnstile CAPTCHA"]
+        RP["Razorpay<br/>Payment Gateway"]
+        GH["GitHub<br/>Webhooks"]
+        SMTP_EXT["ZeptoMail / AWS SES<br/>Email Provider"]
+        S3_EXT["AWS S3<br/>Object Storage"]
+        CDN_EXT["CloudFront / Cloudflare<br/>CDN"]
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Entry Layer
+    %% ──────────────────────────────────────────────
+    subgraph Entry["Entry Layer"]
+        NGINX["Nginx<br/>TLS / Rate Limit / Proxy"]
+        API_GW["API Gateway<br/>:3000"]
+        WS_GW["WebSocket Gateway<br/>:3001"]
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Middleware Pipeline
+    %% ──────────────────────────────────────────────
+    subgraph Middleware["Middleware Pipeline"]
+        direction LR
+        MW_CORS["CORS"] --> MW_TRACE["Tracer"]
+        MW_TRACE --> MW_AUTH["Auth Guard"]
+        MW_AUTH --> MW_RATE["Rate Limiter"]
+        MW_RATE --> MW_VALID["Validation"]
+        MW_VALID --> MW_CSRF["CSRF Guard"]
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Feature Services
+    %% ──────────────────────────────────────────────
+    subgraph Services["Feature Services"]
+        SVC_HEALTH["Health :3010"]
+        SVC_AUTH["Auth :3011"]
+        SVC_USERS["Users :3012"]
+        SVC_REQ["Requests :3013"]
+        SVC_QUOTE["Quotes :3014"]
+        SVC_PROJ["Projects :3015"]
+        SVC_PROG["Progress :3016"]
+        SVC_PAY["Payments :3017"]
+        SVC_MSG["Messaging :3018"]
+        SVC_NOTIF["Notifications :3019"]
+        SVC_MEDIA["Media :3020"]
+        SVC_PORT["Portfolio :3021"]
+        SVC_BLOG["Blog :3022"]
+        SVC_CONTACT["Contact :3023"]
+        SVC_ADMIN["Admin :3024"]
+        SVC_WEBHOOK["Webhooks :3025"]
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Admin Domain
+    %% ──────────────────────────────────────────────
+    subgraph Admin["Admin Domain"]
+        ADMIN_CFG["System Config"]
+        ADMIN_FLAGS["Feature Flags"]
+        ADMIN_AUDIT["Audit Logs"]
+        ADMIN_TEMPL["Email Templates"]
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Core Infrastructure
+    %% ──────────────────────────────────────────────
+    subgraph Infrastructure["Core Infrastructure"]
+        subgraph DB["PostgreSQL 16"]
+            PG_PRIMARY["Primary<br/>Read-Write"]
+            PG_REPLICA["Replica(s)<br/>Read-Only"]
+        end
+        subgraph Redis["Redis 7"]
+            REDIS_CACHE["Cache Instance<br/>:6379<br/>allkeys-lru"]
+            REDIS_PUBSUB["Pub/Sub Instance<br/>:6380<br/>noeviction"]
+        end
+        subgraph MQ["RabbitMQ 3.13"]
+            EX_EVENTS["nestlancer.events<br/>Topic Exchange"]
+            EX_WEBHOOKS["nestlancer.webhooks<br/>Direct Exchange"]
+            EX_DLX["nestlancer.dlx<br/>Dead-Letter Exchange"]
+        end
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Async Workers
+    %% ──────────────────────────────────────────────
+    subgraph Workers["Async Workers"]
+        W_EMAIL["Email Worker"]
+        W_NOTIF["Notification Worker"]
+        W_AUDIT["Audit Worker"]
+        W_MEDIA["Media Worker"]
+        W_ANALYTICS["Analytics Worker"]
+        W_WEBHOOK["Webhook Worker"]
+        W_CDN["CDN Worker"]
+        W_OUTBOX["Outbox Poller"]
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Real-time Layer
+    %% ──────────────────────────────────────────────
+    subgraph Realtime["Real-time Layer"]
+        RT_ROOMS["Project Rooms"]
+        RT_PRESENCE["Presence Tracking"]
+        RT_TYPING["Typing Indicators"]
+    end
+
+    %% ──────────────────────────────────────────────
+    %% Connections
+    %% ──────────────────────────────────────────────
+
+    %% Client → Entry
+    CF -->|HTTPS| NGINX
+    NGINX -->|/api/v1/*| API_GW
+    NGINX -->|/ws/*| WS_GW
+
+    %% Entry → Middleware → Services
+    API_GW --> Middleware
+    Middleware --> Services
+
+    %% Services → Infrastructure
+    Services -->|Write| PG_PRIMARY
+    Services -->|Read| PG_REPLICA
+    Services --> REDIS_CACHE
+    Services -->|Outbox Events| PG_PRIMARY
+
+    %% Admin Domain
+    SVC_ADMIN --> Admin
+
+    %% Outbox Poller → RabbitMQ
+    W_OUTBOX -->|Poll| PG_PRIMARY
+    W_OUTBOX -->|Publish| EX_EVENTS
+
+    %% RabbitMQ → Workers
+    EX_EVENTS --> W_EMAIL
+    EX_EVENTS --> W_NOTIF
+    EX_EVENTS --> W_AUDIT
+    EX_EVENTS --> W_MEDIA
+    EX_EVENTS --> W_ANALYTICS
+    EX_EVENTS --> W_WEBHOOK
+    EX_EVENTS --> W_CDN
+    EX_WEBHOOKS --> W_WEBHOOK
+
+    %% Workers → External
+    W_EMAIL --> SMTP_EXT
+    W_MEDIA --> S3_EXT
+    W_CDN --> CDN_EXT
+    W_WEBHOOK --> RP
+
+    %% Real-time
+    WS_GW --> Realtime
+    REDIS_PUBSUB --> WS_GW
+    W_NOTIF --> REDIS_PUBSUB
+
+    %% Webhook Ingestion
+    RP -->|Webhook| NGINX
+    GH -->|Webhook| NGINX
+
+    %% Dead-Letter
+    EX_EVENTS -.->|Failed msgs| EX_DLX
+
+    %% Styling
+    classDef external fill:#f9f,stroke:#333,stroke-width:2px
+    classDef entry fill:#bbf,stroke:#333,stroke-width:2px
+    classDef service fill:#bfb,stroke:#333,stroke-width:2px
+    classDef infra fill:#fbb,stroke:#333,stroke-width:2px
+    classDef worker fill:#fbf,stroke:#333,stroke-width:2px
+
+    class CF,RP,GH,SMTP_EXT,S3_EXT,CDN_EXT external
+    class NGINX,API_GW,WS_GW entry
+    class SVC_HEALTH,SVC_AUTH,SVC_USERS,SVC_REQ,SVC_QUOTE,SVC_PROJ,SVC_PROG,SVC_PAY,SVC_MSG,SVC_NOTIF,SVC_MEDIA,SVC_PORT,SVC_BLOG,SVC_CONTACT,SVC_ADMIN,SVC_WEBHOOK service
+    class PG_PRIMARY,PG_REPLICA,REDIS_CACHE,REDIS_PUBSUB,EX_EVENTS,EX_WEBHOOKS,EX_DLX infra
+    class W_EMAIL,W_NOTIF,W_AUDIT,W_MEDIA,W_ANALYTICS,W_WEBHOOK,W_CDN,W_OUTBOX worker

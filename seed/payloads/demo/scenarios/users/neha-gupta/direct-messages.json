@@ -1,0 +1,21 @@
+{
+  "phase": "07-direct-messages",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "directThread",
+      "endpoint": "POST /messages/threads/direct",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Hi Neha — welcome to Nestlancer. Let us know if you have questions about your request."
+        },
+        {
+          "sender": "client",
+          "content": "Thanks — we're Gupta HR Cloud based in Noida. Looking forward to working together."
+        }
+      ]
+    }
+  ]
+}

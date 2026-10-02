@@ -1,0 +1,79 @@
+[
+  {
+    "id": "019c0001-0001-7000-8000-000000000001",
+    "slug": "discovery-scoping",
+    "label": "Discovery & Scoping",
+    "description": "Requirements workshop, user flows, and technical feasibility",
+    "category": "discovery",
+    "defaultUnitPricePaise": 1500000,
+    "defaultQuantity": 1,
+    "isActive": true,
+    "sortOrder": 10
+  },
+  {
+    "id": "019c0001-0001-7000-8000-000000000002",
+    "slug": "ui-ux-design",
+    "label": "UI/UX Design",
+    "description": "Wireframes, high-fidelity screens, and design system basics",
+    "category": "design",
+    "defaultUnitPricePaise": 2500000,
+    "defaultQuantity": 1,
+    "isActive": true,
+    "sortOrder": 20
+  },
+  {
+    "id": "019c0001-0001-7000-8000-000000000003",
+    "slug": "frontend-development",
+    "label": "Frontend Development",
+    "description": "Responsive UI implementation and client-side logic",
+    "category": "frontend",
+    "defaultUnitPricePaise": 3500000,
+    "defaultQuantity": 1,
+    "isActive": true,
+    "sortOrder": 30
+  },
+  {
+    "id": "019c0001-0001-7000-8000-000000000004",
+    "slug": "backend-api",
+    "label": "Backend & API",
+    "description": "REST/GraphQL APIs, database schema, and business logic",
+    "category": "backend",
+    "defaultUnitPricePaise": 4000000,
+    "defaultQuantity": 1,
+    "isActive": true,
+    "sortOrder": 40
+  },
+  {
+    "id": "019c0001-0001-7000-8000-000000000005",
+    "slug": "qa-testing",
+    "label": "QA & Testing",
+    "description": "Manual QA, regression testing, and bug-fix support",
+    "category": "qa",
+    "defaultUnitPricePaise": 1200000,
+    "defaultQuantity": 1,
+    "isActive": true,
+    "sortOrder": 50
+  },
+  {
+    "id": "019c0001-0001-7000-8000-000000000006",
+    "slug": "devops-deploy",
+    "label": "DevOps & Deployment",
+    "description": "CI/CD, staging/production deploy, and monitoring setup",
+    "category": "devops",
+    "defaultUnitPricePaise": 1500000,
+    "defaultQuantity": 1,
+    "isActive": true,
+    "sortOrder": 60
+  },
+  {
+    "id": "019c0001-0001-7000-8000-000000000007",
+    "slug": "project-management",
+    "label": "Project Management",
+    "description": "Sprint planning, standups, and client communication",
+    "category": "pm",
+    "defaultUnitPricePaise": 1000000,
+    "defaultQuantity": 1,
+    "isActive": true,
+    "sortOrder": 70
+  }
+]

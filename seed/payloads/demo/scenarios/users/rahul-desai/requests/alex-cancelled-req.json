@@ -1,0 +1,53 @@
+{
+  "seedKey": "alex-cancelled-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Tally ERP to Cloud Migration",
+        "description": "Migrate 15 years of Tally Prime data — inventory, GST returns, payroll — to a cloud ERP with zero downtime during peak dispatch season (October–December). Budget reallocated internally after leadership review.",
+        "category": "consulting",
+        "budget": {
+          "min": 10000000,
+          "max": 20000000,
+          "currency": "INR",
+          "flexible": false
+        },
+        "timeline": {
+          "preferredStartDate": "2026-10-01T00:00:00Z",
+          "deadline": "2027-03-01T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "Tally Prime data extraction and validation",
+          "Parallel run during peak season",
+          "GST return continuity",
+          "Staff training in Marathi and Hindi"
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "rejected",
+        "notes": "Client deferred — budget reallocated to fleet expansion. Revisit Q1 2027 with phased Tally-to-cloud approach."
+      }
+    }
+  ]
+}

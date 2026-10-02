@@ -1,0 +1,53 @@
+{
+  "seedKey": "vikram-shah",
+  "displayName": "Vikram Shah",
+  "summary": "Director at Shah Textile Exports in Surat.",
+  "profile": {
+    "email": "vikram.shah@nestlancer.com",
+    "firstName": "Vikram",
+    "lastName": "Shah",
+    "phone": "+919825667788",
+    "company": "Shah Textile Exports",
+    "jobTitle": "Director",
+    "timezone": "Asia/Kolkata",
+    "city": "Surat",
+    "industry": "textiles",
+    "headline": "Director \u00b7 Shah Textile Exports (Surat \u00b7 Textiles)",
+    "bio": "Vikram directs Shah Textile Exports in Surat. He manages buyer orders, container booking, and credit limits for overseas accounts.",
+    "skills": [
+      "Director",
+      "Export Operations",
+      "B2B Sales",
+      "Inventory Management"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/vikram-shah.jpg"
+}

@@ -1,0 +1,21 @@
+---
+description: Auth, JWT, RBAC, and session conventions
+globs: "{libs/auth-lib,services/auth,services/users}/src/**/*.ts,gateway/src/{app.module.ts,main.ts,proxy/**/*.ts},libs/websocket/src/**/*auth*.ts"
+alwaysApply: false
+---
+
+# Auth and RBAC
+
+## Patterns
+- HTTP JWT strategy: RS256, bearer or `access_token` cookie (`libs/auth-lib`)
+- Guards compose at gateway: JWT → roles → permissions → maintenance
+- Permission map: `libs/auth-lib/src/permissions/default-permissions.config.ts`
+- Sessions persist refresh JTIs; logout/refresh rotation deletes old session
+
+## Rules
+- New protected routes need explicit `@Roles` / `@Permissions` (or documented public intent)
+- Admin impersonation must be audited and time-bounded
+- Password reset / email verify / 2FA flows must invalidate or rotate sessions appropriately
+- Validate token `iss` / `aud` / `type` when touching token verification
+- WS handshake must use the shared WS auth util — do not invent a weaker path
+- Do not store recoverable plaintext passwords or long-lived secrets in Redis without TTL + purpose scoping

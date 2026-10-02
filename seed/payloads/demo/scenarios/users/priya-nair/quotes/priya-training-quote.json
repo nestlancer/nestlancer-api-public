@@ -1,0 +1,77 @@
+{
+  "seedKey": "priya-training-quote",
+  "requestSeedKey": "priya-training-req",
+  "phase": "02-quote",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "uploadQuoteAttachments",
+      "endpoint": "POST /media/upload/request",
+      "files": [
+        "projects/training-portal/assets/quote-proposal.pdf"
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createQuote",
+      "endpoint": "POST /admin/requests/:id/quotes",
+      "payload": {
+        "items": [
+          {
+            "description": "LMS platform setup, course builder, and video hosting",
+            "quantity": 1,
+            "unitPrice": 16800
+          },
+          {
+            "description": "Quiz engine, PDF certificates, and Malayalam subtitle support",
+            "quantity": 1,
+            "unitPrice": 16800
+          },
+          {
+            "description": "Okta SAML SSO integration, admin reporting, and launch",
+            "quantity": 1,
+            "unitPrice": 8400
+          }
+        ],
+        "schedulePreset": "30-40-30",
+        "currency": "INR",
+        "taxPercentage": 0,
+        "validUntil": "2026-08-15T23:59:59Z",
+        "requiresContract": false,
+        "revisionsIncluded": 2,
+        "internalNotes": "Bilingual CMS could be bundled — Priya may want it as separate line item."
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "sendQuote",
+      "endpoint": "POST /admin/quotes/:id/send"
+    },
+    {
+      "order": 4,
+      "actor": "client",
+      "action": "requestChanges",
+      "endpoint": "POST /quotes/:id/request-changes",
+      "payload": {
+        "changes": [
+          {
+            "area": "budget",
+            "request": "Split Malayalam-English CMS into an optional add-on line item instead of bundling with LMS."
+          },
+          {
+            "area": "timeline",
+            "request": "Extend Okta SAML integration milestone by 2 weeks — IT team availability in August."
+          },
+          {
+            "area": "scope",
+            "request": "Add department-wise completion dashboard for HR reporting."
+          }
+        ],
+        "additionalNotes": "Otherwise aligned on LMS scope. Ready to proceed once revised quote is received."
+      }
+    }
+  ]
+}

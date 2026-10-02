@@ -1,0 +1,199 @@
+{
+  "seedKey": "mei-reconciliation-project",
+  "projectKey": "reconciliation-service",
+  "quoteSeedKey": "mei-reconciliation-quote",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "Razorpay Webhook Ingestion",
+          "description": "Webhook receiver for payment.captured and settlement.processed with signature verification.",
+          "startDate": "2026-06-15",
+          "endDate": "2026-07-01",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        },
+        {
+          "name": "Settlement Reconciliation Engine",
+          "description": "Ledger matching, discrepancy detection, and accounting outbox.",
+          "startDate": "2026-07-02",
+          "endDate": "2026-08-01",
+          "amount": 0,
+          "currency": "INR",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 1440000,
+        "currency": "INR",
+        "notes": "Deposit — UTR: CITI20260620044 (Iyer FinServ Pvt Ltd)",
+        "invoiceNumber": null
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Razorpay Webhook Ingestion",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update — Razorpay webhook receiver",
+        "description": "Implemented payment.captured and settlement.processed handlers with HMAC signature verification. Idempotency store tested with 10k replay events — zero duplicates.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Razorpay Webhook Ingestion",
+      "payload": {
+        "type": "MILESTONE_COMPLETE",
+        "title": "Webhook ingestion milestone — implementation complete",
+        "description": "All Razorpay webhook handlers deployed to staging. Settlement spec and outbox publishing verified.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Razorpay Webhook Ingestion",
+      "files": [
+        "projects/reconciliation-service/assets/deliverables/milestone-1-webhook-spec.pdf"
+      ],
+      "description": "Razorpay webhook and settlement specification v1.0."
+    },
+    {
+      "order": 6,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "Razorpay Webhook Ingestion"
+    },
+    {
+      "order": 7,
+      "actor": "admin",
+      "action": "processRefund",
+      "endpoint": "POST /admin/payments/:id/refund",
+      "paymentIndex": 0,
+      "payload": {
+        "amount": 50000,
+        "reason": "Goodwill credit of ₹500 after Ananya flagged a duplicate NEFT memo on the deposit."
+      }
+    },
+    {
+      "order": 8,
+      "actor": "both",
+      "action": "projectMessaging",
+      "endpoint": "POST /messages/project/:id",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Ananya — Razorpay webhook spec uploaded for your review. Covers payment.captured and settlement.processed events.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "client",
+          "content": "Spec looks solid. Please prioritise the admin replay tool for our 18 June payout outage — finance team needs bulk reprocess before month-end close.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "admin",
+          "file": "projects/reconciliation-service/assets/pull-requests/PR-001-webhook-receiver.md",
+          "content": "PR-001 merged — Razorpay webhook receiver with idempotency store and outbox.",
+          "type": "FILE"
+        },
+        {
+          "sender": "client",
+          "content": "I see a duplicate charge of ₹500 on invoice INV-NL-2026-0055. Our accounts team may have entered the UTR twice.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "admin",
+          "content": "Confirmed duplicate NEFT entry. Refund of ₹500 initiated — should reflect in 2–3 business days.",
+          "type": "TEXT"
+        }
+      ]
+    },
+    {
+      "order": 9,
+      "actor": "client",
+      "action": "approveDeliverable",
+      "endpoint": "POST /deliverables/:id/approve",
+      "deliverableIndex": 0,
+      "payload": {
+        "feedback": "Webhook spec approved."
+      }
+    },
+    {
+      "order": 10,
+      "actor": "client",
+      "action": "approveMilestone",
+      "endpoint": "POST /progress/milestones/:id/approve",
+      "milestoneName": "Razorpay Webhook Ingestion",
+      "payload": {
+        "feedback": "Webhook ingestion approved. Proceed with settlement reconciliation engine."
+      }
+    },
+    {
+      "order": 11,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Settlement Reconciliation Engine",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update — ledger matching engine",
+        "description": "Built settlement CSV importer and ledger matcher. Discrepancy report exports to finance team format.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 12,
+      "actor": "client",
+      "action": "requestProjectRevision",
+      "endpoint": "POST /projects/:id/request-revision",
+      "payload": {
+        "area": "Settlement Replay UI",
+        "priority": "high",
+        "description": "Finance ops need bulk replay for failed settlement events from the 18 June Razorpay payout outage.",
+        "details": [
+          "Date-range filter on replay screen",
+          "Export failed settlements to CSV for audit",
+          "Bulk reprocess with confirmation dialog"
+        ],
+        "dueDate": "2026-07-10T00:00:00Z"
+      }
+    },
+    {
+      "order": 13,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/projects/:id/status",
+      "status": "REVIEW",
+      "reason": "M1 complete and M2 in progress. Replay UI revision requested — awaiting client review of current delivery.",
+      "notifyClient": true
+    }
+  ]
+}

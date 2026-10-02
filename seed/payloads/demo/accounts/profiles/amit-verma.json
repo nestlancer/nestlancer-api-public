@@ -1,0 +1,53 @@
+{
+  "seedKey": "amit-verma",
+  "displayName": "Amit Verma",
+  "summary": "Managing Partner at Verma Properties in Delhi.",
+  "profile": {
+    "email": "amit.verma@nestlancer.com",
+    "firstName": "Amit",
+    "lastName": "Verma",
+    "phone": "+919810564433",
+    "company": "Verma Properties",
+    "jobTitle": "Managing Partner",
+    "timezone": "Asia/Kolkata",
+    "city": "Delhi",
+    "industry": "realEstate",
+    "headline": "Managing Partner \u00b7 Verma Properties (Delhi \u00b7 Real Estate)",
+    "bio": "Amit is managing partner at Verma Properties in Delhi. He runs lead follow-up, site visits, and broker commissions from one CRM.",
+    "skills": [
+      "Managing Partner",
+      "Lead Management",
+      "CRM",
+      "Sales Operations"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/amit-verma.jpg"
+}

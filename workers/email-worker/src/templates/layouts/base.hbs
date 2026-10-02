@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>{{companyName}}</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <style type="text/css">
+    table { border-collapse: collapse; }
+    td, th, div, p, a, h1, h2, h3 { font-family: Arial, Helvetica, sans-serif !important; }
+  </style>
+  <![endif]-->
+  <style type="text/css">
+    :root { color-scheme: light; supported-color-schemes: light; }
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; display: block; }
+    a { color: #0d9488; text-decoration: none; }
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; max-width: 100% !important; }
+      .email-pad { padding-left: 20px !important; padding-right: 20px !important; }
+      .email-title { font-size: 22px !important; line-height: 28px !important; }
+      .email-hero-num { font-size: 26px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;width:100%;background-color:#eef2f6;font-family:Arial,Helvetica,sans-serif;color:#0a2540;-webkit-font-smoothing:antialiased;">
+  <!-- Preheader (inbox preview text) -->
+  <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">
+    {{#if preheader}}{{preheader}}{{else}}A secure transactional message from {{companyName}}.{{/if}}
+    &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eef2f6" style="background-color:#eef2f6;width:100%;">
+    <tr>
+      <td align="center" style="padding:28px 12px 36px;">
+        <!-- Main card -->
+        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:600px;max-width:600px;background-color:#ffffff;border:1px solid #dbe3ec;">
+          <!-- Solid brand bars (no CSS gradients — Outlook/Gmail safe) -->
+          <tr>
+            <td bgcolor="#0d9488" style="height:5px;line-height:5px;font-size:0;background-color:#0d9488;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td bgcolor="#272a7a" style="height:3px;line-height:3px;font-size:0;background-color:#272a7a;">&nbsp;</td>
+          </tr>
+          <!-- Brand header: logo + text fallback when images are blocked -->
+          <tr>
+            <td align="center" bgcolor="#ffffff" class="email-pad" style="padding:28px 40px 8px;background-color:#ffffff;">
+              <a href="{{#if siteUrl}}{{siteUrl}}{{else}}https://app.nestlancer.com{{/if}}" target="_blank" style="text-decoration:none;">
+                <!-- alt text remains visible when the client blocks remote images -->
+                <img src="{{logoUrl}}" alt="Nestlancer" width="168" height="46" style="width:168px;height:auto;max-width:168px;border:0;margin:0 auto;">
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#ffffff" style="padding:0 40px 8px;background-color:#ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="border-bottom:1px solid #e2e8f0;font-size:0;line-height:0;height:1px;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td class="email-pad" bgcolor="#ffffff" style="padding:28px 40px 28px;background-color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:26px;color:#334155;">
+              {{{body}}}
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td class="email-pad" bgcolor="#f8fafc" style="padding:22px 40px 28px;background-color:#f8fafc;border-top:1px solid #e2e8f0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#64748b;text-align:center;">
+              <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#0a2540;">{{companyName}}</p>
+              <p style="margin:0 0 10px;">Transactional only — never marketing or newsletters from this address.</p>
+              <p style="margin:0 0 10px;">
+                Need help?
+                <a href="mailto:{{supportEmail}}" style="color:#0d9488;text-decoration:underline;">{{supportEmail}}</a>
+              </p>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">&copy; {{currentYear}} {{companyName}}. All rights reserved.</p>
+            </td>
+          </tr>
+        </table>
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
+          <tr>
+            <td align="center" style="padding:18px 12px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:18px;color:#94a3b8;">
+              If this email looks unexpected, you can safely ignore it.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

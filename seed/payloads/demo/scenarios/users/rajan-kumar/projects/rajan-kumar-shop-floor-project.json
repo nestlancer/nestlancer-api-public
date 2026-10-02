@@ -1,0 +1,156 @@
+{
+  "seedKey": "rajan-kumar-shop-floor-project",
+  "projectKey": "shop-floor",
+  "quoteSeedKey": "rajan-kumar-shop-floor-quote",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "OEE Dashboard",
+          "description": "Real-time OEE metrics from PLC data, shift reports, and downtime alerts for CNC lines.",
+          "startDate": "2026-06-01",
+          "endDate": "2026-08-15",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 3900000,
+        "currency": "INR",
+        "notes": "Deposit — Kumar Precision Tools",
+        "invoiceNumber": "INV-RAJAN--001"
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "OEE Dashboard",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update — OEE Dashboard",
+        "description": "Core features implemented and staging environment ready for review.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "OEE Dashboard",
+      "files": [
+        "projects/shop-floor/assets/deliverables/milestone-1-handoff.pdf"
+      ],
+      "description": "Milestone handoff documentation and staging access guide."
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "OEE Dashboard"
+    },
+    {
+      "order": 6,
+      "actor": "client",
+      "action": "approveDeliverable",
+      "endpoint": "POST /deliverables/:id/approve",
+      "deliverableIndex": 0,
+      "payload": {
+        "feedback": "Handoff reviewed — looks good."
+      }
+    },
+    {
+      "order": 7,
+      "actor": "client",
+      "action": "approveMilestone",
+      "endpoint": "POST /progress/milestones/:id/approve",
+      "milestoneName": "OEE Dashboard",
+      "payload": {
+        "feedback": "Milestone approved."
+      }
+    },
+    {
+      "order": 8,
+      "actor": "admin",
+      "action": "requestMilestonePayment",
+      "endpoint": "POST /admin/payments/milestones/:id/request-payment",
+      "milestoneName": "Final payment"
+    },
+    {
+      "order": 9,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneName": "Final payment",
+      "payload": {
+        "amount": 3900000,
+        "currency": "INR",
+        "notes": "Final payment — Kumar Precision Tools"
+      }
+    },
+    {
+      "order": 10,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/projects/:id/status",
+      "status": "REVIEW",
+      "reason": "Ready for client sign-off",
+      "notifyClient": true
+    },
+    {
+      "order": 11,
+      "actor": "client",
+      "action": "submitFeedback",
+      "endpoint": "POST /projects/:id/feedback",
+      "payload": {
+        "rating": 5,
+        "comment": "Excellent delivery for Kumar Precision Tools."
+      }
+    },
+    {
+      "order": 12,
+      "actor": "client",
+      "action": "approveProject",
+      "endpoint": "POST /projects/:id/approve",
+      "payload": {
+        "rating": 5,
+        "feedback": {
+          "quality": 5,
+          "communication": 5,
+          "timeliness": 5,
+          "professionalism": 5,
+          "overallSatisfaction": 5
+        },
+        "comments": "Project approved — thank you."
+      }
+    },
+    {
+      "order": 13,
+      "actor": "admin",
+      "action": "finalDelivery",
+      "endpoint": "POST /admin/projects/:id/final-delivery",
+      "files": [
+        "projects/shop-floor/assets/final/nestlancer-shop-floor-v1.0.zip"
+      ],
+      "description": "Final production bundle — Shop-Floor OEE Dashboard"
+    }
+  ]
+}

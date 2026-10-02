@@ -1,0 +1,26 @@
+---
+description: Backend security baselines for auth, gateway, secrets, and abuse cases
+globs: "{gateway,ws-gateway,services/*,libs/auth-lib,libs/middleware,libs/crypto,libs/websocket}/src/**/*.ts,services/{auth,payments,webhooks,admin,media}/src/**/*.ts"
+alwaysApply: false
+---
+
+# Backend Security
+
+## Must keep
+- Gateway: Helmet, allowlisted CORS, class-validator whitelist/forbidNonWhitelisted, JWT + roles + permissions guards
+- Passwords: bcrypt (prefer 12 rounds); lockout + Turnstile + optional TOTP where already implemented
+- Tokens: separate RSA keypairs for access/refresh; rotate refresh via session delete; never log secrets/JWTs/PII
+- Webhooks: verify provider signatures before mutating state
+- Payments: never trust client amounts; verify Razorpay server-side
+
+## Hard rules for new code
+- Never commit secrets, private keys, or password-bearing URLs. Prefer Infisical → `.env.infisical` (runtime only)
+- Never accept client `x-user-id` / `x-user-role` as identity on public routes — gateway must overwrite from JWT only
+- Prefer bearer auth; if cookies are used, pair with CSRF and SameSite discipline
+- Do not weaken WS auth (issuer/audience/type checks, algorithm allowlist). Avoid `origin: '*'` + credentials
+- Rate-limit auth, contact, media upload, and payment initiation paths
+- Metrics/admin/debug ports must not be world-exposed without auth
+- Redact query strings and secrets in logs (`redact-url` helpers)
+
+## When reviewing changes
+Call out missing authz on new endpoints, IDOR (resource ownership checks), unsigned webhooks, plaintext secrets, and unauthenticated admin/impersonation paths.

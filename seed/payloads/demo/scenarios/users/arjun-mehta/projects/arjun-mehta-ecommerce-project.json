@@ -1,0 +1,204 @@
+{
+  "seedKey": "arjun-mehta-ecommerce-project",
+  "projectKey": "e-commerce-platform",
+  "quoteSeedKey": "arjun-mehta-ecommerce-quote",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "signContract",
+      "endpoint": "POST /projects/:id/sign-contract",
+      "payload": {
+        "signatureName": "Arjun Mehta"
+      }
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "Design & Architecture",
+          "description": "Wireframes, Hindi/English UX, Shiprocket and Razorpay integration plan.",
+          "startDate": "2026-07-01",
+          "endDate": "2026-07-15",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        },
+        {
+          "name": "Storefront & Checkout",
+          "description": "Next.js storefront, variant catalog, Razorpay UPI/COD, Shiprocket rates.",
+          "startDate": "2026-07-16",
+          "endDate": "2026-08-15",
+          "amount": 0,
+          "currency": "INR",
+          "order": 2
+        },
+        {
+          "name": "QA, SEO & Launch",
+          "description": "End-to-end testing, Hindi meta tags, production deployment before Navratri.",
+          "startDate": "2026-08-16",
+          "endDate": "2026-09-30",
+          "amount": 0,
+          "currency": "INR",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 2250000,
+        "currency": "INR",
+        "notes": "Deposit — UTR: HDFC20260701001",
+        "invoiceNumber": null
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Design & Architecture",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update — homepage and PLP wireframes",
+        "description": "Completed homepage hero, product listing with variant swatches (50g/200g/500g), and mobile-first navigation. Hindi toggle wireframes shared in Figma.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Design & Architecture",
+      "payload": {
+        "type": "INTERNAL_NOTE",
+        "title": "Internal — Shiprocket rate API spike",
+        "description": "Confirmed Shiprocket v2 rates endpoint supports pincode checker on cart. Keeping COD threshold at ₹2,000 per Arjun's note.",
+        "notifyClient": false,
+        "visibility": "INTERNAL"
+      }
+    },
+    {
+      "order": 6,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Design & Architecture",
+      "files": [
+        "projects/e-commerce-platform/assets/deliverables/milestone-1-wireframes.pdf"
+      ],
+      "description": "Milestone 1 wireframes — homepage, PLP, PDP, cart, checkout (Hindi + English)."
+    },
+    {
+      "order": 7,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Design & Architecture",
+      "payload": {
+        "type": "DELIVERABLE_UPLOAD",
+        "title": "Wireframe pack uploaded for review",
+        "description": "Milestone 1 wireframes attached — please review checkout UPI flow and Hindi toggle placement.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 8,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "Design & Architecture"
+    },
+    {
+      "order": 9,
+      "actor": "both",
+      "action": "projectMessaging",
+      "endpoint": "POST /messages/project/:id",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Arjun ji — Milestone 1 wireframes uploaded. Checkout shows UPI, cards, and COD under ₹2,000.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "client",
+          "content": "Looks good. For milestone 2, please prioritise Razorpay UPI and COD before wishlist — Navratri orders start mid-September.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "admin",
+          "content": "Noted — checkout and Shiprocket integration are first in the sprint backlog. Hindi product descriptions will follow in parallel.",
+          "type": "TEXT"
+        }
+      ]
+    },
+    {
+      "order": 10,
+      "actor": "client",
+      "action": "requestRevision",
+      "endpoint": "POST /progress/milestones/:id/request-revision",
+      "milestoneName": "Design & Architecture",
+      "payload": {
+        "reason": "Checkout wireframe missing guest checkout option for first-time D2C buyers."
+      }
+    },
+    {
+      "order": 11,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Design & Architecture",
+      "files": [
+        "projects/e-commerce-platform/assets/deliverables/milestone-1-wireframes-revised.pdf"
+      ],
+      "description": "Revised wireframes — guest checkout added on cart and checkout pages."
+    },
+    {
+      "order": 12,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "Design & Architecture"
+    },
+    {
+      "order": 13,
+      "actor": "client",
+      "action": "approveDeliverable",
+      "endpoint": "POST /deliverables/:id/approve",
+      "deliverableIndex": 1,
+      "payload": {
+        "feedback": "Guest checkout flow approved."
+      }
+    },
+    {
+      "order": 14,
+      "actor": "client",
+      "action": "approveMilestone",
+      "endpoint": "POST /progress/milestones/:id/approve",
+      "milestoneName": "Design & Architecture",
+      "payload": {
+        "feedback": "Wireframes approved. Proceed with checkout-first approach for milestone 2."
+      }
+    },
+    {
+      "order": 15,
+      "actor": "admin",
+      "action": "requestMilestonePayment",
+      "endpoint": "POST /admin/payments/milestones/:id/request-payment",
+      "milestoneName": "Mid-project payment"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+# Staging deploy — manual dispatch only until staging VPS + K3s are configured.
+# Mirrors dev CD but uses Infisical `staging` and optional K3s kubectl apply.
+
+name: Backend CD (Staging)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: backend-staging-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy staging stack via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+          INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+        with:
+          host: ${{ secrets.STAGING_VPS_HOST }}
+          username: ${{ secrets.STAGING_VPS_USERNAME }}
+          password: ${{ secrets.STAGING_VPS_PASSWORD }}
+          envs: INFISICAL_CLIENT_ID,INFISICAL_CLIENT_SECRET
+          script: |
+            set -euo pipefail
+            DEPLOY_PATH="${{ secrets.STAGING_VPS_DEPLOY_PATH }}"
+            [ -z "$DEPLOY_PATH" ] && DEPLOY_PATH="/root/nestlancer-backend-api"
+            cd "$DEPLOY_PATH"
+            PREV_SHA="$(git rev-parse HEAD)"
+            echo "$PREV_SHA" > .deploy-previous-sha
+            git pull origin main
+            rollback_on_fail() {
+              git reset --hard "$PREV_SHA"
+              docker compose -f docker-compose.dev.yml up -d || true
+              exit 1
+            }
+            trap rollback_on_fail ERR
+            export INFISICAL_TOKEN=$(infisical login \
+              --method=universal-auth \
+              --client-id="$INFISICAL_CLIENT_ID" \
+              --client-secret="$INFISICAL_CLIENT_SECRET" \
+              --silent --plain)
+            PROJECT_ID="${{ secrets.INFISICAL_PROJECT_ID }}"
+            [ -z "$PROJECT_ID" ] && [ -f .infisical.json ] && \
+              PROJECT_ID="$(node -p "JSON.parse(require('fs').readFileSync('.infisical.json','utf8')).workspaceId")"
+            infisical export --env=staging --format=dotenv --projectId="$PROJECT_ID" > .env.infisical
+            bash scripts/docker/sanitize-infisical-env.sh .env.infisical
+            chmod 600 .env.infisical
+            chmod +x scripts/db/migrate-deploy-ci.sh scripts/deploy/smoke-health.sh
+            ./scripts/db/migrate-deploy-ci.sh
+            # SSH-safe: core only by default. Set repo var NESTLANCER_COMPOSE_PROFILES=workers|full if needed.
+            export COMPOSE_PROFILES="${{ vars.NESTLANCER_COMPOSE_PROFILES }}"
+            docker compose -f docker-compose.dev.yml build
+            docker compose -f docker-compose.dev.yml up -d
+            GATEWAY_URL="${GATEWAY_URL:-http://127.0.0.1:3000}" ./scripts/deploy/smoke-health.sh
+            trap - ERR

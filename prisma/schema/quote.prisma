@@ -1,0 +1,91 @@
+// =============================================================================
+// Quote / Proposal Models
+// =============================================================================
+
+enum QuoteStatus {
+  DRAFT
+  PENDING
+  SENT
+  VIEWED
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  CHANGES_REQUESTED
+  REVISED
+}
+
+model Quote {
+  id                 String      @id @default(uuid(7))
+  requestId          String      @unique
+  userId             String
+  createdById        String?
+  title              String
+  description        String
+  subtotal           Int         @default(0)
+  taxPercentage      Float       @default(0)
+  taxAmount          Int         @default(0)
+  totalAmount        Int
+  currency           String      @default("INR")
+  validUntil         DateTime
+  status             QuoteStatus @default(DRAFT)
+  terms              String? // Public terms shown to client
+  termsAndConditions String? // Detailed legal terms
+  notes              String? // General notes
+  internalNotes      String? // Admin only notes
+  clientNotes        String? // Notes/feedback from client
+  paymentBreakdown   Json?
+  paymentSchedule    Json?
+  timeline           Json?
+  scope              Json?
+  technicalDetails   Json?
+  attachments        Json?
+  signatureName      String?
+  signatureDate      DateTime?
+  acceptedAt         DateTime?
+  declinedAt         DateTime?
+  declineReason      String?
+  quoteNumber        String?     @unique
+  contractNumber     String?     @unique
+  currentQuoteDocumentId String?
+  contractDocumentId String?
+  revisionsIncluded      Int         @default(2)
+  additionalRevisionCost Int?
+  paymentTerms           Json?
+  viewHistory            Json?
+  viewCount              Int         @default(0)
+  requiresContract       Boolean     @default(false)
+  expiredAt              DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  user      User           @relation("UserQuotes", fields: [userId], references: [id], onDelete: Cascade)
+  createdBy User?          @relation("CreatedQuotes", fields: [createdById], references: [id], onDelete: SetNull)
+  request   ProjectRequest @relation(fields: [requestId], references: [id], onDelete: Restrict)
+  project   Project?
+  currentQuoteDocument GeneratedDocument? @relation("QuoteDocument", fields: [currentQuoteDocumentId], references: [id], onDelete: SetNull)
+  contractDocument     GeneratedDocument? @relation("ContractDocument", fields: [contractDocumentId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([createdById])
+  @@index([status])
+  @@index([currentQuoteDocumentId])
+  @@index([contractDocumentId])
+}
+
+/// Reusable admin line-item blocks (modular quoting — not frozen full quotes).
+model QuoteLineItemBlock {
+  id                    String   @id @default(uuid(7))
+  slug                  String   @unique
+  label                 String
+  description           String
+  category              String
+  defaultUnitPricePaise Int
+  defaultQuantity       Int      @default(1)
+  isActive              Boolean  @default(true)
+  sortOrder             Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+}

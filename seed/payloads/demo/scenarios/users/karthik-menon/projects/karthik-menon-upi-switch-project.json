@@ -1,0 +1,140 @@
+{
+  "seedKey": "karthik-menon-upi-switch-project",
+  "projectKey": "upi-switch",
+  "quoteSeedKey": "karthik-menon-upi-switch-quote",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "UPI Adapter MVP",
+          "description": "Foundation delivery",
+          "startDate": "2026-06-01",
+          "endDate": "2026-07-15",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        },
+        {
+          "name": "Phase 2 \u2014 Extended Scope",
+          "description": "Extended features and integrations",
+          "startDate": "2026-07-16",
+          "endDate": "2026-09-01",
+          "amount": 0,
+          "currency": "INR",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 3600000,
+        "currency": "INR",
+        "notes": "Deposit \u2014 Menon PayTech"
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "UPI Adapter MVP",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update \u2014 UPI Adapter MVP",
+        "description": "UPI adapter contract and merchant onboarding notes are with Menon PayTech for review.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "UPI Adapter MVP",
+      "files": [
+        "projects/upi-switch/assets/deliverables/milestone-1-spec.pdf"
+      ],
+      "description": "M1 specification and API contract."
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "UPI Adapter MVP"
+    },
+    {
+      "order": 6,
+      "actor": "client",
+      "action": "approveMilestone",
+      "endpoint": "POST /progress/milestones/:id/approve",
+      "milestoneName": "UPI Adapter MVP",
+      "payload": {
+        "feedback": "M1 approved \u2014 proceed to phase 2."
+      }
+    },
+    {
+      "order": 7,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Phase 2 \u2014 Extended Scope",
+      "payload": {
+        "type": "UPDATE",
+        "title": "In progress \u2014 Phase 2 \u2014 Extended Scope",
+        "description": "Phase 2 implementation underway \u2014 sharing the current staging build for early feedback.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 8,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Phase 2 \u2014 Extended Scope",
+      "files": [
+        "projects/upi-switch/assets/review/upi-switch-staging-review.zip"
+      ],
+      "description": "Staging build shared for progress review (work in progress; not final delivery)."
+    },
+    {
+      "order": 9,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Phase 2 \u2014 Extended Scope",
+      "payload": {
+        "type": "DELIVERABLE_UPLOAD",
+        "title": "Staging build ready for review",
+        "description": "Staging build uploaded for payments review. Webhook receiver and settlement export are included; NPCI certification is scheduled separately.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 10,
+      "actor": "both",
+      "action": "projectMessaging",
+      "endpoint": "POST /messages/projects/:id",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Shared staging build for UPI Switch Integration Layer \u2014 please review progress; final delivery comes after phase 2 sign-off."
+        }
+      ]
+    }
+  ]
+}

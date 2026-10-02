@@ -1,0 +1,36 @@
+{
+  "phase": "07-group-messages",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "groupThread",
+      "endpoint": "POST /messages/threads/group",
+      "title": "Payments ops — Razorpay settlement and webhooks",
+      "memberEmails": [
+        "karthik.menon@nestlancer.com",
+        "ananya.iyer@nestlancer.com"
+      ],
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Karthik, Ananya — this thread is for settlement and webhook questions that overlap both engagements. Project files stay in each project."
+        },
+        {
+          "sender": "client",
+          "senderEmail": "karthik.menon@nestlancer.com",
+          "content": "Useful. Our UPI adapter is still in staging; I want the same retry rules Ananya's reconciliation service already uses for duplicate captures."
+        },
+        {
+          "sender": "client",
+          "senderEmail": "ananya.iyer@nestlancer.com",
+          "content": "Happy to share the webhook idempotency notes. Duplicate payment refunds are the case we keep hitting on settlement day."
+        },
+        {
+          "sender": "admin",
+          "content": "I'll post the shared retry checklist here after tomorrow's reconciliation review. Production changes still go through each project milestone."
+        }
+      ]
+    }
+  ]
+}

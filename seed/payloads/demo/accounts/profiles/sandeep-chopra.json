@@ -1,0 +1,53 @@
+{
+  "seedKey": "sandeep-chopra",
+  "displayName": "Sandeep Chopra",
+  "summary": "Director at Chopra Fleet Logistics in Chandigarh.",
+  "profile": {
+    "email": "sandeep.chopra@nestlancer.com",
+    "firstName": "Sandeep",
+    "lastName": "Chopra",
+    "phone": "+919814772061",
+    "company": "Chopra Fleet Logistics",
+    "jobTitle": "Director",
+    "timezone": "Asia/Kolkata",
+    "city": "Chandigarh",
+    "industry": "logistics",
+    "headline": "Director \u00b7 Chopra Fleet Logistics (Chandigarh \u00b7 Logistics)",
+    "bio": "Sandeep directs Chopra Fleet Logistics in Chandigarh. He needs GPS tracking and dispatch visibility for contract routes.",
+    "skills": [
+      "Director",
+      "Fleet Management",
+      "Warehouse Ops",
+      "Last-Mile Delivery"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/sandeep-chopra.jpg"
+}

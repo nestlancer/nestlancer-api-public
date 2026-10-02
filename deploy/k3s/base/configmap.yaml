@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: nestlancer
+data:
+  NODE_ENV: production
+  PORT: "3000"
+  # Microservice URLs — expand per overlay or use in-cluster Services
+  AUTH_SERVICE_URL: http://svc-auth:3001
+  USERS_SERVICE_URL: http://svc-users:3002
+  PAYMENTS_SERVICE_URL: http://svc-payments:3003
+  WEBHOOKS_SERVICE_URL: http://svc-webhooks:3004
+  ADMIN_SERVICE_URL: http://svc-admin:3005
+  REQUESTS_SERVICE_URL: http://svc-requests:3006
+  QUOTES_SERVICE_URL: http://svc-quotes:3007
+  PROJECTS_SERVICE_URL: http://svc-projects:3008
+  PROGRESS_SERVICE_URL: http://svc-progress:3009
+  MESSAGING_SERVICE_URL: http://svc-messaging:3010
+  NOTIFICATIONS_SERVICE_URL: http://svc-notifications:3011
+  MEDIA_SERVICE_URL: http://svc-media:3012
+  PORTFOLIO_SERVICE_URL: http://svc-portfolio:3013
+  BLOG_SERVICE_URL: http://svc-blog:3014
+  CONTACT_SERVICE_URL: http://svc-contact:3015
+  HEALTH_SERVICE_URL: http://svc-health:3016

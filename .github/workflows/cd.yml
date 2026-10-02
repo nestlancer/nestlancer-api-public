@@ -1,0 +1,159 @@
+# Deploys the DEVELOPMENT stack on the VPS (dev.nestlancer.com).
+# Secrets on the VPS come from Infisical (environment `dev`) at deploy time only.
+#
+# GitHub runner: checkout → install → Prisma generate → build (no DB, no migrations).
+# VPS (SSH): git pull → Infisical export → docker compose up.
+#
+# Schema changes: migrate deploy runs on VPS before compose up (scripts/db/migrate-deploy-ci.sh).
+# Emergency manual path: scripts/db/migrate-deploy.sh
+#
+# Required GitHub Secrets:
+#   VPS_HOST, VPS_USERNAME, VPS_PASSWORD
+#   INFISICAL_CLIENT_ID, INFISICAL_CLIENT_SECRET  — passed to VPS for infisical export
+# Optional:
+#   VPS_DEPLOY_PATH  — repo path on VPS (default: /root/nestlancer-backend-api)
+#   INFISICAL_PROJECT_ID — override; default from .infisical.json on VPS
+
+name: Backend CD (Dev)
+
+on:
+  workflow_run:
+    workflows: ['Backend CI']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: backend-dev-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build & Deploy (Dev)
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
+      - name: Build Services (Turborepo)
+        run: pnpm build
+
+      - name: Deploy dev stack to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+          INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          envs: INFISICAL_CLIENT_ID,INFISICAL_CLIENT_SECRET
+          command_timeout: 45m
+          script: |
+            set -euo pipefail
+            DEPLOY_PATH="${{ secrets.VPS_DEPLOY_PATH }}"
+            if [ -z "$DEPLOY_PATH" ]; then
+              DEPLOY_PATH="/root/nestlancer-backend-api"
+            fi
+            if [ ! -d "$DEPLOY_PATH/.git" ]; then
+              echo "Deploy path missing — cloning into $DEPLOY_PATH"
+              mkdir -p "$(dirname "$DEPLOY_PATH")"
+              git clone git@github.com:nestlancer/nestlancer-backend-api.git "$DEPLOY_PATH"
+            fi
+            cd "$DEPLOY_PATH"
+
+            PREV_SHA="$(git rev-parse HEAD)"
+            echo "$PREV_SHA" > .deploy-previous-sha
+
+            git pull origin main
+
+            rollback_on_fail() {
+              echo "Deploy failed — rolling back to ${PREV_SHA}"
+              git reset --hard "$PREV_SHA"
+              docker compose -f docker-compose.dev.yml up -d || true
+              exit 1
+            }
+            trap rollback_on_fail ERR
+
+            if ! command -v infisical >/dev/null 2>&1; then
+              echo "ERROR: infisical CLI not installed on VPS"
+              exit 1
+            fi
+
+            export INFISICAL_TOKEN=$(infisical login \
+              --method=universal-auth \
+              --client-id="$INFISICAL_CLIENT_ID" \
+              --client-secret="$INFISICAL_CLIENT_SECRET" \
+              --silent --plain)
+
+            PROJECT_ID="${{ secrets.INFISICAL_PROJECT_ID }}"
+            if [ -z "$PROJECT_ID" ] && [ -f .infisical.json ]; then
+              PROJECT_ID="$(node -p "JSON.parse(require('fs').readFileSync('.infisical.json','utf8')).workspaceId")"
+            fi
+            if [ -z "$PROJECT_ID" ]; then
+              echo "ERROR: set INFISICAL_PROJECT_ID or commit .infisical.json on VPS" >&2
+              exit 1
+            fi
+            infisical export --env=dev --format=dotenv --projectId="$PROJECT_ID" > .env.infisical
+            bash scripts/docker/sanitize-infisical-env.sh .env.infisical
+            chmod 600 .env.infisical
+
+            chmod +x scripts/db/migrate-deploy-ci.sh scripts/deploy/smoke-health.sh scripts/deploy/k3s-deploy.sh
+
+            # Fresh clones have no node_modules; migrate-deploy-ci needs Prisma CLI on the host.
+            if [ ! -f node_modules/prisma/build/index.js ]; then
+              echo "Installing pnpm deps for Prisma migrate..."
+              corepack enable
+              pnpm install --frozen-lockfile
+            fi
+
+            if [ "${{ vars.NESTLANCER_DEPLOY_MODE || 'k3s' }}" = "k3s" ] && command -v kubectl >/dev/null 2>&1; then
+              export NESTLANCER_IMAGE_REGISTRY="${{ secrets.NESTLANCER_IMAGE_REGISTRY }}"
+              export GHCR_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+              export GHCR_USERNAME="${{ github.actor }}"
+              export SKIP_INFISICAL_EXPORT=1
+              ./scripts/deploy/k3s-deploy.sh dev
+            else
+              ./scripts/db/migrate-deploy-ci.sh
+              # SSH-safe: default core profile only. Override via repo var NESTLANCER_COMPOSE_PROFILES
+              # e.g. workers | full (do not leave unbounded — see docs/guides/production-vps-deploy.md)
+              export COMPOSE_PROFILES="${{ vars.NESTLANCER_COMPOSE_PROFILES }}"
+              # CD must not use nest --watch (default all-services): parallel compiles starve the
+              # gateway and smoke fails. "none" selects NON-WATCH build+node dist path.
+              export WATCH_SERVICES="${{ vars.NESTLANCER_WATCH_SERVICES || 'none' }}"
+              docker compose -f docker-compose.dev.yml build
+              docker compose -f docker-compose.dev.yml up -d
+              SMOKE_MAX_ATTEMPTS=90 SMOKE_SLEEP_SECS=3 \
+                GATEWAY_URL="${GATEWAY_URL:-http://127.0.0.1:3000}" \
+                ./scripts/deploy/smoke-health.sh
+            fi
+
+            trap - ERR
+            echo "Deploy succeeded at $(git rev-parse --short HEAD)"

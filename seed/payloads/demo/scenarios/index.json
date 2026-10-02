@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "meta": {
+    "flowReference": "docs/seeding/ADMIN-CLIENT-COMPLETE-FLOW.md",
+    "endpointsReference": "docs/seeding/ADMIN-CLIENT-COMPLETE-FLOW-endpoints.md",
+    "amountUnit": "paise",
+    "quoteLineItemUnit": "rupees",
+    "suppressOutboundEmail": true
+  },
+  "users": [
+    {
+      "seedKey": "arjun-mehta",
+      "displayName": "Arjun Mehta",
+      "flowDir": "users/arjun-mehta",
+      "summary": "Proprietor at Mehta Wholesale Traders (Ahmedabad) \u2014 wholesale delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "samira-patel",
+      "displayName": "Samira Patel",
+      "flowDir": "users/samira-patel",
+      "summary": "Founder & Creative Director at Patel Digital Marketing (Mumbai) \u2014 marketing delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "rahul-desai",
+      "displayName": "Rahul Desai",
+      "flowDir": "users/rahul-desai",
+      "summary": "Operations Head at Desai Logistics Solutions (Pune) \u2014 logistics delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "ananya-iyer",
+      "displayName": "Ananya Iyer",
+      "flowDir": "users/ananya-iyer",
+      "summary": "VP Engineering at Iyer FinServ Pvt Ltd (Bengaluru) \u2014 fintech delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "priya-nair",
+      "displayName": "Priya Nair",
+      "flowDir": "users/priya-nair",
+      "summary": "Head of Learning & Development at Nair Learning Systems (Kochi) \u2014 edtech delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "vikram-shah",
+      "displayName": "Vikram Shah",
+      "flowDir": "users/vikram-shah",
+      "summary": "Director at Shah Textile Exports (Surat) \u2014 textiles delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "kavya-reddy",
+      "displayName": "Kavya Reddy",
+      "flowDir": "users/kavya-reddy",
+      "summary": "CTO at Reddy Pharma Labs (Hyderabad) \u2014 pharma delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "rajan-kumar",
+      "displayName": "Rajan Kumar",
+      "flowDir": "users/rajan-kumar",
+      "summary": "Plant Head at Kumar Precision Tools (Chennai) \u2014 manufacturing delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "divya-sharma",
+      "displayName": "Divya Sharma",
+      "flowDir": "users/divya-sharma",
+      "summary": "Founder at Sharma Handicrafts (Jaipur) \u2014 e-commerce delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "amit-verma",
+      "displayName": "Amit Verma",
+      "flowDir": "users/amit-verma",
+      "summary": "Managing Partner at Verma Properties (Delhi) \u2014 real estate delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "neha-gupta",
+      "displayName": "Neha Gupta",
+      "flowDir": "users/neha-gupta",
+      "summary": "CEO at Gupta HR Cloud (Noida) \u2014 SaaS delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "suresh-iyer",
+      "displayName": "Suresh Iyer",
+      "flowDir": "users/suresh-iyer",
+      "summary": "Proprietor at Iyer Agro Supplies (Coimbatore) \u2014 agriculture delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "pooja-kulkarni",
+      "displayName": "Pooja Kulkarni",
+      "flowDir": "users/pooja-kulkarni",
+      "summary": "Operations Head at Kulkarni Clinic Chain (Pune) \u2014 healthcare delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "karthik-menon",
+      "displayName": "Karthik Menon",
+      "flowDir": "users/karthik-menon",
+      "summary": "Founder at Menon PayTech (Bengaluru) \u2014 fintech delivery partner for Nestlancer"
+    },
+    {
+      "seedKey": "sandeep-chopra",
+      "displayName": "Sandeep Chopra",
+      "flowDir": "users/sandeep-chopra",
+      "summary": "Director at Chopra Fleet Logistics (Chandigarh) \u2014 logistics delivery partner for Nestlancer"
+    }
+  ]
+}

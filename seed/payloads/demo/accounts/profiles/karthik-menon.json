@@ -1,0 +1,53 @@
+{
+  "seedKey": "karthik-menon",
+  "displayName": "Karthik Menon",
+  "summary": "Founder at Menon PayTech in Bengaluru.",
+  "profile": {
+    "email": "karthik.menon@nestlancer.com",
+    "firstName": "Karthik",
+    "lastName": "Menon",
+    "phone": "+919901334275",
+    "company": "Menon PayTech",
+    "jobTitle": "Founder",
+    "timezone": "Asia/Kolkata",
+    "city": "Bengaluru",
+    "industry": "fintech",
+    "headline": "Founder \u00b7 Menon PayTech (Bengaluru \u00b7 Fintech)",
+    "bio": "Karthik founded Menon PayTech in Bengaluru. He is integrating a UPI switch for merchant onboarding and settlement.",
+    "skills": [
+      "Founder",
+      "Payment Reconciliation",
+      "Razorpay",
+      "Webhook Integrations"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "QUOTE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/karthik-menon.jpg"
+}

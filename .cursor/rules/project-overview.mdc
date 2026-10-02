@@ -1,0 +1,26 @@
+---
+description: Nestlancer backend monorepo overview and mandatory commands
+alwaysApply: true
+---
+
+# Backend Project Overview
+
+NestJS 10 + TypeScript monorepo (pnpm 9, Turborepo, Node >=20.19).
+
+Layout:
+- `gateway/` — REST edge, auth guards, proxy, OpenAPI
+- `ws-gateway/` — Socket.IO realtime
+- `services/*` — domain microservices
+- `workers/*` — RabbitMQ consumers
+- `libs/*` — shared platform code (`@nestlancer/*`)
+- `prisma/` — modular schemas, migrations, seeds
+
+Always use workspace package imports (`@nestlancer/...`), never deep relative paths across packages.
+
+Before claiming done on non-trivial changes, run the relevant gates:
+- `pnpm lint`
+- `pnpm build` (acts as typecheck; no separate typecheck script)
+- `pnpm test:unit` for package logic; add integration/e2e when touching HTTP, DB, queues, or auth
+- `pnpm contract:check` when OpenAPI/controllers/DTOs change
+
+Do not hand-edit generated outputs: `**/dist/**`, `prisma/generated/**`, `docs/api/openapi-merged.json`, `docker-compose.prod.yml`, generated k3s workloads.

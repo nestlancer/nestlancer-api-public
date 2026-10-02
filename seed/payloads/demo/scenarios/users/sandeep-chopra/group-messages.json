@@ -1,0 +1,36 @@
+{
+  "phase": "07-group-messages",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "groupThread",
+      "endpoint": "POST /messages/threads/group",
+      "title": "Logistics ops — tracking and dispatch",
+      "memberEmails": [
+        "sandeep.chopra@nestlancer.com",
+        "rahul.desai@nestlancer.com"
+      ],
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Sandeep, Rahul — use this thread for tracking and dispatch questions that apply to both fleets. Milestone files stay on each project."
+        },
+        {
+          "sender": "client",
+          "senderEmail": "sandeep.chopra@nestlancer.com",
+          "content": "Our Chandigarh trucks need geofence alerts that match the delay codes Rahul's Pune warehouse already uses."
+        },
+        {
+          "sender": "client",
+          "senderEmail": "rahul.desai@nestlancer.com",
+          "content": "We can share the Delhivery status map. The live dashboard is still in review, so treat the codes as draft until we sign off."
+        },
+        {
+          "sender": "admin",
+          "content": "Noted. I'll align the status labels before the next staging review so both dashboards don't invent a second vocabulary."
+        }
+      ]
+    }
+  ]
+}

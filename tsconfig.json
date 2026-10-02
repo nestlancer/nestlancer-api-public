@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@nestlancer/*": ["libs/*/src"]
+    }
+  },
+  "include": ["**/*.ts", ".eslintrc.js", "commitlint.config.js"],
+  "exclude": ["node_modules", "dist", "coverage"]
+}

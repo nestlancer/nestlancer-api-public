@@ -1,0 +1,61 @@
+{
+  "seedKey": "kavya-reddy-batch-tracking-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "API Batch Tracking Dashboard",
+        "description": "GMP batch traceability dashboard with QR scan and audit log export for CDSCO inspections.",
+        "category": "webDevelopment",
+        "budget": {
+          "min": 3000000,
+          "max": 8000000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-07-01T00:00:00Z",
+          "deadline": "2026-10-01T23:59:59Z",
+          "flexible": true
+        },
+        "requirements": [
+          "Built for Reddy Pharma Labs (Hyderabad)",
+          "INR billing with milestone payments",
+          "Admin progress visibility for stakeholders"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "actor": "client",
+      "action": "uploadAttachments",
+      "endpoint": "POST /requests/:id/attachments",
+      "files": [
+        "projects/batch-tracking/assets/request-brief.pdf"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "pharma vertical — triaged for Hyderabad client."
+      }
+    }
+  ]
+}

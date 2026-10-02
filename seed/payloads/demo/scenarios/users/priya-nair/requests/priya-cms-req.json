@@ -1,0 +1,34 @@
+{
+  "seedKey": "priya-cms-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Malayalam-English Bilingual CMS",
+        "description": "Headless CMS and marketing site for Nair Learning Systems — Malayalam and English content with side-by-side preview, editor approval workflows for regional course descriptions, and a public site showcasing our Kerala government skill-development partnerships. Stakeholder requirements still being gathered across Kochi and Thiruvananthapuram offices.",
+        "category": "webDevelopment",
+        "budget": {
+          "min": 2500000,
+          "max": 4500000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-09-01T00:00:00Z",
+          "deadline": "2026-11-30T23:59:59Z",
+          "flexible": true
+        },
+        "requirements": [
+          "Malayalam and English i18n with preview",
+          "Editor approval workflow",
+          "Course catalogue pages",
+          "Government partnership showcase section"
+        ]
+      }
+    }
+  ]
+}

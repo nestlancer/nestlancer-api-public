@@ -1,0 +1,214 @@
+{
+  "seedKey": "samira-landing-project",
+  "projectKey": "landing-page-suite",
+  "quoteSeedKey": "samira-landing-quote",
+  "phase": "03-project",
+  "waitForAutoCreate": true,
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "admin",
+      "action": "createMilestones",
+      "endpoint": "POST /admin/projects/:id/milestones",
+      "milestones": [
+        {
+          "name": "Design & Build",
+          "description": "Three festive campaign pages with Zoho CRM, Meta Pixel, and GA4.",
+          "startDate": "2026-03-10",
+          "endDate": "2026-04-01",
+          "amount": 0,
+          "currency": "INR",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneKind": "deposit",
+      "payload": {
+        "amount": 600000,
+        "currency": "INR",
+        "notes": "Deposit — UTR: ICICI20260401088 (Patel Digital Marketing)",
+        "invoiceNumber": null
+      }
+    },
+    {
+      "order": 3,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Design & Build",
+      "payload": {
+        "type": "UPDATE",
+        "title": "Daily update — Navratri campaign page",
+        "description": "Built Navratri snack-brand landing page with Marathi headline variant, Zoho form, and Meta Pixel Purchase event on form submit.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Design & Build",
+      "payload": {
+        "type": "STATUS_CHANGE",
+        "title": "All three campaign pages deployed to staging",
+        "description": "Navratri, Diwali, and corporate gifting pages on staging. GA4 events verified — mobile Lighthouse score 94.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "uploadDeliverable",
+      "endpoint": "POST /admin/projects/:id/deliverables",
+      "milestoneName": "Design & Build",
+      "files": [
+        "projects/landing-page-suite/assets/deliverables/milestone-1-designs.pdf"
+      ],
+      "description": "Final designs and production URLs for all three festive campaigns."
+    },
+    {
+      "order": 6,
+      "actor": "admin",
+      "action": "createProgressEntry",
+      "endpoint": "POST /admin/progress/projects/:id",
+      "milestoneName": "Design & Build",
+      "payload": {
+        "type": "DELIVERABLE_UPLOAD",
+        "title": "Campaign design pack uploaded",
+        "description": "All three festive landing page designs attached for client review.",
+        "notifyClient": true,
+        "visibility": "CLIENT_VISIBLE"
+      }
+    },
+    {
+      "order": 7,
+      "actor": "admin",
+      "action": "completeMilestone",
+      "endpoint": "POST /admin/milestones/:id/complete",
+      "milestoneName": "Design & Build"
+    },
+    {
+      "order": 8,
+      "actor": "client",
+      "action": "approveDeliverable",
+      "endpoint": "POST /deliverables/:id/approve",
+      "deliverableIndex": 0,
+      "payload": {
+        "feedback": "Marathi variants look great on mobile."
+      }
+    },
+    {
+      "order": 9,
+      "actor": "client",
+      "action": "approveMilestone",
+      "endpoint": "POST /progress/milestones/:id/approve",
+      "milestoneName": "Design & Build",
+      "payload": {
+        "feedback": "All three pages approved. Marathi variants performing well in Pune traffic."
+      }
+    },
+    {
+      "order": 10,
+      "actor": "admin",
+      "action": "requestMilestonePayment",
+      "endpoint": "POST /admin/payments/milestones/:id/request-payment",
+      "milestoneName": "Final payment"
+    },
+    {
+      "order": 11,
+      "actor": "admin",
+      "action": "createManualPayment",
+      "endpoint": "POST /admin/payments/manual",
+      "milestoneName": "Final payment",
+      "payload": {
+        "amount": 600000,
+        "currency": "INR",
+        "notes": "Final payment after delivery approval — UTR: ICICI20260401899",
+        "invoiceNumber": null
+      }
+    },
+    {
+      "order": 12,
+      "actor": "admin",
+      "action": "processRefund",
+      "endpoint": "POST /admin/payments/:id/refund",
+      "paymentIndex": 0,
+      "payload": {
+        "amount": 50000,
+        "reason": "Goodwill credit — Samira referred two new agency clients from Mumbai."
+      }
+    },
+    {
+      "order": 13,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/projects/:id/status",
+      "status": "REVIEW",
+      "reason": "All three festive pages live. Zoho leads flowing since 5 September.",
+      "notifyClient": true
+    },
+    {
+      "order": 14,
+      "actor": "both",
+      "action": "projectMessaging",
+      "endpoint": "POST /messages/project/:id",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Samira — all three campaign pages are on production. Zoho CRM integration tested with 12 test leads.",
+          "type": "TEXT"
+        },
+        {
+          "sender": "client",
+          "content": "Navratri page is converting at 4.8% on Meta traffic. Client is thrilled — Diwali page goes live tomorrow for their ad launch.",
+          "type": "TEXT"
+        }
+      ]
+    },
+    {
+      "order": 15,
+      "actor": "client",
+      "action": "submitFeedback",
+      "endpoint": "POST /projects/:id/feedback",
+      "payload": {
+        "comment": "Fast turnaround on all three campaigns. Zoho integration was seamless.",
+        "rating": 5
+      }
+    },
+    {
+      "order": 16,
+      "actor": "client",
+      "action": "approveProject",
+      "endpoint": "POST /projects/:id/approve",
+      "payload": {
+        "rating": 5,
+        "feedback": {
+          "quality": 5,
+          "communication": 5,
+          "timeliness": 5,
+          "professionalism": 5,
+          "overallSatisfaction": 5
+        },
+        "comments": "Approved — ready for production."
+      }
+    },
+    {
+      "order": 17,
+      "actor": "admin",
+      "action": "finalDelivery",
+      "endpoint": "POST /messages/project/:id",
+      "message": "Project complete — final source bundle with GA4 event map and Zoho field mapping doc attached.",
+      "files": [
+        "projects/landing-page-suite/assets/final/nestlancer-landing-pages-v1.0.zip"
+      ]
+    }
+  ]
+}

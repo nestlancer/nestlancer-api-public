@@ -1,0 +1,72 @@
+{
+  "seedKey": "arjun-mehta-marketplace-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "B2B Wholesale Ordering Portal",
+        "description": "Web portal for our Gujarat distributor network — bulk SKU ordering, GST-compliant invoicing, credit-limit checks, and Razorpay payment links for advance orders. Replaces phone-and-WhatsApp order sheets used by 40+ dealers across Ahmedabad and Surat.",
+        "category": "webDevelopment",
+        "budget": {
+          "min": 4000000,
+          "max": 8000000,
+          "currency": "INR",
+          "flexible": true
+        },
+        "timeline": {
+          "preferredStartDate": "2026-06-01T00:00:00Z",
+          "deadline": "2026-08-01T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "Dealer login with credit limit visibility",
+          "Bulk order cart with MOQ rules",
+          "GST invoice PDF generation",
+          "Razorpay payment links for advance orders",
+          "Admin dashboard for order fulfilment"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "actor": "client",
+      "action": "uploadAttachments",
+      "endpoint": "POST /requests/:id/attachments",
+      "files": [
+        "projects/marketplace-web-app/assets/request-brief.pdf"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "Standard B2B portal scope — dealer onboarding flow reviewed with Arjun on 4 June call."
+      }
+    },
+    {
+      "order": 5,
+      "actor": "admin",
+      "action": "assign",
+      "endpoint": "POST /admin/requests/:id/assign",
+      "payload": {
+        "assigneeEmail": "admin@nestlancer.com"
+      }
+    }
+  ]
+}

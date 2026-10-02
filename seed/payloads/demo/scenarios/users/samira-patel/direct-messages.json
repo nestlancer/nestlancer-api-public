@@ -1,0 +1,25 @@
+{
+  "phase": "07-direct-messages",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "both",
+      "action": "directThread",
+      "endpoint": "POST /messages/threads/direct",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Samira — festive landing pages are closed. I'll send the website redesign estimate once the brand assets are in the request folder."
+        },
+        {
+          "sender": "client",
+          "content": "Thanks. The Diwali pages can stay live through the weekend. I'll upload the new logo lockups before we brief the site redesign."
+        },
+        {
+          "sender": "admin",
+          "content": "Received. I'll hold the redesign quote until those files are in, so the line items match the brand kit."
+        }
+      ]
+    }
+  ]
+}

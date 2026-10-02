@@ -1,0 +1,21 @@
+{
+  "phase": "07-messaging",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "both",
+      "action": "directThread",
+      "endpoint": "POST /messages/threads/direct",
+      "messages": [
+        {
+          "sender": "admin",
+          "content": "Hi Ananya — the duplicate ₹500 advance payment refund is being processed. UTR confirmation will follow by email."
+        },
+        {
+          "sender": "client",
+          "content": "Thanks. Our finance team confirmed the duplicate NEFT on their end too. Replay UI remains the priority for month-end."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "seedKey": "samira-landing-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Festive Season Campaign Landing Pages",
+        "description": "Three campaign landing pages for our FMCG clients ahead of Navratri and Diwali — lead capture via Zoho CRM, Meta Pixel and GA4 conversion tracking, Marathi/Hindi headline variants, and mobile-first design targeting tier-2 Maharashtra audiences.",
+        "category": "marketing",
+        "budget": {
+          "min": 800000,
+          "max": 1500000,
+          "currency": "INR",
+          "flexible": false
+        },
+        "timeline": {
+          "preferredStartDate": "2026-03-01T00:00:00Z",
+          "deadline": "2026-04-15T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "Zoho CRM lead forms",
+          "Meta Pixel + GA4 events",
+          "Marathi headline variants",
+          "Lighthouse mobile score above 90"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "actor": "client",
+      "action": "uploadAttachments",
+      "endpoint": "POST /requests/:id/attachments",
+      "files": [
+        "projects/landing-page-suite/assets/request-brief.pdf"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "Fast-track — Navratri campaign launch is 15 September hard deadline for client handoff."
+      }
+    }
+  ]
+}

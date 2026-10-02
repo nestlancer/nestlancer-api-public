@@ -1,0 +1,7 @@
+export enum WebhookLogStatus {
+  RECEIVED = 'RECEIVED',
+  PROCESSING = 'PROCESSING',
+  PROCESSED = 'PROCESSED',
+  FAILED = 'FAILED',
+  RETRYING = 'RETRYING',
+}

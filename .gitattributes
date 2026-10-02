@@ -1,0 +1,38 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Force LF line endings for all text files
+*.ts text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.hbs text eol=lf
+*.sh text eol=lf
+
+# Mark generated files
+*.generated.ts linguist-generated=true
+prisma/migrations/** linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+docs/api/openapi-merged.json linguist-generated=true -diff
+docs/api/_legacy/** linguist-generated=true
+docs/api/postman-collection.json linguist-generated=true
+
+# Mark vendor files
+**/node_modules/** linguist-vendored=true
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary

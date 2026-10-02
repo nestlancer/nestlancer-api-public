@@ -1,0 +1,89 @@
+# =============================================================================
+# Private repo — commit config, env, certs, and tooling needed to recover from GitHub.
+# DO NOT IGNORE (contract / codegen — must stay in git):
+#   docs/api/openapi-merged.json
+#   docs/api/openapi-merged.json.baseline
+#   gateway/src/swagger/
+#   scripts/openapi/
+#   services/*/prisma/migrations/
+# TRACKED on purpose: .env*.example, *.example.env, .infisical.json, .npmrc, TLS certs, deploy/k3s/
+# Real env files and Infisical exports stay local. Examples stay in git.
+.env
+.env.*
+!.env.example
+!.env.*.example
+!*.example.env
+# =============================================================================
+
+# Dependencies (reinstall with pnpm install)
+node_modules/
+.pnpm-store/
+.pnp
+.pnp.js
+
+# Build outputs (regenerated)
+dist/
+build/
+*.tsbuildinfo
+
+# Turborepo cache
+.turbo/
+
+# Testing artifacts
+coverage/
+*.lcov
+
+# Prisma generated client only (migrations stay tracked)
+prisma/generated/
+**/prisma/generated/
+
+# IDE — only machine-local junk; shared settings stay tracked
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs and temp
+logs/
+.docker/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.temp/
+.tmp/
+tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local-only Python / review tooling (not needed on VPS)
+.code-review-graph/
+.venv/
+.venv-crg/
+
+# seed — runtime output
+seed/**/__pycache__/
+prod-data/**/__pycache__/
+seed/.generated/
+prod-data/.generated/
+seed/payloads/demo/scenarios/users/**/assets/
+seed/reset/config/.env.reset
+prod-data/reset/config/.env.reset
+
+# Misc archives
+*.tgz
+
+# Local Docker BuildKit cache (scripts/docker/build-all-prod-images.sh)
+.cache/
+
+# Local seed passwords — never commit
+seed/.generated-seed-credentials.env
+seed/.generated-client-passwords.json
+prod-data/.generated-seed-credentials.env
+prod-data/.generated-client-passwords.json

@@ -1,0 +1,19 @@
+[
+  {
+    "label": "Primary legal entity",
+    "legalName": "Nestlancer Pvt Ltd",
+    "tradeName": "Nestlancer",
+    "address": "12th Floor, Prestige Tech Park, Outer Ring Road, Bengaluru, Karnataka 560103",
+    "state": "Karnataka",
+    "stateCode": "29",
+    "gstin": "29AABCT1332L1ZV",
+    "pan": "AABCT1332L",
+    "cin": "U72900KA2020PTC123456",
+    "email": "billing@nestlancer.com",
+    "phone": "+919876543210",
+    "website": "https://nestlancer.com",
+    "isActive": true,
+    "isPrimary": true,
+    "sortOrder": 0
+  }
+]

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc-users
+  labels:
+    app: svc-users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svc-users
+  template:
+    metadata:
+      labels:
+        app: svc-users
+    spec:
+      imagePullSecrets:
+        - name: ghcr-credentials
+      containers:
+        - name: svc-users
+          image: ghcr.io/nestlancer/users:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3002
+              name: http
+          envFrom:
+            - secretRef:
+                name: nestlancer-secrets
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3002"
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health/ready
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health/live
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

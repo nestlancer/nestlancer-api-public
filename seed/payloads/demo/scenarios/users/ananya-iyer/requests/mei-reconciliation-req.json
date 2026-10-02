@@ -1,0 +1,63 @@
+{
+  "seedKey": "mei-reconciliation-req",
+  "phase": "01-request",
+  "interactions": [
+    {
+      "order": 1,
+      "actor": "client",
+      "action": "createRequest",
+      "endpoint": "POST /requests",
+      "payload": {
+        "title": "Razorpay Settlement Reconciliation Engine",
+        "description": "Node.js microservice to reconcile Razorpay settlement reports with our internal ledger — idempotent webhook ingestion for payment.captured and settlement.processed events, transactional outbox for downstream accounting, and an admin replay UI for ops to reprocess failed settlements after the 18 June payout outage.",
+        "category": "custom",
+        "budget": {
+          "min": 4000000,
+          "max": 5500000,
+          "currency": "INR",
+          "flexible": false
+        },
+        "timeline": {
+          "preferredStartDate": "2026-06-15T00:00:00Z",
+          "deadline": "2026-08-30T23:59:59Z",
+          "flexible": false
+        },
+        "requirements": [
+          "Razorpay webhook signature verification",
+          "Idempotency store for settlement events",
+          "Ledger matching with discrepancy alerts",
+          "Admin replay UI for failed settlements",
+          "Transactional outbox for accounting sync"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "actor": "client",
+      "action": "uploadAttachments",
+      "endpoint": "POST /requests/:id/attachments",
+      "files": [
+        "projects/reconciliation-service/assets/request-brief.pdf"
+      ]
+    },
+    {
+      "order": 3,
+      "actor": "client",
+      "action": "submitRequest",
+      "endpoint": "POST /requests/:id/submit",
+      "payload": {
+        "confirmComplete": true
+      }
+    },
+    {
+      "order": 4,
+      "actor": "admin",
+      "action": "updateStatus",
+      "endpoint": "PATCH /admin/requests/:id/status",
+      "payload": {
+        "status": "underReview",
+        "notes": "RBI-compliant fintech scope — Razorpay settlement format reviewed with Ananya's finance team."
+      }
+    }
+  ]
+}

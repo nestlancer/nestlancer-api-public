@@ -1,0 +1,48 @@
+{
+  "seedKey": "ananya-iyer",
+  "displayName": "Ananya Iyer",
+  "summary": "VP Engineering at Iyer FinServ Pvt Ltd in Bengaluru.",
+  "profile": {
+    "email": "ananya.iyer@nestlancer.com",
+    "firstName": "Ananya",
+    "lastName": "Iyer",
+    "phone": "+919845067890",
+    "company": "Iyer FinServ Pvt Ltd",
+    "jobTitle": "VP Engineering",
+    "timezone": "Asia/Kolkata",
+    "city": "Bengaluru",
+    "industry": "fintech",
+    "headline": "VP Engineering \u00b7 Iyer FinServ Pvt Ltd (Bengaluru \u00b7 Fintech)",
+    "bio": "Ananya is VP Engineering at Iyer FinServ in Bengaluru. She is building Razorpay settlement reconciliation and a UPI collections app.",
+    "skills": [
+      "VP Engineering",
+      "Payment Reconciliation",
+      "Razorpay",
+      "Webhook Integrations"
+    ]
+  },
+  "emailSuppression": {
+    "disableEmailChannel": true,
+    "disablePushChannel": true
+  },
+  "notificationPreferences": {
+    "preferences": {
+      "PROJECT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "PAYMENT": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      },
+      "MESSAGE": {
+        "email": false,
+        "push": false,
+        "inApp": true
+      }
+    }
+  },
+  "avatarLocal": "avatars/ananya-iyer.jpg"
+}

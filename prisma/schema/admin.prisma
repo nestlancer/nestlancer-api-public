@@ -1,0 +1,73 @@
+// =============================================================================
+// Admin Domain Models
+// =============================================================================
+
+model SystemConfig {
+  id          String   @id @default(uuid(7))
+  key         String   @unique
+  value       Json
+  description String?
+  isPublic    Boolean  @default(false)
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  admin       User?    @relation(fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([updatedBy])
+}
+
+model FeatureFlag {
+  id                 String   @id @default(uuid(7))
+  flag               String   @unique
+  enabled            Boolean  @default(false)
+  description        String?
+  rolloutPercentage  Int      @default(0)
+  metadata           Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model EmailTemplate {
+  id          String   @id @default(uuid(7))
+  name        String   @unique
+  subject     String
+  body        String
+  variables   Json?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ImpersonationSession {
+  id           String    @id @default(uuid(7))
+  adminId      String
+  targetUserId String
+  reason       String?
+  ticketId     String?
+  /** Access-token id so ending the session can revoke only this support login. */
+  accessJti    String?
+  startedAt    DateTime  @default(now())
+  endedAt      DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  admin        User?     @relation("ImpersonationAdmin", fields: [adminId], references: [id], onDelete: Cascade)
+  targetUser   User?     @relation("ImpersonationTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([targetUserId])
+  @@index([endedAt])
+}
+
+model ReportExport {
+  id        String   @id @default(uuid(7))
+  type      String
+  period    String
+  format    String
+  url       String
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([createdAt])
+}

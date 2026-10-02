@@ -1,0 +1,106 @@
+# Redeploy production from GHCR:latest without rebuilding all 28 images.
+# Use after Infisical secret updates or when affected images were built separately.
+
+name: Backend CD (Production deploy only)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: backend-production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    name: Deploy Production (pull + reload)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy production stack via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+          INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.PRODUCTION_VPS_HOST }}
+          username: ${{ secrets.PRODUCTION_VPS_USERNAME }}
+          password: ${{ secrets.PRODUCTION_VPS_PASSWORD }}
+          envs: INFISICAL_CLIENT_ID,INFISICAL_CLIENT_SECRET,GHCR_TOKEN
+          command_timeout: 45m
+          script: |
+            set -euo pipefail
+            DEPLOY_PATH="${{ secrets.PRODUCTION_VPS_DEPLOY_PATH }}"
+            if [ -z "$DEPLOY_PATH" ] || [ ! -d "$DEPLOY_PATH/.git" ]; then
+              DEPLOY_PATH="/root/nestlancer-backend-api-prod"
+            fi
+
+            RUNNING_DIR=""
+            if docker ps -a --format '{{.Names}}' | grep -q '^nl-prod-gateway$'; then
+              RUNNING_DIR="$(docker inspect nl-prod-gateway --format '{{index .Config.Labels "com.docker.compose.project.working_dir"}}' 2>/dev/null || true)"
+            fi
+            if [ -n "$RUNNING_DIR" ] && [ -d "$RUNNING_DIR/.git" ]; then
+              echo "Using live prod compose dir: $RUNNING_DIR"
+              cd "$RUNNING_DIR"
+            else
+              if [ ! -d "$DEPLOY_PATH/.git" ]; then
+                echo "Deploy path missing — cloning into $DEPLOY_PATH"
+                mkdir -p "$(dirname "$DEPLOY_PATH")"
+                git clone git@github.com:nestlancer/nestlancer-backend-api.git "$DEPLOY_PATH"
+              fi
+              cd "$DEPLOY_PATH"
+            fi
+
+            git fetch origin main --tags
+            git pull origin main
+
+            export INFISICAL_TOKEN=$(infisical login \
+              --method=universal-auth \
+              --client-id="$INFISICAL_CLIENT_ID" \
+              --client-secret="$INFISICAL_CLIENT_SECRET" \
+              --silent --plain)
+
+            PROJECT_ID="${{ secrets.INFISICAL_PROJECT_ID }}"
+            [ -z "$PROJECT_ID" ] && [ -f .infisical.json ] && \
+              PROJECT_ID="$(node -p "JSON.parse(require('fs').readFileSync('.infisical.json','utf8')).workspaceId")"
+
+            INFISICAL_ENV=prod SKIP_INFISICAL_EXPORT=0 \
+              INFISICAL_CLIENT_ID="$INFISICAL_CLIENT_ID" \
+              INFISICAL_CLIENT_SECRET="$INFISICAL_CLIENT_SECRET" \
+              INFISICAL_PROJECT_ID="$PROJECT_ID" \
+              ./scripts/docker/compose-prod.sh config >/dev/null
+
+            chmod +x scripts/db/migrate-deploy-ci.sh scripts/deploy/smoke-health.sh scripts/docker/proxy-prod-up.sh
+
+            if [ ! -f node_modules/prisma/build/index.js ]; then
+              echo "Installing pnpm deps for Prisma migrate..."
+              corepack enable
+              pnpm install --frozen-lockfile
+            fi
+
+            export NESTLANCER_IMAGE_REGISTRY=ghcr.io/${{ github.repository_owner }}
+            export NESTLANCER_IMAGE_TAG=latest
+
+            ./scripts/db/migrate-deploy-ci.sh || echo "WARN: migrate failed (continuing with secret reload)"
+
+            chmod +x scripts/docker/reload-prod-secrets.sh scripts/docker/proxy-prod-up.sh
+
+            # Reload Infisical prod env into running containers (e.g. SWAGGER_ENABLED, MEDIA_SKIP_VIRUS_SCAN).
+            # Skip GHCR pull when images are built locally on the VPS — prod may predate GHCR publish.
+            if docker ps -a --format '{{.Names}}' | grep -qE '^nl-prod-'; then
+              echo "Prod stack detected — force-recreating with fresh .env.infisical"
+              bash scripts/docker/reload-prod-secrets.sh
+            else
+              echo "$GHCR_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
+              COMPOSE_PULL=always INFISICAL_ENV=prod ./scripts/docker/compose-prod.sh pull || true
+              COMPOSE_PULL=never FORCE_RECREATE=1 INFISICAL_ENV=prod ./scripts/docker/compose-prod.sh up -d --force-recreate
+            fi
+            bash scripts/docker/proxy-prod-up.sh
+            GATEWAY_URL="${GATEWAY_URL:-http://127.0.0.1:4000}" ./scripts/deploy/smoke-health.sh
+            echo "Deploy-only succeeded at $(git rev-parse --short HEAD)"

@@ -1,0 +1,75 @@
+// =============================================================================
+// Notification Domain Models
+// =============================================================================
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  CRITICAL
+}
+
+model Notification {
+  id              String               @id @default(uuid(7))
+  userId          String
+  type            String
+  title           String
+  message         String
+  priority        NotificationPriority @default(NORMAL)
+  data            Json?
+  actionUrl       String?
+  read            Boolean              @default(false)
+  readAt          DateTime?
+  channels        Json?
+  expiresAt       DateTime?
+  idempotencyKey  String?              @unique
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+}
+
+model NotificationTemplate {
+  id          String   @id @default(uuid(7))
+  name        String   @unique
+  eventType   String
+  titleTemplate   String
+  messageTemplate String
+  channels    Json
+  priority    NotificationPriority @default(NORMAL)
+  isActive    Boolean  @default(true)
+  variables   Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([eventType])
+}
+
+model NotificationPreference {
+  id                 String   @id @default(uuid(7))
+  userId             String   @unique
+  preferences        Json?
+  quietHoursStart    String?
+  quietHoursEnd      String?
+  quietHoursTimezone String   @default("Asia/Kolkata")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserPushSubscription {
+  id           String   @id @default(uuid(7))
+  userId       String
+  subscription Json
+  deviceInfo   Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

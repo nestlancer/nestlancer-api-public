@@ -36,7 +36,7 @@
     "@nestlancer/queue": "workspace:*",
     "@nestlancer/storage": "workspace:*",
     "@nestlancer/tracing": "workspace:*",
-    "bullmq": "^5.0.0",
+    "bullmq": "^6.3.9",
     "clamav.js": "^0.12.0",
     "fluent-ffmpeg": "^2.1.2",
     "reflect-metadata": "^0.1.13",

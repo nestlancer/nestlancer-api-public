@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway
+  name: worker-document
   labels:
-    app: gateway
+    app: worker-document
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gateway
+      app: worker-document
   template:
     metadata:
       labels:
-        app: gateway
+        app: worker-document
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9464"
@@ -21,38 +21,20 @@ spec:
       imagePullSecrets:
         - name: ghcr-credentials
       containers:
-        - name: gateway
-          image: ghcr.io/nestlancer/gateway:latest
+        - name: worker-document
+          image: ghcr.io/nestlancer/document-worker:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000
-              name: http
             - containerPort: 9464
               name: metrics
           envFrom:
             - secretRef:
                 name: nestlancer-secrets
-            - configMapRef:
-                name: gateway-config
           env:
             - name: NODE_ENV
               value: production
             - name: METRICS_BIND_HOST
               value: "0.0.0.0"
-            - name: PORT
-              value: "3000"
-          readinessProbe:
-            httpGet:
-              path: /api/v1/health/ready
-              port: http
-            initialDelaySeconds: 20
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /api/v1/health/live
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 20
           resources:
             requests:
               cpu: 50m

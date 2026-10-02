@@ -1,6 +1,6 @@
 # Nestlancer Backend API
 
-Production NestJS monorepo for the Nestlancer platform. It includes one API gateway, one WebSocket gateway, 16 domain microservices, and 8 workers running on RabbitMQ-driven asynchronous flows.
+Production NestJS monorepo for the Nestlancer platform. It includes one API gateway, one WebSocket gateway, 16 domain microservices, and 10 workers running on RabbitMQ-driven asynchronous flows.
 
 ## Table of Contents
 
@@ -35,7 +35,7 @@ This backend is designed as a domain-separated distributed monorepo.
 - **Operational implications**
   - Local development needs infra dependencies (PostgreSQL, Redis, RabbitMQ, Mailpit)
   - Production deploy needs explicit secret and migration discipline
-  - Image tag consistency (`NESTLANCER_IMAGE_TAG`) is critical across all 26 images
+  - Image tag consistency (`NESTLANCER_IMAGE_TAG`) is critical across all 28 images (1 gateway + 1 ws-gateway + 16 services + 10 workers)
 
 ## System Architecture
 
@@ -64,7 +64,7 @@ Client/Browser --------------- v ------------------------------+
                                                |
                                                v
                                        +---------------+
-                                       | Workers x8    |
+                                       | Workers x10   |
                                        +---------------+
 ```
 
@@ -73,7 +73,7 @@ High-level runtime components:
 - `gateway/` for REST, auth guard composition, API contract exposure, and envelope responses
 - `ws-gateway/` for socket-based real-time channels
 - `services/` (16 bounded services): `auth`, `users`, `requests`, `quotes`, `projects`, `progress`, `payments`, `messaging`, `notifications`, `media`, `portfolio`, `blog`, `contact`, `admin`, `webhooks`, `health`
-- `workers/` (8 processors): `analytics-worker`, `audit-worker`, `cdn-worker`, `email-worker`, `media-worker`, `notification-worker`, `outbox-poller`, `webhook-worker`
+- `workers/` (10 processors): `analytics-worker`, `audit-worker`, `cdn-worker`, `document-worker`, `email-worker`, `export-worker`, `media-worker`, `notification-worker`, `outbox-poller`, `webhook-worker`
 - `libs/` shared platform modules for config, transport, auth, queue, tracing, and common contracts
 
 ```mermaid
@@ -86,7 +86,7 @@ flowchart LR
   S --> R[(Redis)]
   S --> O[Outbox]
   O --> MQ[(RabbitMQ)]
-  MQ --> WK[Workers x8]
+  MQ --> WK[Workers x10]
 ```
 
 ## Tech Stack
@@ -389,7 +389,7 @@ Image IDs used in GHCR and compose:
 
 - Gateways: `gateway`, `ws-gateway`
 - Services: `auth`, `users`, `payments`, `webhooks`, `admin`, `requests`, `quotes`, `projects`, `progress`, `messaging`, `notifications`, `media`, `portfolio`, `blog`, `contact`, `health`
-- Workers: `analytics-worker`, `audit-worker`, `cdn-worker`, `email-worker`, `media-worker`, `notification-worker`, `outbox-poller`, `webhook-worker`
+- Workers: `analytics-worker`, `audit-worker`, `cdn-worker`, `document-worker`, `email-worker`, `export-worker`, `media-worker`, `notification-worker`, `outbox-poller`, `webhook-worker`
 
 ## API Contract Docs
 

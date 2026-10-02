@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         app: worker-audit
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9464"
+        prometheus.io/path: /metrics
     spec:
       imagePullSecrets:
         - name: ghcr-credentials
@@ -20,12 +24,17 @@ spec:
         - name: worker-audit
           image: ghcr.io/nestlancer/audit-worker:latest
           imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9464
+              name: metrics
           envFrom:
             - secretRef:
                 name: nestlancer-secrets
           env:
             - name: NODE_ENV
               value: production
+            - name: METRICS_BIND_HOST
+              value: "0.0.0.0"
           resources:
             requests:
               cpu: 50m

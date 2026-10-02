@@ -72,9 +72,18 @@ export class NotificationWorkerService {
           case NotificationChannel.EMAIL:
             return this.processEmailNotification(resolvedJob);
           default:
-            this.logger.warn(
-              `[NotificationWorker] Channel ${channel} is currently not implemented/supported.`,
+            // BE-G03: this used to warn-log only, so the delivery vanished with
+            // no metric, no record and no retry. Promise.allSettled resolves the
+            // branch, so nothing downstream ever noticed. Now it is countable in
+            // Grafana and alertable.
+            this.metrics.recordUnsupportedChannel(String(channel), notificationType);
+            this.logger.error(
+              `[NotificationWorker] Dropping notification for UserID=${userId}: channel ` +
+                `${String(channel)} has no processor (supported: ${Object.values(
+                  NotificationChannel,
+                ).join(', ')}).`,
             );
+            return;
         }
       }),
     );

@@ -49,6 +49,8 @@ resources:
   - workloads/worker-email-deployment.yaml
   - workloads/worker-media-deployment.yaml
   - workloads/worker-notification-deployment.yaml
+  - workloads/worker-document-deployment.yaml
+  - workloads/worker-export-deployment.yaml
   - workloads/worker-outbox-deployment.yaml
   - workloads/worker-webhook-deployment.yaml
 

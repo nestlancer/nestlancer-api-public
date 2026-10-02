@@ -119,7 +119,7 @@ E2E DB setup can fail if:
 - Prefer explicit env var export over `source .env.e2e` (that file has decorative lines/comments that are not shell-safe).
 
 ```bash
-export DATABASE_URL='postgresql://USER:PASSWORD@REDACTED_E2E_HOST:5434/nl_platform_e2e'
+export DATABASE_URL='postgresql://USER:PASSWORD@<E2E_HOST>:5434/nl_platform_e2e'
 ```
 
 ### Standard E2E flow (fresh migration + migrate + seed)
@@ -145,16 +145,16 @@ npx -y node@20.19.0 ./node_modules/prisma/build/index.js migrate diff \
 3. If deploy fails with `P3005` (schema not empty), reset schema with admin user:
 
 ```bash
-PGPASSWORD='REDACTED_E2E_PASSWORD' psql -h REDACTED_E2E_HOST -p 5434 -U nl_infra_admin -d nl_platform_e2e \
+PGPASSWORD='<E2E_PASSWORD>' psql -h <E2E_HOST> -p 5434 -U nl_infra_admin -d nl_platform_e2e \
   -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO nl_platform_app; GRANT ALL ON SCHEMA public TO nl_infra_admin;"
 ```
 
 4. Ensure DB-level privileges for app user (if `permission denied for database` appears):
 
 ```bash
-PGPASSWORD='REDACTED_E2E_PASSWORD' psql -h REDACTED_E2E_HOST -p 5434 -U nl_infra_admin -d postgres \
+PGPASSWORD='<E2E_PASSWORD>' psql -h <E2E_HOST> -p 5434 -U nl_infra_admin -d postgres \
   -c "GRANT CONNECT, CREATE, TEMPORARY ON DATABASE nl_platform_e2e TO nl_platform_app;"
-PGPASSWORD='REDACTED_E2E_PASSWORD' psql -h REDACTED_E2E_HOST -p 5434 -U nl_infra_admin -d nl_platform_e2e \
+PGPASSWORD='<E2E_PASSWORD>' psql -h <E2E_HOST> -p 5434 -U nl_infra_admin -d nl_platform_e2e \
   -c "GRANT USAGE, CREATE ON SCHEMA public TO nl_platform_app; ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO nl_platform_app; ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO nl_platform_app;"
 ```
 

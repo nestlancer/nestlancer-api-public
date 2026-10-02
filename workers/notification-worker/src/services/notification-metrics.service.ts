@@ -7,6 +7,7 @@ export const METRIC_MAPPER_EMPTY = 'notifications_mapper_empty_total';
 export const METRIC_DLQ = 'notifications_dlq_total';
 export const METRIC_WS_PUBLISH_LATENCY = 'notifications_ws_publish_latency_seconds';
 export const METRIC_SKIPPED = 'notifications_skipped_total';
+export const METRIC_UNSUPPORTED_CHANNEL = 'notifications_unsupported_channel_total';
 
 @Injectable()
 export class NotificationMetricsService implements OnModuleInit {
@@ -26,6 +27,11 @@ export class NotificationMetricsService implements OnModuleInit {
       'reason',
       'type',
     ]);
+    this.metrics.createCounter(
+      METRIC_UNSUPPORTED_CHANNEL,
+      'Notification jobs requesting a delivery channel this worker cannot handle (silently dropped before BE-G03)',
+      ['channel', 'type'],
+    );
     this.metrics.createHistogram(
       METRIC_WS_PUBLISH_LATENCY,
       'Redis pub/sub latency for WS fan-out',
@@ -49,6 +55,21 @@ export class NotificationMetricsService implements OnModuleInit {
 
   recordSkipped(reason: string, notificationType: string): void {
     this.metrics.incrementCounter(METRIC_SKIPPED, { reason, type: notificationType });
+  }
+
+  /**
+   * A notification job asked for a channel this worker has no processor for.
+   *
+   * The `NotificationChannel` enum only declares IN_APP/PUSH/EMAIL, but jobs
+   * arrive as JSON over RabbitMQ, so a legacy or mis-seeded value (e.g. `SMS`)
+   * can still reach the dispatcher at runtime. Those deliveries were previously
+   * dropped with nothing but a warn log — invisible in Grafana (BE-G03).
+   */
+  recordUnsupportedChannel(channel: string, notificationType: string): void {
+    this.metrics.incrementCounter(METRIC_UNSUPPORTED_CHANNEL, {
+      channel: channel || 'unknown',
+      type: notificationType || 'unknown',
+    });
   }
 
   recordWsPublishLatency(event: string, seconds: number): void {

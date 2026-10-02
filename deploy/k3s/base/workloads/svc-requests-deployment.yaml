@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         app: svc-requests
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9464"
+        prometheus.io/path: /metrics
     spec:
       imagePullSecrets:
         - name: ghcr-credentials
@@ -23,12 +27,16 @@ spec:
           ports:
             - containerPort: 3006
               name: http
+            - containerPort: 9464
+              name: metrics
           envFrom:
             - secretRef:
                 name: nestlancer-secrets
           env:
             - name: NODE_ENV
               value: production
+            - name: METRICS_BIND_HOST
+              value: "0.0.0.0"
             - name: PORT
               value: "3006"
           readinessProbe:

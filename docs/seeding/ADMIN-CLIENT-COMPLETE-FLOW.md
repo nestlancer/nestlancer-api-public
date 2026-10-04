@@ -362,7 +362,7 @@ Independent audit of every diagram node against live backend code (**2026-06-17*
 | Area                                      | Status      | Notes                                                                                      |
 | ----------------------------------------- | ----------- | ------------------------------------------------------------------------------------------ |
 | All core pipeline phases ⓪–⑦              | ✅ Verified | Every diagram node traced to source                                                        |
-| Deposit vs work milestone orthogonality   | ✅          | Matches `docs/adr/001-milestone-lifecycle.md`                                              |
+| Deposit vs work milestone orthogonality   | ✅          | Matches `docs/decisions/009-milestone-lifecycle.md`                                              |
 | Messaging read + send gate                | ✅          | `requireProjectMessagingAllowed` on POST and GET                                           |
 | Dispute resolve dual id                   | ✅          | Dispute id OR payment id                                                                   |
 | Dispute respond dispute id only           | ✅          | `respondToDispute` requires dispute record id                                              |
@@ -388,6 +388,6 @@ Independent audit of every diagram node against live backend code (**2026-06-17*
 | State machines               | `libs/common/src/state-machines/status-transitions.ts`                  |
 | Messaging allowed statuses   | `libs/common/src/constants/project-messaging.constants.ts`              |
 | Payment terms defaults       | `libs/common/src/payment/payment-terms.util.ts`                         |
-| Milestone lifecycle ADR      | `docs/adr/001-milestone-lifecycle.md`                                   |
+| Milestone lifecycle ADR      | `docs/decisions/009-milestone-lifecycle.md`                                   |
 | Prisma models                | `prisma/schema/{request,quote,project,payment,progress,message}.prisma` |
 | Backend analysis prompt      | _(archived — see git history)_                                          |

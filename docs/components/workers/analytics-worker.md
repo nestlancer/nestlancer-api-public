@@ -1,34 +1,15 @@
-<div align="center">
-
 # Analytics Worker
 
-### Rolls up views, revenue snapshots, portfolio/blog engagement into reporting tables.
+Rolls up views, revenue snapshots, portfolio/blog engagement into reporting tables.
 
-</div>
+## At a glance
 
----
-
-## 📖 Table of Contents
-
-- [👁 At a glance](#at-a-glance)
-- [Processors / jobs](#processors-jobs)
-- [Message flow](#message-flow)
-- [📎 Dependencies](#dependencies)
-- [💻 Local development](#local-development)
-- [📚 Related documentation](#related-documentation)
-
----
-
-## 👁 At a glance
-
-|             |                                |
-| :---------- | :----------------------------- |
+| | |
+| --- | --- |
 | **Package** | `@nestlancer/analytics-worker` |
-| **Source**  | `workers/analytics-worker/`    |
-| **Queue**   | `analytics.queue`              |
-| **Routing** | analytics.#                    |
-
----
+| **Source** | `workers/analytics-worker/` |
+| **Queue** | `analytics.queue` |
+| **Routing** | analytics.# |
 
 ## Processors / jobs
 
@@ -37,8 +18,6 @@
 - `revenue-analytics`
 - `blog-analytics`
 - `portfolio-analytics`
-
----
 
 ## Message flow
 
@@ -49,11 +28,9 @@ Service commits business data + OutboxEvent (same transaction)
         → side effect (email, push, S3, analytics DB, …)
 ```
 
-On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../runbooks/dlq-processing.md)).
+On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../operations/runbooks/dlq-processing.md)).
 
----
-
-## 📎 Dependencies
+## Dependencies
 
 - `@nestlancer/common`
 - `@nestlancer/config`
@@ -64,31 +41,20 @@ On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../ru
 - `@nestlancer/metrics`
 - `@nestlancer/tracing`
 - `@nestlancer/storage`
+- `@nestlancer/pdf`
 
----
-
-## 💻 Local development
+## Local development
 
 ```bash
 pnpm --filter @nestlancer/analytics-worker dev
 pnpm --filter @nestlancer/analytics-worker test
 ```
 
-Ensure RabbitMQ and PostgreSQL are running (`make dev-services`).
+RabbitMQ and PostgreSQL run on the shared dev VPS over Tailscale, not via local Docker Compose — see [Local workflow](../../development/local-workflow.md) for how to point `.env` at them.
 
----
-
-## 📚 Related documentation
+## Related documentation
 
 - [Queue topology](../../architecture/queue-topology.md)
 - [Event catalog](../../architecture/event-catalog.md)
-- [Adding a new worker](../../guides/adding-new-worker.md)
+- [Adding a new worker](../../development/adding-a-worker.md)
 - [CHANGELOG](../../changelog/CHANGELOG.md)
-
----
-
-<div align="center">
-
-**Analytics Worker** — Nestlancer backend component documentation
-
-</div>

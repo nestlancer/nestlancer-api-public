@@ -18,7 +18,6 @@
 prisma/migrations/** linguist-generated=true
 pnpm-lock.yaml linguist-generated=true
 docs/api/openapi-merged.json linguist-generated=true -diff
-docs/api/_legacy/** linguist-generated=true
 docs/api/postman-collection.json linguist-generated=true
 
 # Mark vendor files

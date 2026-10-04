@@ -1,34 +1,15 @@
-<div align="center">
-
 # Email Worker
 
-### Renders Handlebars templates and sends mail via ZeptoMail (transactional) or SES (bulk).
+Renders Handlebars templates and sends mail via ZeptoMail (transactional) or SES (bulk).
 
-</div>
+## At a glance
 
----
-
-## 📖 Table of Contents
-
-- [👁 At a glance](#at-a-glance)
-- [Processors / jobs](#processors-jobs)
-- [Message flow](#message-flow)
-- [📎 Dependencies](#dependencies)
-- [💻 Local development](#local-development)
-- [📚 Related documentation](#related-documentation)
-
----
-
-## 👁 At a glance
-
-|             |                            |
-| :---------- | :------------------------- |
+| | |
+| --- | --- |
 | **Package** | `@nestlancer/email-worker` |
-| **Source**  | `workers/email-worker/`    |
-| **Queue**   | `email.queue`              |
-| **Routing** | email.#                    |
-
----
+| **Source** | `workers/email-worker/` |
+| **Queue** | `email.queue` |
+| **Routing** | email.# |
 
 ## Processors / jobs
 
@@ -41,8 +22,6 @@
 - `contact-auto-reply/response`
 - `announcement`
 
----
-
 ## Message flow
 
 ```
@@ -52,13 +31,14 @@ Service commits business data + OutboxEvent (same transaction)
         → side effect (email, push, S3, analytics DB, …)
 ```
 
-On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../runbooks/dlq-processing.md)).
+On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../operations/runbooks/dlq-processing.md)).
 
----
-
-## 📎 Dependencies
+## Dependencies
 
 - `@nestlancer/common`
+- `@nestlancer/cache`
+- `@nestlancer/database`
+- `@nestlancer/email`
 - `@nestlancer/config`
 - `@nestlancer/logger`
 - `@nestlancer/metrics`
@@ -66,47 +46,18 @@ On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../ru
 - `@nestlancer/queue`
 - `@nestlancer/mail`
 
----
-
-## Environment (production)
-
-| Variable                   | Notes                                                       |
-| :------------------------- | :---------------------------------------------------------- |
-| `EMAIL_PROVIDER`           | `zeptomail`                                                 |
-| `ZEPTOMAIL_TOKEN`          | Agent → SMTP/API → Send Mail Token                          |
-| `ZEPTOMAIL_SMTP_HOST`      | Must match account region, e.g. `smtp.zeptomail.in` (India) |
-| `ZEPTOMAIL_DC`             | Optional shorthand: `in`, `us`, `eu`, …                     |
-| `FROM_EMAIL` / `FROM_NAME` | Verified sender in ZeptoMail                                |
-| `REPLY_TO`                 | Reply-To header + template support link                     |
-| `FRONTEND_URL`             | Used in template links and logo URL                         |
-| `RABBITMQ_URL`             | Consumes `email.queue`                                      |
-
-See [environment variables guide](../../guides/environment-variables.md#email).
-
----
-
-## 💻 Local development
+## Local development
 
 ```bash
 pnpm --filter @nestlancer/email-worker dev
 pnpm --filter @nestlancer/email-worker test
 ```
 
-Ensure RabbitMQ and PostgreSQL are running (`make dev-services`). Local dev uses `EMAIL_PROVIDER=smtp` and Mailpit (see `.env.test`).
+RabbitMQ and PostgreSQL run on the shared dev VPS over Tailscale, not via local Docker Compose — see [Local workflow](../../development/local-workflow.md) for how to point `.env` at them.
 
----
-
-## 📚 Related documentation
+## Related documentation
 
 - [Queue topology](../../architecture/queue-topology.md)
 - [Event catalog](../../architecture/event-catalog.md)
-- [Adding a new worker](../../guides/adding-new-worker.md)
+- [Adding a new worker](../../development/adding-a-worker.md)
 - [CHANGELOG](../../changelog/CHANGELOG.md)
-
----
-
-<div align="center">
-
-**Email Worker** — Nestlancer backend component documentation
-
-</div>

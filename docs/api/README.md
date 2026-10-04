@@ -55,4 +55,8 @@ See [`scripts/openapi/README.md`](../../scripts/openapi/README.md) for codemods 
 
 ## Legacy stub
 
-The old ~11-path YAML is archived under [`_legacy/`](_legacy/README.md). Do not use it for codegen or validation.
+The old ~11-path YAML stub (`_legacy/`) was removed during the 2026-10 documentation reset — it
+was superseded by the gateway-generated merged OpenAPI spec below and existed only as an archived
+stub, not a maintained source. Do not look for it; use
+[`openapi-merged.json`](openapi-merged.json) (or `GET /docs-all-json` on a running gateway) for
+codegen or validation instead.

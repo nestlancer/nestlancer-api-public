@@ -15,7 +15,7 @@ These paths are mounted into `nl-prod-proxy` as `/etc/caddy/certs/`.
 
 Let's Encrypt auto-issue from Caddy also burns rate limits when prod stacks are reset during testing. **Save real certs here once** and reuse them on every fresh VPS / compose recreate.
 
-This sanitized share package does **not** include origin certs. Obtain them from your secrets store and install with `install-prod-origin-certs.sh`.
+This is a private repo — origin certs are intentionally recoverable from git (see root `.gitignore` contract). Still restrict key permissions (`600`).
 
 ## Recommended: Cloudflare Origin Certificate
 

@@ -58,7 +58,7 @@ All requests pass through this ordered middleware pipeline:
 
 ### ⚙️ Microservices (16)
 
-Default ports from each service’s `*_SERVICE_PORT` env (local dev). **Authoritative list:** [modification-playbook § Service ports](../guides/modification-playbook.md#service-port-quick-reference) and per-service docs under [components/services/](../components/services/).
+Default ports from each service’s `*_SERVICE_PORT` env (local dev). **Authoritative list:** [modification-playbook § Service ports](../development/modification-playbook.md#service-port-quick-reference) and per-service docs under [components/services/](../components/services/).
 
 | Service       | Port | Env variable                 | Description                                 |
 | :------------ | :--- | :--------------------------- | :------------------------------------------ |

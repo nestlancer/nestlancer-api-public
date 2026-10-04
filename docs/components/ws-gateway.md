@@ -73,7 +73,7 @@ NEXT_PUBLIC_WS_URL=https://dev.nestlancer.com
 NEXT_PUBLIC_SOCKET_IO_PATH=/ws/socket.io
 ```
 
-If connections fail behind Nginx, verify `proxy_set_header Upgrade` and WebSocket timeout — [nginx guide](../guides/nginx.md).
+If connections fail behind Nginx, verify `proxy_set_header Upgrade` and WebSocket timeout — [nginx guide](../operations/nginx.md).
 
 ---
 

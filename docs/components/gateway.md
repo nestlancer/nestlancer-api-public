@@ -118,7 +118,7 @@ curl http://localhost:3000/api/v1/health
 open http://localhost:3000/api/docs
 ```
 
-Upstream service URLs come from env (`AUTH_SERVICE_URL`, etc.) — see [environment variables](../guides/environment-variables.md).
+Upstream service URLs come from env (`AUTH_SERVICE_URL`, etc.) — see [environment variables](../reference/environment-variables.md).
 
 ---
 
@@ -138,7 +138,7 @@ Upstream service URLs come from env (`AUTH_SERVICE_URL`, etc.) — see [environm
 - [WebSocket gateway](./ws-gateway.md)
 - [API standards](../api/standards.md)
 - [Architecture overview](../architecture/overview.md)
-- [Nginx / TLS](../guides/nginx.md)
+- [Nginx / TLS](../operations/nginx.md)
 - [CHANGELOG](../changelog/CHANGELOG.md)
 
 ---

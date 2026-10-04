@@ -17,8 +17,8 @@ Use this file when:
 - 1 API gateway (`gateway`)
 - 1 WS gateway (`ws-gateway`)
 - 16 services (`services/*`)
-- 8 workers (`workers/*`)
-- shared libraries in `libs/*`
+- 10 workers (`workers/*`)
+- 28 shared libraries in `libs/*`
 
 Backend depends on:
 

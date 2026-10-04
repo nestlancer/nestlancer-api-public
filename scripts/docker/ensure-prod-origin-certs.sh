@@ -84,7 +84,7 @@ Fix (recommended — Cloudflare Origin Certificate, 15y, no LE rate limits):
        bash scripts/docker/install-prod-origin-certs.sh --print-infisical
   4. pnpm docker:prod:proxy:up
 
-See: docker/caddy/certs/README.md and docs/guides/prod-origin-tls.md
+See: docker/caddy/certs/README.md and docs/operations/prod-origin-tls.md
 EOF
   exit 1
 }

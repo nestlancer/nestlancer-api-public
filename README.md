@@ -21,6 +21,7 @@ Production NestJS monorepo for the Nestlancer platform. It includes one API gate
 - [Beginner Guide](#beginner-guide)
 - [Operator Runbook (Day-2 Ops)](#operator-runbook-day-2-ops)
 - [Troubleshooting](#troubleshooting)
+- [More Documentation](#more-documentation)
 
 ## Project Analysis
 
@@ -143,7 +144,7 @@ chmod 600 .env.infisical
 Reference templates:
 
 - `.env.production.example`
-- `docs/guides/infisical.md`
+- `docs/operations/secrets-infisical.md`
 
 ## Run Locally (Development)
 
@@ -317,7 +318,7 @@ pnpm docker:prod:build:affected                         # turbo-changed only
 pnpm docker:prod:build
 ```
 
-Do **not** wipe `.cache/docker-buildkit` or run `docker builder prune -af` between iterations. Details: `docs/guides/prod-deployment.md`.
+Do **not** wipe `.cache/docker-buildkit` or run `docker builder prune -af` between iterations. Details: `docs/operations/deployment-prod-compose.md`.
 
 ## Deploy to VPS (Compose)
 
@@ -382,6 +383,13 @@ Main script: `scripts/deploy/k3s-deploy.sh`
 - `pnpm docker:prod:build:affected` - build turbo-affected production images only (preferred for iteration)
 - `pnpm docker:prod:up` / `pnpm docker:prod:down` - production compose lifecycle
 - `pnpm k3s:generate` - regenerate Kubernetes manifests
+
+`make <target>` also works as a thinner, Unix-conventional wrapper around most of the commands
+above (e.g. `make test-unit`, `make docker-up`) — run `make help` for the full list. A handful of
+targets that depended on files this repo never had (`docker-compose.yml`, `docker-compose.test.yml`,
+a local infra-only Compose bring-up) are intentionally retired and print an explanation instead of
+failing silently. See [`docs/reference/commands.md`](docs/reference/commands.md) for the complete
+`pnpm`/`make` command reference, including exactly which targets were fixed vs. retired.
 
 ## Service Inventory
 
@@ -463,7 +471,14 @@ GATEWAY_URL=http://127.0.0.1:3000 ./scripts/deploy/smoke-health.sh
 - If health checks fail post deploy, inspect gateway and dependency service logs first (`pnpm docker:prod:logs`).
 - If `dev-api.nestlancer.com` times out in the browser but `pnpm docker:verify:dev-host` passes only local checks, apply [UFW Docker rules](#dev-vps-public-access-dev-apinestlancercom) and confirm provider firewall allows `80`/`443`.
 - If Caddy cannot obtain a certificate, ensure Let's Encrypt can reach `http://<your-host>/.well-known/acme-challenge/` on port 80 from the public internet (not just from inside the VPS).
-- Legacy host-level Nginx guides (`docs/guides/nginx.md`) are for compose-only production fallback—not the default dev Docker path (Caddy in `docker-compose.local.yml`).
+- Legacy host-level Nginx guides (`docs/operations/nginx.md`) are for compose-only production fallback—not the default dev Docker path (Caddy in `docker-compose.local.yml`).
+
+## More documentation
+
+- [`docs/README.md`](docs/README.md) — full documentation index (architecture, API, per-service/worker/library docs, development, operations, reference, decisions)
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — workflow, PR checklist, commit conventions, architecture boundaries
+- [`SECURITY.md`](SECURITY.md) — how to report a vulnerability, secret-handling expectations
+- [`CHANGELOG.md`](CHANGELOG.md) — generated from Git history (`pnpm docs:changelog`)
 
 ---
 

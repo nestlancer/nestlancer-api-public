@@ -1,42 +1,21 @@
-<div align="center">
-
 # Notification Worker
 
-### Writes in-app notifications, sends Web Push, publishes Redis events for Socket.IO fan-out.
+Writes in-app notifications, sends Web Push, publishes Redis events for Socket.IO fan-out.
 
-</div>
+## At a glance
 
----
-
-## 📖 Table of Contents
-
-- [👁 At a glance](#at-a-glance)
-- [Processors / jobs](#processors-jobs)
-- [Message flow](#message-flow)
-- [📎 Dependencies](#dependencies)
-- [💻 Local development](#local-development)
-- [📚 Related documentation](#related-documentation)
-
----
-
-## 👁 At a glance
-
-|             |                                   |
-| :---------- | :-------------------------------- |
+| | |
+| --- | --- |
 | **Package** | `@nestlancer/notification-worker` |
-| **Source**  | `workers/notification-worker/`    |
-| **Queue**   | `notification.queue`              |
-| **Routing** | notification.#                    |
-
----
+| **Source** | `workers/notification-worker/` |
+| **Queue** | `notification.queue` |
+| **Routing** | notification.# |
 
 ## Processors / jobs
 
 - `in-app-notification`
 - `push-notification`
 - `realtime-fanout`
-
----
 
 ## Message flow
 
@@ -47,45 +26,33 @@ Service commits business data + OutboxEvent (same transaction)
         → side effect (email, push, S3, analytics DB, …)
 ```
 
-On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../runbooks/dlq-processing.md)).
+On failure: retry with backoff → dead-letter queue (see [DLQ runbook](../../operations/runbooks/dlq-processing.md)).
 
----
-
-## 📎 Dependencies
+## Dependencies
 
 - `@nestlancer/cache`
 - `@nestlancer/common`
 - `@nestlancer/config`
 - `@nestlancer/database`
+- `@nestlancer/email`
 - `@nestlancer/logger`
 - `@nestlancer/metrics`
+- `@nestlancer/notifications`
 - `@nestlancer/queue`
 - `@nestlancer/tracing`
 
----
-
-## 💻 Local development
+## Local development
 
 ```bash
 pnpm --filter @nestlancer/notification-worker dev
 pnpm --filter @nestlancer/notification-worker test
 ```
 
-Ensure RabbitMQ and PostgreSQL are running (`make dev-services`).
+RabbitMQ and PostgreSQL run on the shared dev VPS over Tailscale, not via local Docker Compose — see [Local workflow](../../development/local-workflow.md) for how to point `.env` at them.
 
----
-
-## 📚 Related documentation
+## Related documentation
 
 - [Queue topology](../../architecture/queue-topology.md)
 - [Event catalog](../../architecture/event-catalog.md)
-- [Adding a new worker](../../guides/adding-new-worker.md)
+- [Adding a new worker](../../development/adding-a-worker.md)
 - [CHANGELOG](../../changelog/CHANGELOG.md)
-
----
-
-<div align="center">
-
-**Notification Worker** — Nestlancer backend component documentation
-
-</div>

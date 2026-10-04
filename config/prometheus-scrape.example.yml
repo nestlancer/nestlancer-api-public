@@ -1,5 +1,5 @@
 # Add to Prometheus on INFRA VPS (job: nestlancer-apps)
-# Generate targets: bash scripts/generate-app-metrics-targets.sh
+# Generate targets: pnpm monitoring:targets
 #
 # Replace APP_VPS_HOST with the App VPS Tailscale IP (NOT 172.22.0.1).
 

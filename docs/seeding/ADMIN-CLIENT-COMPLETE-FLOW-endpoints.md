@@ -1893,7 +1893,7 @@ curl -s -X POST "$BASE/requests" \
 ## 13. Related docs
 
 - [`ADMIN-CLIENT-COMPLETE-FLOW.md`](./ADMIN-CLIENT-COMPLETE-FLOW.md) — architecture, state machines, diagram (audit source for § index above)
-- [`docs/adr/001-milestone-lifecycle.md`](./docs/adr/001-milestone-lifecycle.md) — deposit vs work milestone rules
+- [`docs/decisions/009-milestone-lifecycle.md`](../decisions/009-milestone-lifecycle.md) — deposit vs work milestone rules
 - Gateway OpenAPI: `https://dev-api.nestlancer.com/docs` (when enabled)
 
 **Audit notes (2026-06-18):** Endpoint index at top of this file was cross-checked against `ADMIN-CLIENT-COMPLETE-FLOW.md` diagram nodes, handoffs table, happy path, and gateway controllers under `gateway/src/modules/{requests,quotes,projects,progress,payments,messages}` plus admin payment/progress routes in `gateway/src/modules/admin/admin.controller.ts`. Out-of-scope for this guide: general admin dashboard, users, portfolio, blog, webhooks, notifications (not part of the client↔admin project pipeline).

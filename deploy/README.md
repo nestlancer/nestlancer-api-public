@@ -67,5 +67,5 @@ K3s clusters need `ghcr-credentials` (see `k3s/base/ghcr-pull-secret.example.yam
 ## Docs
 
 - [Terraform + K3s install](terraform/README.md)
-- [Production VPS (Compose fallback)](../docs/guides/production-vps-deploy.md)
+- [Production VPS (Compose fallback)](../docs/operations/deployment-prod-vps.md)
 - [Prisma migrations](../prisma/README.md)

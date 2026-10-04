@@ -21,9 +21,7 @@ describe('AuthLibModule (Integration)', () => {
     process.env.JWT_ACCESS_SECRET = 'secret1234567890';
     process.env.JWT_REFRESH_SECRET = 'secret1234567890';
     process.env.JWT_ACCESS_PUBLIC_KEY =
-      '-----BEGIN PUBLIC KEY-----
-REDACTED_FOR_SHARE_PACKAGE
------END PUBLIC KEY-----\\n';
+      '-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsrYYAIHjHvtREpYIs5QA\\nHrInZn5ECnTaLh4d5K0VXIqMWJ3rhJ+6zQGKkwgJOSqkDwVRwmbywjCh+eH03pCT\\n7dbFKHosk2pEirCBNMnH2fADG0XNKhqnW3fqDJxKF/rVy90odq3/rIMFkL4zSqZB\\n5oo+Y2yKgS6KRZbogLHYBr5g9ICwZHQeC7WN/GBlJfsQymzeMVSJih3CvrI7zi5c\\n7jBBwv8ixQciHPCEVz3yEVvHHxNiNbPERgqfL1Qq+s+m25On2L4ZXxkuzpXFgQM6\\nL0O38cA+N85KZnpoY1Pznu7E1rUu5Na44mZmz+aqMIK/IxA6y1FHapJiOL16iccu\\nGQIDAQAB\\n-----END PUBLIC KEY-----\\n';
 
     module = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env.test' }), AuthLibModule],

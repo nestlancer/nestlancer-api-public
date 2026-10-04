@@ -1,9 +1,6 @@
 /**
  * RS256 JWT keys for integration/e2e tests (matches auth-lib JwtStrategy).
  * Used when services load AppModule without .env.test.
- *
- * NOTE: Real test key material was removed from this sanitized share package.
- * Provide JWT_ACCESS_PUBLIC_KEY / JWT_ACCESS_PRIVATE_KEY via env when running tests.
  */
 const TEST_JWT_ACCESS_PUBLIC_KEY =
   '-----BEGIN PUBLIC KEY-----\nREDACTED_FOR_SHARE_PACKAGE\n-----END PUBLIC KEY-----\n';
